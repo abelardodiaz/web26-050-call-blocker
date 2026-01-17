@@ -81,3 +81,6 @@ app/outputs/
 
 # Large cache files
 *.hprof
+
+# Claude local settings (keep doc/ and sessions/ for portability)
+.claude/settings.local.json
