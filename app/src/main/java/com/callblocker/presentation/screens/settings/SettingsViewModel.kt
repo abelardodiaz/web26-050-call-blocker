@@ -47,4 +47,16 @@ class SettingsViewModel @Inject constructor(
             settingsRepository.setShowNotifications(enabled)
         }
     }
+
+    fun setSimBlockingEnabled(subscriptionId: Int, enabled: Boolean) {
+        viewModelScope.launch {
+            val currentSlots = settings.value.enabledSimSlots.toMutableSet()
+            if (enabled) {
+                currentSlots.add(subscriptionId)
+            } else {
+                currentSlots.remove(subscriptionId)
+            }
+            settingsRepository.setEnabledSimSlots(currentSlots)
+        }
+    }
 }

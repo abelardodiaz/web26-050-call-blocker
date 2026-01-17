@@ -8,6 +8,12 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <!-- Android 9 (API 28) - TelecomManager.endCall() -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!-- Multi-SIM support -->
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 
     <application
         android:name=".CallBlockerApplication"
@@ -48,6 +54,22 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <!-- Phone State Receiver for Android 9 (API 28) -->
+        <receiver
+            android:name=".core.receiver.PhoneStateReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Legacy Call Blocker Service for Android 9 (API 28) -->
+        <service
+            android:name=".core.service.LegacyCallBlockerService"
+            android:foregroundServiceType="phoneCall"
+            android:exported="false" />
 
     </application>
 

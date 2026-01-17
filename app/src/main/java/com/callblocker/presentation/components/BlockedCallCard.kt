@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.callblocker.domain.model.BlockReason
 import com.callblocker.domain.model.BlockedCall
-import com.callblocker.presentation.theme.BlockedCallBackground
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,7 +31,9 @@ fun BlockedCallCard(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = BlockedCallBackground)
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
         Row(
             modifier = Modifier
@@ -43,8 +44,9 @@ fun BlockedCallCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = blockedCall.phoneNumber.ifEmpty { "Private Number" },
-                    style = MaterialTheme.typography.titleMedium
+                    text = blockedCall.phoneNumber.ifEmpty { "Numero Privado" },
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = formatTimestamp(blockedCall.timestamp),
@@ -60,7 +62,7 @@ fun BlockedCallCard(
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
+                    contentDescription = "Eliminar",
                     tint = MaterialTheme.colorScheme.error
                 )
             }
@@ -69,14 +71,14 @@ fun BlockedCallCard(
 }
 
 private fun formatTimestamp(timestamp: Long): String {
-    val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+    val sdf = SimpleDateFormat("dd MMM yyyy HH:mm", Locale("es", "ES"))
     return sdf.format(Date(timestamp))
 }
 
 private fun formatBlockReason(reason: BlockReason): String {
     return when (reason) {
-        BlockReason.BLOCK_LIST -> "Blocked (in block list)"
-        BlockReason.UNKNOWN_NUMBER -> "Blocked (unknown number)"
-        BlockReason.PRIVATE_NUMBER -> "Blocked (private number)"
+        BlockReason.BLOCK_LIST -> "Bloqueado (en lista)"
+        BlockReason.UNKNOWN_NUMBER -> "Bloqueado (desconocido)"
+        BlockReason.PRIVATE_NUMBER -> "Bloqueado (privado)"
     }
 }

@@ -42,6 +42,11 @@ class SettingsRepositoryImpl @Inject constructor(
         settingsDao.setShowNotifications(enabled)
     }
 
+    override suspend fun setEnabledSimSlots(simSlots: Set<Int>) {
+        ensureSettingsExist()
+        settingsDao.setEnabledSimSlots(simSlots.joinToString(","))
+    }
+
     private suspend fun ensureSettingsExist() {
         settingsDao.insert(SettingsEntity())
     }

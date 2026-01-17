@@ -26,4 +26,7 @@ interface SettingsDao {
 
     @Query("UPDATE settings SET showNotifications = :enabled WHERE id = 1")
     suspend fun setShowNotifications(enabled: Boolean)
+
+    @Query("UPDATE settings SET enabled_sim_slots = :simSlots WHERE id = 1")
+    suspend fun setEnabledSimSlots(simSlots: String)
 }

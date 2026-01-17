@@ -11,7 +11,51 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 ### Pendiente
 - Tests unitarios e instrumentados
 - Iconos de launcher personalizados (reemplazar placeholders)
-- Notificaciones de llamadas bloqueadas (UI)
+- Implementar funcionalidad de notificaciones
+- Implementar bloqueo de numeros desconocidos
+
+---
+
+## [0.2.2] - 2026-01-17
+
+### Corregido
+
+- **Bloqueo dual SIM funcional**
+  - CallBlockerScreeningService ahora verifica de que SIM viene la llamada
+  - Respeta la configuracion por SIM en Ajustes
+  - Si no hay SIMs configuradas, bloquea en todas (comportamiento legacy)
+
+---
+
+## [0.2.1] - 2026-01-17
+
+### Agregado
+
+- **Tema oscuro por defecto**
+  - Colores optimizados para modo oscuro
+  - Tema forzado (sin opcion de tema claro)
+  - Cards con surfaceVariant del tema
+
+- **Interfaz completa en espanol**
+  - BlockListScreen: "Lista de Bloqueo", "Agregar numero", etc.
+  - BlockedCallsScreen: "Llamadas Bloqueadas", etc.
+  - AddNumberDialog: "Agregar Numero Bloqueado", etc.
+  - Navigation: "Llamadas Bloqueadas", "Lista de Bloqueo", "Ajustes"
+
+- **Soporte Dual SIM**
+  - SimManager para deteccion de SIMs activas
+  - Seccion de configuracion por SIM en Ajustes
+  - Campo enabledSimSlots en Settings para persistencia
+  - Bloqueo individual habilitado/deshabilitado por SIM
+
+### Cambiado
+
+- Opciones "Bloquear Desconocidos" y "Mostrar Notificaciones" deshabilitadas (pendiente implementacion)
+- Colores del tema actualizados para mejor legibilidad en modo oscuro
+
+### Corregido
+
+- Correccion de historial de versiones (0.1.0 -> 0.2.0 -> 0.2.1)
 
 ---
 

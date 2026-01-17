@@ -44,7 +44,7 @@ fun BlockListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Block List") },
+                title = { Text("Lista de Bloqueo") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -56,7 +56,7 @@ fun BlockListScreen(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add number")
+                Icon(Icons.Default.Add, contentDescription = "Agregar numero")
             }
         }
     ) { padding ->
@@ -108,12 +108,12 @@ private fun EmptyState(modifier: Modifier = Modifier) {
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "No blocked numbers",
+                text = "Sin numeros bloqueados",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Add numbers to block unwanted calls",
+                text = "Agrega numeros para bloquear llamadas no deseadas",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

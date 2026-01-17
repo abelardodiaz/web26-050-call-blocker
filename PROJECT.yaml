@@ -2,7 +2,7 @@ project:
   code: web26-050
   name: Call Blocker
   description: Aplicacion Android para bloqueo de llamadas no deseadas
-  version: 0.2.0
+  version: 0.2.2
   status: development
   type: mobile-android
 
@@ -14,7 +14,7 @@ stack:
   platform: android
   language: kotlin
   ui_framework: jetpack-compose
-  min_sdk: 29
+  min_sdk: 28
   target_sdk: 34
   architecture: clean-architecture-mvvm
 
@@ -31,6 +31,10 @@ features:
   - call_history
   - spam_detection
   - prefix_blocking
+  - android9_legacy_support
+  - multi_sim_config
+  - dark_theme_forced
+  - spanish_ui
 
 created_at: 2026-01-17
 updated_at: 2026-01-17

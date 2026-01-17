@@ -13,19 +13,19 @@ sealed class Screen(
 ) {
     data object BlockedCalls : Screen(
         route = "blocked_calls",
-        title = "Blocked Calls",
+        title = "Llamadas",
         icon = Icons.Default.CallEnd
     )
 
     data object BlockList : Screen(
         route = "block_list",
-        title = "Block List",
+        title = "Lista",
         icon = Icons.Default.Block
     )
 
     data object Settings : Screen(
         route = "settings",
-        title = "Settings",
+        title = "Ajustes",
         icon = Icons.Default.Settings
     )
 

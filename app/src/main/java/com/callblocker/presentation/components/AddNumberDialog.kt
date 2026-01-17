@@ -34,7 +34,7 @@ fun AddNumberDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Blocked Number") },
+        title = { Text("Agregar Numero Bloqueado") },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -45,18 +45,18 @@ fun AddNumberDialog(
                         phoneNumber = it
                         isError = false
                     },
-                    label = { Text("Phone number") },
+                    label = { Text("Numero de telefono") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     isError = isError,
                     supportingText = if (isError) {
-                        { Text("Please enter a phone number") }
+                        { Text("Por favor ingresa un numero") }
                     } else null,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = label,
                     onValueChange = { label = it },
-                    label = { Text("Label (optional)") },
+                    label = { Text("Etiqueta (opcional)") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Row(
@@ -64,7 +64,7 @@ fun AddNumberDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Block as prefix")
+                    Text("Bloquear como prefijo")
                     Switch(
                         checked = isPrefix,
                         onCheckedChange = { isPrefix = it }
@@ -82,12 +82,12 @@ fun AddNumberDialog(
                     }
                 }
             ) {
-                Text("Save", color = MaterialTheme.colorScheme.primary)
+                Text("Guardar", color = MaterialTheme.colorScheme.primary)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text("Cancelar")
             }
         }
     )

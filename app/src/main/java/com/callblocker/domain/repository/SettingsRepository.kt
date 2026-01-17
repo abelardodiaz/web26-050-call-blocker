@@ -10,4 +10,5 @@ interface SettingsRepository {
     suspend fun setBlockUnknownNumbers(enabled: Boolean)
     suspend fun setBlockPrivateNumbers(enabled: Boolean)
     suspend fun setShowNotifications(enabled: Boolean)
+    suspend fun setEnabledSimSlots(simSlots: Set<Int>)
 }

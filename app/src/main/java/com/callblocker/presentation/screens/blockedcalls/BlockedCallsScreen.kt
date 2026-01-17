@@ -37,7 +37,7 @@ fun BlockedCallsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Blocked Calls") },
+                title = { Text("Llamadas Bloqueadas") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -83,12 +83,12 @@ private fun EmptyState(modifier: Modifier = Modifier) {
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "No blocked calls yet",
+                text = "Sin llamadas bloqueadas",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Calls from blocked numbers will appear here",
+                text = "Las llamadas bloqueadas apareceran aqui",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

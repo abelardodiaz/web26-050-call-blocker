@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,7 +33,12 @@ fun BlockedNumberCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(modifier = modifier.fillMaxWidth()) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -44,12 +50,13 @@ fun BlockedNumberCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = blockedNumber.phoneNumber,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     if (blockedNumber.isPrefix) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "PREFIX",
+                            text = "PREFIJO",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier
@@ -67,7 +74,7 @@ fun BlockedNumberCard(
                     )
                 }
                 Text(
-                    text = "Added ${formatDate(blockedNumber.createdAt)}",
+                    text = "Agregado ${formatDate(blockedNumber.createdAt)}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -75,7 +82,7 @@ fun BlockedNumberCard(
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
+                    contentDescription = "Eliminar",
                     tint = MaterialTheme.colorScheme.error
                 )
             }
@@ -84,6 +91,6 @@ fun BlockedNumberCard(
 }
 
 private fun formatDate(timestamp: Long): String {
-    val sdf = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    val sdf = SimpleDateFormat("dd MMM yyyy", Locale("es", "ES"))
     return sdf.format(Date(timestamp))
 }

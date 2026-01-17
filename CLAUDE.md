@@ -44,6 +44,20 @@ Este proyecto usa el sistema de agentes colaborativos 996:
 ./gradlew connectedAndroidTest
 ```
 
+## Post-Build: Copiar APK a Windows
+
+**IMPORTANTE**: Despues de cada build exitoso, copiar el APK a Downloads del usuario:
+
+```bash
+# Obtener version del build.gradle.kts
+VERSION=$(grep 'versionName' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
+
+# Copiar via SCP a WSL local (laptop-g3)
+scp app/build/outputs/apk/debug/app-debug.apk wrr@10.254.0.133:/mnt/c/Users/abela/Downloads/CallBlocker-v${VERSION}-debug.apk
+```
+
+Destino: `/mnt/c/Users/abela/Downloads/CallBlocker-vX.X.X-debug.apk`
+
 ## Permisos Requeridos
 
 - READ_PHONE_STATE

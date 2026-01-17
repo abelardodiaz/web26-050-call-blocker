@@ -9,13 +9,13 @@ App Android para bloquear llamadas no deseadas.
 - **Arquitectura**: Clean Architecture + MVVM
 - **DI**: Hilt
 - **Base de datos**: Room
-- **Min SDK**: 29 (Android 10)
+- **Min SDK**: 28 (Android 9+)
 
 ## Requisitos
 
 - JDK 17
 - Android SDK 34
-- Dispositivo/Emulador Android 10+
+- Dispositivo/Emulador Android 9+ (API 28+)
 
 ## Build
 
@@ -83,6 +83,10 @@ app/src/main/java/com/callblocker/
 - [x] **Bloquear por prefijo** (ej: 442 bloquea todos los que empiecen con 442)
 - [x] Ver historial de llamadas bloqueadas
 - [x] Configurar bloqueo de numeros privados
+- [x] **Soporte Dual SIM** - bloqueo individual por tarjeta
+- [x] **Tema oscuro** forzado para mejor legibilidad
+- [x] **Interfaz en espanol**
+- [x] Compatible Android 9 - 17
 - [ ] Notificaciones de llamadas bloqueadas
 - [ ] Backup/Restore de lista de bloqueados
 

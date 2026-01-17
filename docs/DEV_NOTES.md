@@ -1,5 +1,198 @@
 # Notas de Desarrollo - Call Blocker
 
+## 2026-01-17: Version 0.2.2 - Bloqueo Dual SIM Funcional
+
+### Problema
+
+El bloqueo solo funcionaba en una SIM. El `CallBlockerScreeningService` no verificaba de qué SIM venía la llamada entrante.
+
+### Solucion
+
+Agregado en `CallBlockerScreeningService.kt`:
+
+```kotlin
+private fun getSubscriptionIdFromCall(callDetails: Call.Details): Int {
+    val phoneAccountHandle = callDetails.accountHandle
+    return phoneAccountHandle?.id?.toIntOrNull() ?: -1
+}
+
+private fun isBlockingEnabledForSim(subscriptionId: Int, enabledSimSlots: Set<Int>): Boolean {
+    if (enabledSimSlots.isEmpty()) return true  // Legacy: bloquea en todas
+    if (subscriptionId == -1) return true       // Desconocido: bloquea por seguridad
+    return enabledSimSlots.contains(subscriptionId)
+}
+```
+
+### Logica de Bloqueo por SIM
+
+| Configuracion | Comportamiento |
+|---------------|----------------|
+| Sin SIMs en Ajustes | Bloquea en todas las SIMs |
+| SIM 1 habilitada | Solo bloquea llamadas por SIM 1 |
+| SIM 2 habilitada | Solo bloquea llamadas por SIM 2 |
+| Ambas habilitadas | Bloquea en ambas SIMs |
+
+---
+
+## 2026-01-17: Version 0.2.1 - Tema Oscuro, Espanol y Dual SIM
+
+### Resumen del Cambio
+
+- Tema oscuro forzado por defecto (sin opcion de tema claro)
+- Interfaz completa traducida a espanol
+- Soporte dual SIM con configuracion individual por tarjeta
+- Funciones "Bloquear Desconocidos" y "Notificaciones" deshabilitadas temporalmente
+
+### Tema Oscuro
+
+| Componente | Antes | Despues |
+|------------|-------|---------|
+| Theme.kt | Sigue sistema | Forzado oscuro siempre |
+| Color.kt | BlockedCallBackground | DarkSurfaceVariant |
+| Cards | Fondo claro | surfaceVariant del tema |
+
+**Colores Dark Theme:**
+```kotlin
+val DarkBackground = Color(0xFF121212)
+val DarkSurface = Color(0xFF1E1E1E)
+val DarkSurfaceVariant = Color(0xFF2D2D2D)
+val OnDarkSurface = Color(0xFFE0E0E0)
+```
+
+### Textos en Espanol
+
+| Archivo | Textos Traducidos |
+|---------|------------------|
+| BlockListScreen.kt | "Lista de Bloqueo", "Sin numeros bloqueados" |
+| BlockedCallsScreen.kt | "Llamadas Bloqueadas", "Sin llamadas bloqueadas" |
+| AddNumberDialog.kt | "Agregar Numero Bloqueado", "Numero de telefono" |
+| BlockedCallCard.kt | "Numero Privado", "Bloqueado (en lista)" |
+| BlockedNumberCard.kt | "PREFIJO", "Agregado" |
+| Navigation.kt | "Llamadas", "Lista", "Ajustes" |
+
+### Soporte Dual SIM
+
+**Nuevo archivo: `core/util/SimManager.kt`**
+
+- Detecta SIMs activas via `SubscriptionManager`
+- Compatible desde API 22 (nuestro minSdk es 28)
+- Soporta SIM fisica y eSIM
+
+**Cambios en Settings:**
+
+| Capa | Archivo | Cambio |
+|------|---------|--------|
+| Domain | Settings.kt | +enabledSimSlots: Set<Int> |
+| Data | SettingsEntity.kt | +enabled_sim_slots (String) |
+| Data | SettingsDao.kt | +setEnabledSimSlots() |
+| Data | SettingsRepository.kt | +setEnabledSimSlots() |
+| Data | SettingsRepositoryImpl.kt | Implementacion |
+| Presentation | SettingsViewModel.kt | +setSimBlockingEnabled() |
+| UI | SettingsScreen.kt | Seccion "Tarjetas SIM" |
+
+**Migracion de Base de Datos:**
+
+```kotlin
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE settings ADD COLUMN enabled_sim_slots TEXT NOT NULL DEFAULT ''")
+    }
+}
+```
+
+### Funciones Deshabilitadas
+
+Por ahora, las siguientes funciones estan deshabilitadas en la UI:
+
+1. **Bloquear Desconocidos**: Requiere implementacion de verificacion de contactos
+2. **Mostrar Notificaciones**: Requiere implementacion del canal de notificaciones
+
+Se muestran con texto "Proximamente..." y switch deshabilitado.
+
+---
+
+## 2026-01-17: Soporte Android 9-17 (API 28-37)
+
+### Resumen del Cambio
+
+Se implemento soporte para Android 9 (Pie, API 28) ademas del existente para Android 10+. La app ahora es compatible con Android 9 hasta Android 17.
+
+### Metodos de Bloqueo por Version
+
+| Android | API | Metodo | Descripcion |
+|---------|-----|--------|-------------|
+| 9 (Pie) | 28 | `TelecomManager.endCall()` | Deprecated en API 29 pero funcional en API 28 |
+| 10+ (Q+) | 29+ | `CallScreeningService` | Metodo oficial recomendado por Google |
+
+### Diferencias Clave
+
+| Caracteristica | Android 9 | Android 10+ |
+|---------------|-----------|-------------|
+| App predeterminada | No requerida | Requiere `ROLE_CALL_SCREENING` |
+| Servicio | Foreground service manual | Gestionado por el sistema |
+| Experiencia | Puede sonar brevemente antes de colgar | Bloqueo silencioso |
+| Permisos extra | `CALL_PHONE` | Ninguno |
+
+### Archivos Nuevos
+
+| Archivo | Proposito |
+|---------|-----------|
+| `core/service/LegacyCallBlockerService.kt` | Foreground service para Android 9 |
+| `core/receiver/PhoneStateReceiver.kt` | BroadcastReceiver para detectar llamadas en Android 9 |
+| `core/util/PermissionHandler.kt` | Manejo de permisos condicionales por version |
+| `domain/model/SimConfig.kt` | Modelo para configuracion multi-SIM |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `app/build.gradle.kts` | `minSdk = 28`, `buildConfig = true` |
+| `AndroidManifest.xml` | +CALL_PHONE, +READ_PHONE_NUMBERS, +FOREGROUND_SERVICE, +componentes nuevos |
+| `core/receiver/BootReceiver.kt` | Inicia LegacyCallBlockerService en Android 9 |
+| `presentation/screens/settings/SettingsScreen.kt` | UI en espanol, info de version, seccion "Acerca de" |
+| `res/values/strings.xml` | Traduccion completa a espanol |
+
+### Permisos por Version
+
+**Android 9 (API 28):**
+```
+READ_PHONE_STATE       - Detectar llamadas entrantes
+READ_CALL_LOG          - Historial de llamadas bloqueadas
+ANSWER_PHONE_CALLS     - Terminar llamadas
+CALL_PHONE             - TelecomManager.endCall()
+FOREGROUND_SERVICE     - Mantener servicio activo
+```
+
+**Android 10+ (API 29+):**
+```
+READ_PHONE_STATE       - Detectar llamadas entrantes
+READ_CALL_LOG          - Historial de llamadas bloqueadas
+ANSWER_PHONE_CALLS     - Requerido por CallScreeningService
+ROLE_CALL_SCREENING    - App predeterminada de filtrado
+```
+
+### Configurar App como Predeterminada
+
+**Android 10+:** El usuario debe configurar la app como predeterminada en:
+- Ajustes > Apps > Apps predeterminadas > Identificador de llamadas y spam
+
+**Android 9:** No requiere ser app predeterminada (usa BroadcastReceiver).
+
+### Soporte Multi-SIM y eSIM
+
+Se agrego el modelo `SimConfig` para futura implementacion de:
+- Configuracion de bloqueo por SIM individual
+- Soporte para eSIM
+- Deteccion de SIMs activas via `SubscriptionManager`
+
+### Limitaciones Android 9
+
+1. **Retraso en bloqueo**: El telefono puede sonar brevemente (~0.5s) antes de colgar
+2. **Servicio foreground**: Requiere notificacion permanente para mantenerse activo
+3. **Consumo bateria**: Mayor que en Android 10+ debido al servicio foreground
+
+---
+
 ## 2026-01-17: Implementacion de Bloqueo por Prefijo
 
 ### Resumen del Cambio

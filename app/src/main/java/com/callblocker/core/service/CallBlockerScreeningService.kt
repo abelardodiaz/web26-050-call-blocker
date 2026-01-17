@@ -2,6 +2,9 @@ package com.callblocker.core.service
 
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import android.telecom.PhoneAccountHandle
+import android.telecom.TelecomManager
+import android.telephony.SubscriptionManager
 import com.callblocker.domain.model.BlockReason
 import com.callblocker.domain.model.BlockedCall
 import com.callblocker.domain.repository.BlockedCallRepository
@@ -31,11 +34,18 @@ class CallBlockerScreeningService : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
         val phoneNumber = callDetails.handle?.schemeSpecificPart ?: ""
+        val subscriptionId = getSubscriptionIdFromCall(callDetails)
 
         serviceScope.launch {
             val settings = settingsRepository.getSettings().first()
 
             if (!settings.isBlockingEnabled) {
+                allowCall(callDetails)
+                return@launch
+            }
+
+            // Verificar si el bloqueo esta habilitado para esta SIM
+            if (!isBlockingEnabledForSim(subscriptionId, settings.enabledSimSlots)) {
                 allowCall(callDetails)
                 return@launch
             }
@@ -48,6 +58,44 @@ class CallBlockerScreeningService : CallScreeningService() {
                 allowCall(callDetails)
             }
         }
+    }
+
+    /**
+     * Obtiene el subscriptionId de la llamada entrante.
+     * Retorna -1 si no se puede determinar.
+     */
+    private fun getSubscriptionIdFromCall(callDetails: Call.Details): Int {
+        return try {
+            val phoneAccountHandle: PhoneAccountHandle? = callDetails.accountHandle
+            if (phoneAccountHandle != null) {
+                val telecomManager = getSystemService(TELECOM_SERVICE) as? TelecomManager
+                val phoneAccount = telecomManager?.getPhoneAccount(phoneAccountHandle)
+                // El ID del componente suele contener el slot o subscription ID
+                phoneAccountHandle.id.toIntOrNull() ?: -1
+            } else {
+                -1
+            }
+        } catch (e: Exception) {
+            -1
+        }
+    }
+
+    /**
+     * Verifica si el bloqueo esta habilitado para una SIM especifica.
+     * Si enabledSimSlots esta vacio, bloquea en todas las SIMs (comportamiento legacy).
+     * Si subscriptionId es -1 (desconocido), bloquea por seguridad.
+     */
+    private fun isBlockingEnabledForSim(subscriptionId: Int, enabledSimSlots: Set<Int>): Boolean {
+        // Si no hay SIMs configuradas, bloquear en todas (comportamiento por defecto)
+        if (enabledSimSlots.isEmpty()) {
+            return true
+        }
+        // Si no se pudo determinar la SIM, bloquear por seguridad
+        if (subscriptionId == -1) {
+            return true
+        }
+        // Verificar si esta SIM tiene bloqueo habilitado
+        return enabledSimSlots.contains(subscriptionId)
     }
 
     private suspend fun determineBlockReason(

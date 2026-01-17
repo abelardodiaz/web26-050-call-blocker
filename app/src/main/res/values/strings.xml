@@ -3,48 +3,64 @@
     <string name="app_name">Call Blocker</string>
 
     <!-- Navigation -->
-    <string name="nav_blocked_calls">Blocked Calls</string>
-    <string name="nav_block_list">Block List</string>
-    <string name="nav_settings">Settings</string>
+    <string name="nav_blocked_calls">Llamadas Bloqueadas</string>
+    <string name="nav_block_list">Lista de Bloqueo</string>
+    <string name="nav_settings">Ajustes</string>
 
     <!-- Blocked Calls Screen -->
-    <string name="blocked_calls_empty">No blocked calls yet</string>
-    <string name="blocked_calls_empty_description">Calls from blocked numbers will appear here</string>
+    <string name="blocked_calls_empty">Sin llamadas bloqueadas</string>
+    <string name="blocked_calls_empty_description">Las llamadas de numeros bloqueados apareceran aqui</string>
 
     <!-- Block List Screen -->
-    <string name="block_list_empty">No blocked numbers</string>
-    <string name="block_list_empty_description">Add numbers to block unwanted calls</string>
-    <string name="add_number">Add Number</string>
-    <string name="phone_number_hint">Phone number</string>
-    <string name="label_hint">Label (optional)</string>
-    <string name="save">Save</string>
-    <string name="cancel">Cancel</string>
-    <string name="delete">Delete</string>
+    <string name="block_list_empty">Sin numeros bloqueados</string>
+    <string name="block_list_empty_description">Agrega numeros para bloquear llamadas no deseadas</string>
+    <string name="add_number">Agregar Numero</string>
+    <string name="phone_number_hint">Numero de telefono</string>
+    <string name="label_hint">Etiqueta (opcional)</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Eliminar</string>
+    <string name="block_as_prefix">Bloquear como prefijo</string>
 
     <!-- Settings Screen -->
-    <string name="settings_blocking_enabled">Call Blocking Enabled</string>
-    <string name="settings_blocking_enabled_description">Block calls from numbers in your block list</string>
-    <string name="settings_block_unknown">Block Unknown Numbers</string>
-    <string name="settings_block_unknown_description">Block calls from numbers not in contacts</string>
-    <string name="settings_block_private">Block Private Numbers</string>
-    <string name="settings_block_private_description">Block calls with hidden caller ID</string>
-    <string name="settings_notifications">Show Notifications</string>
-    <string name="settings_notifications_description">Get notified when a call is blocked</string>
-    <string name="settings_default_app">Default Call Screening App</string>
-    <string name="settings_set_default">Set as Default</string>
-    <string name="settings_is_default">This app is the default call screener</string>
+    <string name="settings_blocking_enabled">Bloqueo Activo</string>
+    <string name="settings_blocking_enabled_description">Bloquear llamadas de numeros en tu lista</string>
+    <string name="settings_block_unknown">Bloquear Desconocidos</string>
+    <string name="settings_block_unknown_description">Bloquear llamadas de numeros que no estan en contactos</string>
+    <string name="settings_block_private">Bloquear Privados</string>
+    <string name="settings_block_private_description">Bloquear llamadas con ID oculto</string>
+    <string name="settings_notifications">Mostrar Notificaciones</string>
+    <string name="settings_notifications_description">Recibir notificacion cuando se bloquea una llamada</string>
+    <string name="settings_default_app">App de Filtrado Predeterminada</string>
+    <string name="settings_set_default">Establecer como Predeterminada</string>
+    <string name="settings_is_default">Esta app es el filtro de llamadas predeterminado</string>
+
+    <!-- Android Version Info -->
+    <string name="settings_android_version">Version de Android</string>
+    <string name="settings_blocking_method">Metodo de Bloqueo</string>
+    <string name="settings_blocking_method_screening">CallScreeningService (Android 10+)</string>
+    <string name="settings_blocking_method_legacy">TelecomManager (Android 9)</string>
+    <string name="settings_legacy_service_running">Servicio de bloqueo activo</string>
+    <string name="settings_legacy_service_stopped">Servicio de bloqueo detenido</string>
 
     <!-- Permissions -->
-    <string name="permission_required">Permission Required</string>
-    <string name="permission_phone_rationale">Phone permission is needed to identify and block calls</string>
-    <string name="permission_call_log_rationale">Call log permission is needed to record blocked calls</string>
-    <string name="permission_notification_rationale">Notification permission is needed to alert you of blocked calls</string>
-    <string name="grant_permission">Grant Permission</string>
+    <string name="permission_required">Permiso Requerido</string>
+    <string name="permission_phone_rationale">Permiso de telefono necesario para identificar y bloquear llamadas</string>
+    <string name="permission_call_log_rationale">Permiso de registro de llamadas necesario para guardar historial</string>
+    <string name="permission_notification_rationale">Permiso de notificaciones necesario para alertar de llamadas bloqueadas</string>
+    <string name="grant_permission">Conceder Permiso</string>
 
     <!-- Common -->
-    <string name="unknown_number">Unknown Number</string>
-    <string name="private_number">Private Number</string>
-    <string name="blocked">Blocked</string>
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
+    <string name="unknown_number">Numero Desconocido</string>
+    <string name="private_number">Numero Privado</string>
+    <string name="blocked">Bloqueado</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+    <string name="prefix">PREFIJO</string>
+
+    <!-- Developer Info -->
+    <string name="about_title">Acerca de</string>
+    <string name="about_developer">Desarrollado por</string>
+    <string name="about_developer_name">redv6.com</string>
+    <string name="about_version">Version</string>
 </resources>
