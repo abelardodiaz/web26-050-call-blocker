@@ -61,3 +61,23 @@ lint/tmp/
 
 # Secrets
 secrets.properties
+
+# Android SDK downloaded files
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Kotlin
+*.kotlin_module
+
+# Hilt
+**/hilt_aggregated_deps/
+
+# Test outputs
+app/build/
+app/outputs/
+
+# Large cache files
+*.hprof
