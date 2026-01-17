@@ -1,129 +1,63 @@
-# Call Blocker App - Context & Planning
+# Context Session: Call Blocker Android App
 
-## Feature Overview
+## Estado Actual
+- **Fase**: Implementacion inicial completada por 996
+- **Commit**: ed8de3b (Initial commit)
+- **Branch**: master
+- **Archivos**: 53 archivos, 3572 lineas
 
-Aplicacion Android nativa para bloqueo de llamadas no deseadas. Utiliza CallScreeningService (Android 10+) para interceptar y filtrar llamadas entrantes antes de que suenen.
+## Resumen de lo Implementado
 
-## User Requirements
+### Arquitectura (Clean Architecture + MVVM)
+- Domain Layer: models, repository interfaces
+- Data Layer: Room entities, DAOs, repository implementations
+- Presentation Layer: ViewModels, Compose screens, components
+- Core Layer: DI modules, CallScreeningService, BootReceiver
 
-### Funcionalidades Principales
-1. **Bloqueo de llamadas**
-   - Bloquear numeros especificos (lista negra)
-   - Bloquear numeros desconocidos/privados
-   - Bloquear por prefijo (ej: todos los 800-)
-   - Bloquear numeros no en contactos
+### Funcionalidades Base
+1. **CallScreeningService**: Intercepta llamadas y las bloquea segun configuracion
+2. **Room Database**: 3 tablas (blocked_numbers, blocked_calls, settings)
+3. **Hilt DI**: AppModule, RepositoryModule
+4. **UI Compose**: 3 pantallas con navegacion bottom bar
 
-2. **Lista de bloqueo**
-   - Agregar numeros manualmente
-   - Agregar desde historial de llamadas
-   - Agregar desde contactos
-   - Importar/exportar lista
+### Pendiente para 050
+1. Crear gradle wrapper (gradlew, gradlew.bat)
+2. Agregar launcher icons (mipmap)
+3. Implementar PermissionHandler para solicitar permisos
+4. Implementar CallScreeningRoleManager para ROLE_CALL_SCREENING
+5. Agregar notificaciones cuando se bloquea una llamada
+6. Tests unitarios e instrumentados
+7. Probar build con: ./gradlew assembleDebug
 
-3. **Historial de llamadas bloqueadas**
-   - Ver llamadas bloqueadas con fecha/hora
-   - Desbloquear desde historial
-   - Estadisticas de bloqueo
+## Documentacion de Agentes
+Los agentes documentaron sus decisiones en:
+- .claude/doc/call_blocker/system-architecture.md (CallScreeningService)
+- .claude/doc/call_blocker/ui-design.md (Compose UI)
+- .claude/doc/call_blocker/app-architecture.md (Clean Architecture)
 
-4. **Configuracion**
-   - Activar/desactivar bloqueo global
-   - Modo silencioso vs rechazo directo
-   - Notificaciones de llamadas bloqueadas
-   - Backup/restore de configuracion
+## Comandos Utiles
+```bash
+# Construir APK
+./gradlew assembleDebug
 
-### Requisitos No Funcionales
-- Consumo minimo de bateria
-- Sin acceso a internet requerido (funciona offline)
-- Datos almacenados localmente (privacidad)
-- Material Design 3
+# Instalar en dispositivo
+adb install app/build/outputs/apk/debug/app-debug.apk
 
-## Technical Stack
+# Ver logs de la app
+adb logcat -s CallBlocker
 
-- **Platform**: Android (minSdk 29, targetSdk 34)
-- **Language**: Kotlin 1.9+
-- **UI**: Jetpack Compose + Material 3
-- **Architecture**: Clean Architecture + MVVM
-- **DI**: Hilt
-- **Database**: Room
-- **Background**: CallScreeningService
-- **Testing**: JUnit 5, MockK, Turbine, Compose Testing
+# Limpiar build
+./gradlew clean
+```
 
-## System APIs Required
+## Permisos Requeridos
+- READ_PHONE_STATE
+- READ_CALL_LOG  
+- ANSWER_PHONE_CALLS
+- READ_CONTACTS (opcional, para nombres)
+- POST_NOTIFICATIONS
 
-### CallScreeningService (API 29+)
-- Intercepta llamadas antes de que suenen
-- Puede rechazar, silenciar o permitir
-- Requiere ser app de screening por defecto
-
-### Permissions
-- READ_PHONE_STATE - Estado del telefono
-- READ_CALL_LOG - Historial de llamadas
-- ANSWER_PHONE_CALLS - Para rechazar llamadas
-- POST_NOTIFICATIONS - Notificaciones (Android 13+)
-
-### Roles
-- ROLE_CALL_SCREENING - Rol de sistema para screening
-
-## Plan Status
-
-**Status**: Research Phase
-**Last Updated**: 2026-01-17
-
-## Phase 1: Research & Design (In Progress)
-
-### Agentes a Consultar:
-1. [ ] android-system-architect - CallScreeningService implementation
-2. [ ] compose-ui-architect - UI/UX design
-3. [ ] android-architecture-expert - Clean Architecture setup
-4. [ ] android-test-engineer - Testing strategy
-
-### Deliverables Esperados:
-- system-architecture.md (CallScreeningService, permissions, roles)
-- ui-design.md (Screens, components, navigation)
-- app-architecture.md (Domain, data, presentation layers)
-- testing-strategy.md (Unit, UI, integration tests)
-
-## Phase 2: Implementation (Pending)
-
-### Backend/Core:
-- [ ] CallScreeningService implementation
-- [ ] Room database (BlockedNumber, CallLog entities)
-- [ ] Repository implementations
-- [ ] Use cases
-
-### UI:
-- [ ] Main screen (blocked calls list)
-- [ ] Add number screen
-- [ ] Settings screen
-- [ ] Call history screen
-
-### Testing:
-- [ ] Unit tests for use cases
-- [ ] Repository tests
-- [ ] ViewModel tests
-- [ ] UI tests
-
-## Phase 3: Validation (Pending)
-
-- [ ] Manual testing on real device
-- [ ] Permission flow validation
-- [ ] Battery consumption check
-
-## Notes & Decisions
-
-1. **CallScreeningService vs BroadcastReceiver**: 
-   - Decision: CallScreeningService (API moderno, mas control)
-   - BroadcastReceiver esta deprecado para call blocking
-
-2. **Almacenamiento**:
-   - Decision: Room database local
-   - No necesita backend/servidor
-
-3. **UI Framework**:
-   - Decision: Jetpack Compose
-   - Material 3 para look moderno
-
-## Open Questions
-
-- [ ] Soporte para dual SIM?
-- [ ] Integracion con bases de datos de spam (opcional, fase 2)?
-- [ ] Widget para activar/desactivar rapidamente?
+## Notas Importantes
+- minSdk = 29 (Android 10) requerido para CallScreeningService
+- La app debe solicitar ROLE_CALL_SCREENING para ser el call screener default
+- El servicio se activa automaticamente cuando la app tiene el rol
