@@ -1,10 +1,14 @@
 package com.callblocker.core.service
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.telecom.PhoneAccountHandle
 import android.telecom.TelecomManager
 import android.telephony.SubscriptionManager
+import android.util.Log
+import androidx.core.content.ContextCompat
 import com.callblocker.domain.model.BlockReason
 import com.callblocker.domain.model.BlockedCall
 import com.callblocker.domain.repository.BlockedCallRepository
@@ -63,21 +67,83 @@ class CallBlockerScreeningService : CallScreeningService() {
     /**
      * Obtiene el subscriptionId de la llamada entrante.
      * Retorna -1 si no se puede determinar.
+     *
+     * La logica busca el subscriptionId en el siguiente orden:
+     * 1. Intenta parsear el ID del PhoneAccountHandle como entero
+     * 2. Busca en las subscripciones activas por coincidencia de ICC ID
+     * 3. Retorna -1 si no se puede determinar
      */
     private fun getSubscriptionIdFromCall(callDetails: Call.Details): Int {
         return try {
             val phoneAccountHandle: PhoneAccountHandle? = callDetails.accountHandle
-            if (phoneAccountHandle != null) {
-                val telecomManager = getSystemService(TELECOM_SERVICE) as? TelecomManager
-                val phoneAccount = telecomManager?.getPhoneAccount(phoneAccountHandle)
-                // El ID del componente suele contener el slot o subscription ID
-                phoneAccountHandle.id.toIntOrNull() ?: -1
-            } else {
-                -1
+            if (phoneAccountHandle == null) {
+                Log.d(TAG, "PhoneAccountHandle is null")
+                return -1
             }
+
+            val handleId = phoneAccountHandle.id
+            Log.d(TAG, "PhoneAccountHandle.id: $handleId")
+
+            // Metodo 1: Intentar parsear como entero (funciona en algunos dispositivos)
+            val directId = handleId.toIntOrNull()
+            if (directId != null && isValidSubscriptionId(directId)) {
+                Log.d(TAG, "SubscriptionId from direct parse: $directId")
+                return directId
+            }
+
+            // Metodo 2: Buscar por ICC ID en las subscripciones activas
+            // El ID del PhoneAccountHandle suele ser el ICC ID (SIM card identifier)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_PHONE_STATE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                val subscriptionManager = getSystemService(TELEPHONY_SUBSCRIPTION_SERVICE)
+                    as? SubscriptionManager
+
+                subscriptionManager?.activeSubscriptionInfoList?.forEach { subInfo ->
+                    // Comparar por ICC ID
+                    if (subInfo.iccId == handleId || subInfo.iccId?.endsWith(handleId) == true) {
+                        Log.d(TAG, "SubscriptionId from ICC ID match: ${subInfo.subscriptionId}")
+                        return subInfo.subscriptionId
+                    }
+                }
+            }
+
+            Log.d(TAG, "Could not determine subscriptionId, returning -1")
+            -1
         } catch (e: Exception) {
+            Log.e(TAG, "Error getting subscriptionId", e)
             -1
         }
+    }
+
+    /**
+     * Verifica si un subscriptionId es valido consultando SubscriptionManager.
+     */
+    private fun isValidSubscriptionId(subscriptionId: Int): Boolean {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_PHONE_STATE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return false
+        }
+
+        return try {
+            val subscriptionManager = getSystemService(TELEPHONY_SUBSCRIPTION_SERVICE)
+                as? SubscriptionManager ?: return false
+
+            subscriptionManager.activeSubscriptionInfoList?.any {
+                it.subscriptionId == subscriptionId
+            } ?: false
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    companion object {
+        private const val TAG = "CallBlockerScreening"
     }
 
     /**

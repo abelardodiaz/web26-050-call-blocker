@@ -1,6 +1,8 @@
 package com.callblocker.presentation.screens.settings
 
 import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,23 +17,30 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
-import com.callblocker.core.util.SimManager
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.callblocker.BuildConfig
 import com.callblocker.core.util.PermissionHandler
+import com.callblocker.core.util.SimManager
+import com.callblocker.domain.model.SimConfig
+import com.callblocker.presentation.components.SettingsButton
 import com.callblocker.presentation.components.SettingsSwitch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,11 +49,38 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val settings by viewModel.settings.collectAsState()
+    val isExporting by viewModel.isExporting.collectAsState()
+    val isImporting by viewModel.isImporting.collectAsState()
+    val backupMessage by viewModel.backupMessage.collectAsState()
+
     val scrollState = rememberScrollState()
     val context = LocalContext.current
-    val simCards = remember { SimManager.getActiveSimCards(context) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // Estado reactivo para SIMs - se re-evalua cuando settings cambia
+    // (permisos otorgados cambian el estado de settings)
+    var simCards by remember { mutableStateOf(emptyList<SimConfig>()) }
+    LaunchedEffect(settings) {
+        simCards = SimManager.getActiveSimCards(context)
+    }
+
+    // Launcher para seleccionar archivo JSON para importar
+    val importLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        uri?.let { viewModel.importBlockedNumbers(it) }
+    }
+
+    // Mostrar mensaje de backup en snackbar
+    LaunchedEffect(backupMessage) {
+        backupMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.clearBackupMessage()
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("Ajustes") },
@@ -113,6 +149,27 @@ fun SettingsScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Seccion de Respaldo
+            SectionHeader("Respaldo")
+
+            SettingsButton(
+                title = "Exportar Lista",
+                description = "Guardar numeros bloqueados en archivo JSON",
+                onClick = { viewModel.exportBlockedNumbers() },
+                isLoading = isExporting
+            )
+
+            SettingsButton(
+                title = "Importar Lista",
+                description = "Cargar numeros desde archivo JSON",
+                onClick = { importLauncher.launch(arrayOf("application/json")) },
+                isLoading = isImporting
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
             HorizontalDivider()

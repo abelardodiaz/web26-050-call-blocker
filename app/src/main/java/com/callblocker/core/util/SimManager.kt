@@ -3,6 +3,7 @@ package com.callblocker.core.util
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.telephony.SubscriptionManager
 import androidx.core.content.ContextCompat
 import com.callblocker.domain.model.SimConfig
@@ -55,8 +56,14 @@ object SimManager {
      * Gets phone number for a SIM if available.
      *
      * May return null if number is not available (carrier restriction).
+     * Note: getPhoneNumber(subscriptionId) is only available on API 33+.
      */
     private fun getPhoneNumber(context: Context, subscriptionId: Int): String? {
+        // getPhoneNumber(subscriptionId) solo disponible en API 33+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return null
+        }
+
         return try {
             val subscriptionManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)
                 as? SubscriptionManager ?: return null

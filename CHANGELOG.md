@@ -16,6 +16,39 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
+## [0.2.3] - 2026-01-17
+
+### Agregado
+
+- **Export/Import de lista de bloqueados**
+  - Exportar numeros bloqueados a archivo JSON en Downloads
+  - Importar numeros desde archivo JSON
+  - Nueva seccion "Respaldo" en Ajustes
+  - Use cases: ExportBlockedNumbersUseCase, ImportBlockedNumbersUseCase
+  - Componente SettingsButton para botones de accion
+
+### Corregido
+
+- **Crash en Android 9 al abrir Ajustes**
+  - SimManager.getPhoneNumber() ahora verifica API level >= 33
+  - Metodo getPhoneNumber(subscriptionId) solo disponible en API 33+
+
+- **SIMs no aparecen en Android 16**
+  - Cambiado de `remember {}` a estado reactivo con `LaunchedEffect`
+  - SIMs se re-evaluan cuando cambia el estado de permisos
+
+- **Mejora en deteccion de SIM para dual SIM**
+  - getSubscriptionIdFromCall() ahora usa multiples metodos de deteccion
+  - Busqueda por ICC ID para mayor compatibilidad
+  - Logging agregado para diagnostico
+
+### Conocido
+
+- **Android 9**: Bloqueo solo funciona con telefono desbloqueado
+- **Android 16**: Llamadas bloqueadas se registran como perdidas
+
+---
+
 ## [0.2.2] - 2026-01-17
 
 ### Corregido
