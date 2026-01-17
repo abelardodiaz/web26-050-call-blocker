@@ -2,60 +2,121 @@
 
 ## Estado Actual
 - **Fase**: Implementacion inicial completada por 996
-- **Commit**: ed8de3b (Initial commit)
 - **Branch**: master
-- **Archivos**: 53 archivos, 3572 lineas
+- **Archivos**: 53+ archivos
 
-## Resumen de lo Implementado
+---
 
-### Arquitectura (Clean Architecture + MVVM)
-- Domain Layer: models, repository interfaces
-- Data Layer: Room entities, DAOs, repository implementations
-- Presentation Layer: ViewModels, Compose screens, components
-- Core Layer: DI modules, CallScreeningService, BootReceiver
+## Features Prioritarias
 
-### Funcionalidades Base
-1. **CallScreeningService**: Intercepta llamadas y las bloquea segun configuracion
-2. **Room Database**: 3 tablas (blocked_numbers, blocked_calls, settings)
-3. **Hilt DI**: AppModule, RepositoryModule
-4. **UI Compose**: 3 pantallas con navegacion bottom bar
+### 1. Bloqueo por Prefijo (ALTA PRIORIDAD)
+**Requisito del usuario**: Bloquear llamadas que comiencen con un prefijo especifico (ej: 442)
 
-### Pendiente para 050
-1. Crear gradle wrapper (gradlew, gradlew.bat)
-2. Agregar launcher icons (mipmap)
-3. Implementar PermissionHandler para solicitar permisos
-4. Implementar CallScreeningRoleManager para ROLE_CALL_SCREENING
-5. Agregar notificaciones cuando se bloquea una llamada
-6. Tests unitarios e instrumentados
-7. Probar build con: ./gradlew assembleDebug
+**Implementacion sugerida**:
+
+1. **Agregar campo en BlockedNumberEntity**:
+   ```kotlin
+   @Entity(tableName = "blocked_numbers")
+   data class BlockedNumberEntity(
+       @PrimaryKey(autoGenerate = true)
+       val id: Long = 0,
+       val phoneNumber: String,
+       val label: String? = null,
+       val isPrefix: Boolean = false,  // NUEVO: true si es prefijo
+       val createdAt: Long = System.currentTimeMillis()
+   )
+   ```
+
+2. **Actualizar BlockedNumberDao**:
+   ```kotlin
+   @Query("""
+       SELECT EXISTS(
+           SELECT 1 FROM blocked_numbers 
+           WHERE (isPrefix = 0 AND phoneNumber = :phoneNumber)
+              OR (isPrefix = 1 AND :phoneNumber LIKE phoneNumber || '%')
+       )
+   """)
+   suspend fun isNumberBlocked(phoneNumber: String): Boolean
+   ```
+
+3. **Actualizar UI (AddNumberDialog)**:
+   - Agregar Switch/Checkbox: "Bloquear como prefijo"
+   - Si es prefijo, mostrar hint: "Ej: 442 bloqueara 4421234567"
+
+4. **Actualizar BlockedNumberCard**:
+   - Mostrar icono/badge si es prefijo
+   - Texto: "Prefijo: 442*" en lugar de solo "442"
+
+---
+
+## Pendiente para 050
+
+### Alta Prioridad
+1. **Bloqueo por prefijo** (feature del usuario)
+2. Crear gradle wrapper (gradlew, gradlew.bat)
+3. Agregar launcher icons (mipmap)
+
+### Media Prioridad
+4. Implementar PermissionHandler para solicitar permisos
+5. Implementar solicitud de ROLE_CALL_SCREENING
+6. Notificaciones cuando se bloquea una llamada
+
+### Baja Prioridad
+7. Tests unitarios e instrumentados
+8. Backup/Restore de lista de bloqueados
+
+---
+
+## Arquitectura Actual
+
+### Domain Layer
+- models/: BlockedNumber, BlockedCall, Settings, BlockReason
+- repository/: Interfaces de repositorios
+- usecase/: (pendiente)
+
+### Data Layer
+- local/entity/: Room entities
+- local/dao/: Room DAOs
+- local/AppDatabase.kt: Room database
+- repository/: Implementations
+
+### Presentation Layer
+- theme/: Color.kt, Theme.kt
+- navigation/: Screen, AppNavigation
+- screens/: 3 pantallas con ViewModels
+- components/: Cards, Dialog, Switch
+- MainActivity.kt
+
+### Core Layer
+- di/: AppModule, RepositoryModule
+- service/: CallBlockerScreeningService
+- receiver/: BootReceiver
+
+---
 
 ## Documentacion de Agentes
-Los agentes documentaron sus decisiones en:
-- .claude/doc/call_blocker/system-architecture.md (CallScreeningService)
-- .claude/doc/call_blocker/ui-design.md (Compose UI)
-- .claude/doc/call_blocker/app-architecture.md (Clean Architecture)
+- .claude/doc/call_blocker/system-architecture.md
+- .claude/doc/call_blocker/ui-design.md
+- .claude/doc/call_blocker/app-architecture.md
+
+---
 
 ## Comandos Utiles
 ```bash
 # Construir APK
 ./gradlew assembleDebug
 
-# Instalar en dispositivo
+# Instalar
 adb install app/build/outputs/apk/debug/app-debug.apk
 
-# Ver logs de la app
+# Logs
 adb logcat -s CallBlocker
 
-# Limpiar build
+# Limpiar
 ./gradlew clean
 ```
 
-## Permisos Requeridos
-- READ_PHONE_STATE
-- READ_CALL_LOG  
-- ANSWER_PHONE_CALLS
-- READ_CONTACTS (opcional, para nombres)
-- POST_NOTIFICATIONS
+---
 
 ## Notas Importantes
 - minSdk = 29 (Android 10) requerido para CallScreeningService
