@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Call Blocker</string>
+
+    <!-- Navigation -->
+    <string name="nav_blocked_calls">Blocked Calls</string>
+    <string name="nav_block_list">Block List</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Blocked Calls Screen -->
+    <string name="blocked_calls_empty">No blocked calls yet</string>
+    <string name="blocked_calls_empty_description">Calls from blocked numbers will appear here</string>
+
+    <!-- Block List Screen -->
+    <string name="block_list_empty">No blocked numbers</string>
+    <string name="block_list_empty_description">Add numbers to block unwanted calls</string>
+    <string name="add_number">Add Number</string>
+    <string name="phone_number_hint">Phone number</string>
+    <string name="label_hint">Label (optional)</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_blocking_enabled">Call Blocking Enabled</string>
+    <string name="settings_blocking_enabled_description">Block calls from numbers in your block list</string>
+    <string name="settings_block_unknown">Block Unknown Numbers</string>
+    <string name="settings_block_unknown_description">Block calls from numbers not in contacts</string>
+    <string name="settings_block_private">Block Private Numbers</string>
+    <string name="settings_block_private_description">Block calls with hidden caller ID</string>
+    <string name="settings_notifications">Show Notifications</string>
+    <string name="settings_notifications_description">Get notified when a call is blocked</string>
+    <string name="settings_default_app">Default Call Screening App</string>
+    <string name="settings_set_default">Set as Default</string>
+    <string name="settings_is_default">This app is the default call screener</string>
+
+    <!-- Permissions -->
+    <string name="permission_required">Permission Required</string>
+    <string name="permission_phone_rationale">Phone permission is needed to identify and block calls</string>
+    <string name="permission_call_log_rationale">Call log permission is needed to record blocked calls</string>
+    <string name="permission_notification_rationale">Notification permission is needed to alert you of blocked calls</string>
+    <string name="grant_permission">Grant Permission</string>
+
+    <!-- Common -->
+    <string name="unknown_number">Unknown Number</string>
+    <string name="private_number">Private Number</string>
+    <string name="blocked">Blocked</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+</resources>
