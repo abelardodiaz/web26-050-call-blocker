@@ -24,12 +24,13 @@ class BlockListViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun addBlockedNumber(phoneNumber: String, label: String?) {
+    fun addBlockedNumber(phoneNumber: String, label: String?, isPrefix: Boolean = false) {
         viewModelScope.launch {
             blockedNumberRepository.addBlockedNumber(
                 BlockedNumber(
                     phoneNumber = phoneNumber,
-                    label = label?.takeIf { it.isNotBlank() }
+                    label = label?.takeIf { it.isNotBlank() },
+                    isPrefix = isPrefix
                 )
             )
         }

@@ -8,16 +8,41 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ## [Unreleased]
 
-### Agregado
-- Bloqueo por prefijo (ej: bloquear todos los numeros que empiecen con 442)
-- Notificaciones cuando se bloquea una llamada
-- PermissionHandler para solicitar permisos
-- Solicitud de ROLE_CALL_SCREENING
-
 ### Pendiente
-- Gradle wrapper (gradlew, gradlew.bat)
-- Launcher icons
 - Tests unitarios e instrumentados
+- Iconos de launcher personalizados (reemplazar placeholders)
+- Notificaciones de llamadas bloqueadas (UI)
+
+---
+
+## [0.2.0] - 2026-01-17
+
+### Agregado
+
+- **Bloqueo por prefijo**
+  - Nuevo campo `isPrefix` en modelo BlockedNumber
+  - Switch "Block as prefix" en dialogo de agregar numero
+  - Badge "PREFIX" en tarjetas de numeros bloqueados
+  - Migracion de base de datos v1 → v2
+
+- **Entorno de build**
+  - Gradle wrapper (gradlew, gradlew.bat)
+  - gradle.properties con configuracion AndroidX
+  - Iconos de launcher (placeholder)
+  - Iconos adaptativos (vector XML)
+
+- **Documentacion**
+  - docs/DEV_NOTES.md con notas tecnicas de desarrollo
+
+### Cambiado
+
+- Query `isNumberBlocked()` corregido para matching exacto + prefijo
+- AppDatabase version 1 → 2
+- AppModule incluye migracion MIGRATION_1_2
+
+### Arreglado
+
+- Query de bloqueo que hacia matching bidireccional incorrecto
 
 ---
 

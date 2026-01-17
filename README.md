@@ -13,22 +13,39 @@ App Android para bloquear llamadas no deseadas.
 
 ## Requisitos
 
-- Android Studio Hedgehog o superior
 - JDK 17
+- Android SDK 34
 - Dispositivo/Emulador Android 10+
 
-## Instalacion
+## Build
+
+### En servidor (server005)
+
+```bash
+cd /home/ubuntu/projects/web26-050-call-blocker
+
+# Build debug APK
+./gradlew assembleDebug --no-daemon
+
+# Output
+ls app/build/outputs/apk/debug/app-debug.apk
+```
+
+### En local (Android Studio)
 
 ```bash
 # Clonar
-git clone git@gitlab.com:usuario/web26-050-call-blocker.git
+git clone <repo-url>
 cd web26-050-call-blocker
 
-# Abrir en Android Studio
-# O construir desde CLI:
+# Abrir en Android Studio y sincronizar Gradle
+# O desde CLI:
 ./gradlew assembleDebug
+```
 
-# Instalar en dispositivo
+### Instalar en dispositivo
+
+```bash
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
@@ -44,7 +61,8 @@ app/src/main/java/com/callblocker/
 |-- data/
 |   |-- local/
 |   |   |-- entity/      # Room entities
-|   |   +-- dao/         # Room DAOs
+|   |   |-- dao/         # Room DAOs
+|   |   +-- migration/   # Room migrations
 |   +-- repository/      # Repository implementations
 |
 |-- domain/
@@ -62,11 +80,22 @@ app/src/main/java/com/callblocker/
 ## Funcionalidades
 
 - [x] Bloquear numeros especificos
+- [x] **Bloquear por prefijo** (ej: 442 bloquea todos los que empiecen con 442)
 - [x] Ver historial de llamadas bloqueadas
 - [x] Configurar bloqueo de numeros privados
-- [ ] **Bloquear por prefijo** (ej: 442)
 - [ ] Notificaciones de llamadas bloqueadas
 - [ ] Backup/Restore de lista de bloqueados
+
+## Bloqueo por Prefijo
+
+Nueva funcionalidad que permite bloquear rangos de numeros:
+
+1. Abrir la app > Block List > Boton (+)
+2. Ingresar el prefijo (ej: "442")
+3. Activar switch "Block as prefix"
+4. Guardar
+
+Todos los numeros que empiecen con ese prefijo seran bloqueados.
 
 ## Permisos
 
@@ -76,6 +105,7 @@ app/src/main/java/com/callblocker/
 | `READ_CALL_LOG` | Registrar llamadas bloqueadas |
 | `ANSWER_PHONE_CALLS` | Rechazar llamadas |
 | `POST_NOTIFICATIONS` | Notificar bloqueos |
+| `ROLE_CALL_SCREENING` | Actuar como screening service |
 
 ## Comandos
 
@@ -87,12 +117,22 @@ app/src/main/java/com/callblocker/
 | `./gradlew connectedAndroidTest` | Run instrumented tests |
 | `./gradlew clean` | Limpiar build |
 
-## Documentacion Tecnica
+## Documentacion
 
-Ver `.claude/doc/call_blocker/`:
-- `system-architecture.md` - CallScreeningService
-- `ui-design.md` - Diseno de UI
-- `app-architecture.md` - Clean Architecture
+| Documento | Contenido |
+|-----------|-----------|
+| `docs/DEV_NOTES.md` | Notas tecnicas de desarrollo |
+| `CHANGELOG.md` | Historial de cambios |
+| `.claude/doc/` | Documentacion arquitectura 996 |
+
+## Entorno de Desarrollo (Server005)
+
+```bash
+# Variables de entorno (ya en ~/.bashrc)
+export ANDROID_HOME=/home/ubuntu/android-sdk
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$PATH:/home/ubuntu/gradle-8.7/bin
+```
 
 ## Licencia
 

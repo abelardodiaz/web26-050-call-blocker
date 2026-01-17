@@ -15,7 +15,7 @@ interface BlockedNumberDao {
     @Query("SELECT * FROM blocked_numbers WHERE phoneNumber = :phoneNumber LIMIT 1")
     suspend fun getByPhoneNumber(phoneNumber: String): BlockedNumberEntity?
 
-    @Query("SELECT EXISTS(SELECT 1 FROM blocked_numbers WHERE phoneNumber LIKE '%' || :phoneNumber OR :phoneNumber LIKE '%' || phoneNumber)")
+    @Query("SELECT EXISTS(SELECT 1 FROM blocked_numbers WHERE (is_prefix = 0 AND phoneNumber = :phoneNumber) OR (is_prefix = 1 AND :phoneNumber LIKE phoneNumber || '%'))")
     suspend fun isNumberBlocked(phoneNumber: String): Boolean
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

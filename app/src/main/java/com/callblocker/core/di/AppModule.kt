@@ -3,6 +3,7 @@ package com.callblocker.core.di
 import android.content.Context
 import androidx.room.Room
 import com.callblocker.data.local.AppDatabase
+import com.callblocker.data.local.migration.Migrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,9 @@ object AppModule {
             context,
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
-        ).build()
+        )
+            .addMigrations(Migrations.MIGRATION_1_2)
+            .build()
     }
 
     @Provides

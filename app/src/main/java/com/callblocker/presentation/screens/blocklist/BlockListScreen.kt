@@ -82,8 +82,8 @@ fun BlockListScreen(
         if (showAddDialog) {
             AddNumberDialog(
                 onDismiss = { showAddDialog = false },
-                onConfirm = { phoneNumber, label ->
-                    viewModel.addBlockedNumber(phoneNumber, label)
+                onConfirm = { phoneNumber, label, isPrefix ->
+                    viewModel.addBlockedNumber(phoneNumber, label, isPrefix)
                     showAddDialog = false
                 }
             )
