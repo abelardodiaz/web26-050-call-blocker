@@ -4,6 +4,9 @@ Android app to block unwanted calls.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![F-Droid](https://img.shields.io/badge/F--Droid-pending-yellow.svg)](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092)
+[![Android](https://img.shields.io/badge/Android-9%20--%2017-3DDC84.svg?logo=android)](https://developer.android.com)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.9-7F52FF.svg?logo=kotlin)](https://kotlinlang.org)
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Material%203-4285F4.svg)](https://developer.android.com/jetpack/compose)
 
 ## Screenshots
 
