@@ -17,6 +17,51 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
+## [0.3.0] - 2026-01-17
+
+### Agregado
+
+- **Backup completo con encriptacion opcional**
+  - Exporta numeros bloqueados, historial de llamadas y configuracion
+  - Encriptacion AES-256-GCM con contrasena opcional
+  - Formato JSON sin encriptar (.json) o encriptado (.cbbk)
+  - Magic header "CBBK" para identificar archivos encriptados
+  - PBKDF2 con 100,000 iteraciones para derivacion de clave
+
+- **Restauracion inteligente**
+  - Detecta automaticamente si el backup esta encriptado
+  - Merge inteligente: agrega numeros nuevos, omite duplicados
+  - Importa historial completo de llamadas bloqueadas
+  - Restaura configuracion si esta presente en el backup
+  - Compatible con backups v1 (solo numeros) y v2 (completo)
+
+- **Nuevos dialogos de UI**
+  - Dialogo para elegir si proteger con contrasena
+  - Dialogo para ingresar/confirmar contrasena
+  - Snackbar con estadisticas de importacion
+
+### Tecnico
+
+- Nuevos modelos: `BackupData`, `BackupMetadata`, `BackupCounts`, `ImportResult`
+- Nueva clase `BackupJsonSerializer` con soporte v1 y v2
+- Nueva clase `BackupEncryption` para AES-256-GCM
+- Use cases: `ExportFullBackupUseCase`, `ImportFullBackupUseCase`
+- `PasswordDialogState` sealed class para manejo de estados
+- Componente `PasswordDialog` y `BackupPasswordPromptDialog`
+
+### Archivos Nuevos
+
+| Archivo | Proposito |
+|---------|-----------|
+| `domain/model/BackupData.kt` | Modelos de backup |
+| `data/backup/BackupJsonSerializer.kt` | Serializacion JSON |
+| `data/backup/BackupEncryption.kt` | Encriptacion AES |
+| `domain/usecase/ExportFullBackupUseCase.kt` | Export completo |
+| `domain/usecase/ImportFullBackupUseCase.kt` | Import con merge |
+| `presentation/components/PasswordDialog.kt` | Dialogos UI |
+
+---
+
 ## [0.2.8.1] - 2026-01-17
 
 ### Agregado

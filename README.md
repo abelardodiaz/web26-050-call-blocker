@@ -87,8 +87,8 @@ app/src/main/java/com/callblocker/
 - [x] **Tema oscuro** forzado para mejor legibilidad
 - [x] **Interfaz en espanol**
 - [x] Compatible Android 9 - 17
+- [x] **Backup/Restore completo** con encriptacion AES-256-GCM opcional
 - [ ] Notificaciones de llamadas bloqueadas
-- [ ] Backup/Restore de lista de bloqueados
 
 ## Bloqueo por Prefijo
 
@@ -100,6 +100,24 @@ Nueva funcionalidad que permite bloquear rangos de numeros:
 4. Guardar
 
 Todos los numeros que empiecen con ese prefijo seran bloqueados.
+
+## Backup y Restauracion
+
+### Backup Completo
+1. Abrir la app > Ajustes > Respaldo
+2. Tocar "Backup Completo"
+3. Elegir si proteger con contrasena
+4. El archivo se guarda en Downloads
+
+### Restaurar Backup
+1. Ajustes > Respaldo > "Restaurar Backup"
+2. Seleccionar archivo (.json o .cbbk)
+3. Si esta encriptado, ingresar contrasena
+4. Los datos se agregan sin duplicar existentes
+
+**Formatos:**
+- `.json` - Backup sin encriptar (legible)
+- `.cbbk` - Backup encriptado con AES-256-GCM
 
 ## Permisos
 

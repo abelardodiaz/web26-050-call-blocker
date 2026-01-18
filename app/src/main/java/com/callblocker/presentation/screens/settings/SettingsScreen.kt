@@ -45,6 +45,9 @@ import com.callblocker.BuildConfig
 import com.callblocker.core.util.PermissionHandler
 import com.callblocker.core.util.SimManager
 import com.callblocker.domain.model.SimConfig
+import com.callblocker.presentation.components.BackupPasswordPromptDialog
+import com.callblocker.presentation.components.PasswordDialog
+import com.callblocker.presentation.components.PasswordDialogMode
 import com.callblocker.presentation.components.SettingsButton
 import com.callblocker.presentation.components.SettingsSwitch
 
@@ -57,6 +60,9 @@ fun SettingsScreen(
     val isExporting by viewModel.isExporting.collectAsState()
     val isImporting by viewModel.isImporting.collectAsState()
     val backupMessage by viewModel.backupMessage.collectAsState()
+    val isFullExporting by viewModel.isFullExporting.collectAsState()
+    val isFullImporting by viewModel.isFullImporting.collectAsState()
+    val passwordDialogState by viewModel.passwordDialogState.collectAsState()
 
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -79,11 +85,18 @@ fun SettingsScreen(
         simCards = SimManager.getActiveSimCards(context)
     }
 
-    // Launcher para seleccionar archivo JSON para importar
+    // Launcher para seleccionar archivo JSON para importar (legacy - solo numeros)
     val importLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
         uri?.let { viewModel.importBlockedNumbers(it) }
+    }
+
+    // Launcher para seleccionar archivo para restore completo
+    val fullRestoreLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        uri?.let { viewModel.startFullRestore(it) }
     }
 
     // Mostrar mensaje de backup en snackbar
@@ -92,6 +105,76 @@ fun SettingsScreen(
             snackbarHostState.showSnackbar(message)
             viewModel.clearBackupMessage()
         }
+    }
+
+    // Manejar dialogos de contrasena
+    when (val state = passwordDialogState) {
+        is PasswordDialogState.Hidden -> { /* No dialog */ }
+
+        is PasswordDialogState.PromptEncrypt -> {
+            BackupPasswordPromptDialog(
+                onWithPassword = {
+                    viewModel.dismissPasswordDialog()
+                    // Mostrar dialogo para ingresar contrasena
+                    viewModel.executeFullBackup(null) // Temporal, se reemplaza abajo
+                },
+                onWithoutPassword = {
+                    viewModel.executeFullBackup(null)
+                },
+                onDismiss = { viewModel.dismissPasswordDialog() }
+            )
+        }
+
+        is PasswordDialogState.EnterEncryptPassword -> {
+            PasswordDialog(
+                mode = PasswordDialogMode.ENCRYPT,
+                onConfirm = { password ->
+                    viewModel.executeFullBackup(password)
+                },
+                onDismiss = { viewModel.dismissPasswordDialog() }
+            )
+        }
+
+        is PasswordDialogState.RequestDecrypt -> {
+            PasswordDialog(
+                mode = PasswordDialogMode.DECRYPT,
+                onConfirm = { password ->
+                    viewModel.executeFullRestore(state.uri, password)
+                },
+                onDismiss = { viewModel.dismissPasswordDialog() }
+            )
+        }
+    }
+
+    // Estado para mostrar dialogo de encriptacion
+    var showEncryptDialog by remember { mutableStateOf(false) }
+
+    if (showEncryptDialog) {
+        PasswordDialog(
+            mode = PasswordDialogMode.ENCRYPT,
+            onConfirm = { password ->
+                showEncryptDialog = false
+                viewModel.executeFullBackup(password)
+            },
+            onDismiss = { showEncryptDialog = false }
+        )
+    }
+
+    // Estado para prompt de backup
+    var showBackupPrompt by remember { mutableStateOf(false) }
+
+    if (showBackupPrompt) {
+        BackupPasswordPromptDialog(
+            onWithPassword = {
+                showBackupPrompt = false
+                showEncryptDialog = true
+            },
+            onWithoutPassword = {
+                showBackupPrompt = false
+                viewModel.executeFullBackup(null)
+            },
+            onDismiss = { showBackupPrompt = false }
+        )
     }
 
     Scaffold(
@@ -172,9 +255,36 @@ fun SettingsScreen(
             // Seccion de Respaldo
             SectionHeader("Respaldo")
 
+            // Backup completo (nuevo)
+            SettingsButton(
+                title = "Backup Completo",
+                description = "Guardar numeros, historial y configuracion",
+                onClick = { showBackupPrompt = true },
+                isLoading = isFullExporting
+            )
+
+            SettingsButton(
+                title = "Restaurar Backup",
+                description = "Recuperar datos desde archivo de backup",
+                onClick = {
+                    fullRestoreLauncher.launch(arrayOf("application/json", "application/octet-stream", "*/*"))
+                },
+                isLoading = isFullImporting
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Legacy backup (solo numeros)
+            Text(
+                text = "Solo Lista Bloqueados",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+
             SettingsButton(
                 title = "Exportar Lista",
-                description = "Guardar numeros bloqueados en archivo JSON",
+                description = "Guardar solo numeros bloqueados (JSON)",
                 onClick = { viewModel.exportBlockedNumbers() },
                 isLoading = isExporting
             )
