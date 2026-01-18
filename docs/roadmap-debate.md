@@ -154,7 +154,7 @@
 
 ### Decisiones Pendientes
 
-- [ ] Licencia: GPLv3 vs Apache 2.0
+- [x] Licencia → **GPLv3** (decisión 2026-01-17)
 - [x] Formato exacto de backup → **JSON con format_version 2** (v0.3.0)
 - [x] Algoritmo de encriptación → **AES-256-GCM con PBKDF2** (v0.3.0)
 - [ ] Proveedor cloud (Firebase vs Google Drive API)
