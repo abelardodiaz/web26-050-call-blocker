@@ -12,7 +12,7 @@ interface SettingsDao {
     @Query("SELECT * FROM settings WHERE id = 1")
     fun getSettings(): Flow<SettingsEntity?>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(entity: SettingsEntity)
 
     @Query("UPDATE settings SET isBlockingEnabled = :enabled WHERE id = 1")

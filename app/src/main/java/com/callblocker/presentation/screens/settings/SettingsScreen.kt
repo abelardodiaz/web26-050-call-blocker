@@ -118,9 +118,10 @@ fun SettingsScreen(
 
             SettingsSwitch(
                 title = "Bloquear Privados",
-                description = "Bloquear llamadas con ID oculto",
-                checked = settings.blockPrivateNumbers,
-                onCheckedChange = { viewModel.setBlockPrivateNumbers(it) }
+                description = "Proximamente...",
+                checked = false,
+                enabled = false,
+                onCheckedChange = { }
             )
 
             SettingsSwitch(

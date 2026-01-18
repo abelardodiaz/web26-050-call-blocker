@@ -2,7 +2,7 @@ project:
   code: web26-050
   name: Call Blocker
   description: Aplicacion Android para bloqueo de llamadas no deseadas
-  version: 0.2.4
+  version: 0.2.5
   status: development
   type: mobile-android
 
