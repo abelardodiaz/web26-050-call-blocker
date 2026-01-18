@@ -17,6 +17,25 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
+## [0.2.8] - 2026-01-17
+
+### Corregido
+
+- **Llamadas con codigo de pais no se bloqueaban**
+  - SIM 1 enviaba numeros con prefijo `+52` (ej: `+524441390343`)
+  - SIM 2 enviaba numeros sin prefijo (ej: `4441390343`)
+  - El prefijo `444` no hacia match con `+524441390343`
+  - Nueva funcion `normalizePhoneNumber()` quita codigo de pais antes de verificar
+  - Soporta codigos de Mexico (+52) y USA/Canada (+1)
+
+### Tecnico
+
+- `CallBlockerScreeningService.normalizePhoneNumber()` normaliza numeros entrantes
+- Remueve `+52` y `+1` de numeros con mas de 10 digitos
+- Logs agregados para diagnostico de normalizacion
+
+---
+
 ## [0.2.7] - 2026-01-17
 
 ### Cambiado
