@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
             try {
                 val language = settingsRepository.getAppLanguage()
                 Log.d(TAG, "Applying saved language: $language")
-                LocaleHelper.setAppLanguage(language)
+                LocaleHelper.setAppLanguage(language, this@MainActivity)
             } catch (e: Exception) {
                 Log.e(TAG, "Error applying saved language", e)
             }
