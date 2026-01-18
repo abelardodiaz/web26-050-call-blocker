@@ -56,6 +56,26 @@ class SettingsRepositoryImpl @Inject constructor(
         return settingsDao.isPersistentServiceEnabled() ?: false
     }
 
+    override suspend fun setDeveloperModeEnabled(enabled: Boolean) {
+        ensureSettingsExist()
+        settingsDao.setDeveloperModeEnabled(enabled)
+    }
+
+    override suspend fun setDevSimDetectionByFormat(enabled: Boolean) {
+        ensureSettingsExist()
+        settingsDao.setDevSimDetectionByFormat(enabled)
+    }
+
+    override suspend fun setDevBlockSim1(enabled: Boolean) {
+        ensureSettingsExist()
+        settingsDao.setDevBlockSim1(enabled)
+    }
+
+    override suspend fun setDevBlockSim2(enabled: Boolean) {
+        ensureSettingsExist()
+        settingsDao.setDevBlockSim2(enabled)
+    }
+
     private suspend fun ensureSettingsExist() {
         settingsDao.insert(SettingsEntity())
     }

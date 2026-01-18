@@ -148,6 +148,135 @@ adb shell ps | grep callblocker
 
 ---
 
+## 2026-01-17: Version 0.2.8.1 - Settings Ocultas de Desarrollador
+
+### El Concepto
+
+Modo desarrollador oculto con activación secreta de 2 pasos para configuración avanzada de detección de SIM por formato de número.
+
+### Activación de 2 Pasos
+
+| Paso | Acción | Tiempo |
+|------|--------|--------|
+| 1 | Tocar "Información del Sistema" 7 veces | < 2s entre taps |
+| 2 | Tocar "Acerca de" 7 veces | < 10s después del paso 1 |
+
+Solo quien conoce la secuencia exacta puede activar el modo desarrollador.
+
+### Lógica de Detección de SIM por Formato
+
+Observación empírica en Samsung Galaxy S25 Ultra con Dual SIM:
+
+| Formato de número | Operador | SIM |
+|-------------------|----------|-----|
+| `+524441234567` (con +52) | Bait | SIM 1 |
+| `4441234567` (sin +52) | AT&T MX | SIM 2 |
+
+**Advertencia**: Esta configuración es frágil y específica del dispositivo. Si cambian las SIMs de slot o de operador, dejará de funcionar.
+
+### Nuevos Settings de Desarrollador
+
+| Setting | Descripción | Default |
+|---------|-------------|---------|
+| `developerModeEnabled` | Muestra/oculta sección dev | `false` |
+| `devSimDetectionByFormat` | Detectar SIM por formato +52 | `false` |
+| `devBlockSim1` | Bloquear llamadas de SIM 1 (Bait) | `true` |
+| `devBlockSim2` | Bloquear llamadas de SIM 2 (AT&T) | `true` |
+
+### Flujo de Filtrado por SIM
+
+```
+Llamada entrante: +524441390343
+                      ↓
+¿devSimDetectionByFormat habilitado?
+         Sí ↓                    No → flujo normal
+         ↓
+¿Tiene código de país +52?
+    Sí → SIM 1 (Bait)      No → SIM 2 (AT&T)
+         ↓                        ↓
+¿devBlockSim1 = true?     ¿devBlockSim2 = true?
+    Sí → continuar            Sí → continuar
+    No → PERMITIR (return null)
+```
+
+### Implementación: Tap Detector de 2 Pasos
+
+```kotlin
+// Estados para la activación secreta
+var infoSectionTaps by remember { mutableIntStateOf(0) }
+var step1Completed by remember { mutableStateOf(false) }
+var step1CompletedTime by remember { mutableLongStateOf(0L) }
+var aboutSectionTaps by remember { mutableIntStateOf(0) }
+
+// Paso 1: Tocar InfoCard 7 veces
+InfoCard(onTap = {
+    val now = System.currentTimeMillis()
+    if (now - infoSectionLastTap < 2000) {
+        infoSectionTaps++
+        if (infoSectionTaps >= 7) {
+            step1Completed = true
+            step1CompletedTime = now
+        }
+    } else {
+        infoSectionTaps = 1
+    }
+})
+
+// Paso 2: Tocar AboutCard 7 veces (dentro de 10s)
+AboutCard(onTap = {
+    if (!step1Completed || now - step1CompletedTime > 10000) {
+        step1Completed = false
+        return@AboutCard
+    }
+    if (aboutSectionTaps >= 7) {
+        viewModel.setDeveloperModeEnabled(true)
+        // Snackbar: "Modo desarrollador activado"
+    }
+})
+```
+
+### Migración de Base de Datos v5 → v6
+
+```kotlin
+val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE settings ADD COLUMN developer_mode_enabled INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE settings ADD COLUMN dev_sim_detection_by_format INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE settings ADD COLUMN dev_block_sim1 INTEGER NOT NULL DEFAULT 1")
+        db.execSQL("ALTER TABLE settings ADD COLUMN dev_block_sim2 INTEGER NOT NULL DEFAULT 1")
+    }
+}
+```
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `domain/model/Settings.kt` | +4 campos dev |
+| `data/local/entity/SettingsEntity.kt` | +4 columnas |
+| `data/local/dao/SettingsDao.kt` | +4 queries UPDATE |
+| `data/local/migration/Migrations.kt` | +MIGRATION_5_6 |
+| `data/local/AppDatabase.kt` | version = 6 |
+| `core/di/AppModule.kt` | +MIGRATION_5_6 |
+| `domain/repository/SettingsRepository.kt` | +4 métodos |
+| `data/repository/SettingsRepositoryImpl.kt` | +4 implementaciones |
+| `presentation/screens/settings/SettingsViewModel.kt` | +4 funciones |
+| `presentation/screens/settings/SettingsScreen.kt` | Tap detector + sección oculta |
+| `core/service/CallBlockerScreeningService.kt` | Lógica detección SIM por formato |
+| `app/build.gradle.kts` | versionCode=12, versionName="0.2.8.1" |
+| `PROJECT.yaml` | version: 0.2.8.1 |
+
+### Lecciones Aprendidas
+
+| Aspecto | Aprendizaje |
+|---------|-------------|
+| Easter Eggs | 2 pasos es más seguro que 1 (evita activación accidental) |
+| Formato de número | Es indicador de operador, no de SIM (frágil) |
+| Settings avanzados | Ocultar por defecto, solo para quien sabe |
+| Configuración por SIM | Útil para usuarios con SIMs de diferente propósito |
+
+---
+
 ## 2026-01-17: Version 0.2.8 - Normalizacion de Numeros por Operador
 
 ### El Problema

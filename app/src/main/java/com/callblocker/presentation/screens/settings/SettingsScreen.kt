@@ -3,6 +3,7 @@ package com.callblocker.presentation.screens.settings
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,8 +27,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import com.callblocker.BuildConfig
 import com.callblocker.core.util.PermissionHandler
 import com.callblocker.core.util.SimManager
@@ -56,6 +61,16 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // Estados para la activacion secreta de 2 pasos
+    var infoSectionTaps by remember { mutableIntStateOf(0) }
+    var infoSectionLastTap by remember { mutableLongStateOf(0L) }
+    var step1Completed by remember { mutableStateOf(false) }
+    var step1CompletedTime by remember { mutableLongStateOf(0L) }
+
+    var aboutSectionTaps by remember { mutableIntStateOf(0) }
+    var aboutSectionLastTap by remember { mutableLongStateOf(0L) }
 
     // Estado reactivo para SIMs - se re-evalua cuando settings cambia
     // (permisos otorgados cambian el estado de settings)
@@ -186,7 +201,21 @@ fun SettingsScreen(
                     } else {
                         "TelecomManager (Legacy)"
                     }
-                )
+                ),
+                onTap = {
+                    val now = System.currentTimeMillis()
+                    if (now - infoSectionLastTap < 2000) {
+                        infoSectionTaps++
+                        if (infoSectionTaps >= 7) {
+                            step1Completed = true
+                            step1CompletedTime = now
+                            infoSectionTaps = 0
+                        }
+                    } else {
+                        infoSectionTaps = 1
+                    }
+                    infoSectionLastTap = now
+                }
             )
 
             if (PermissionHandler.requiresLegacyBlocker()) {
@@ -205,7 +234,77 @@ fun SettingsScreen(
             // Seccion Acerca de
             SectionHeader("Acerca de")
 
-            AboutCard()
+            AboutCard(
+                onTap = {
+                    val now = System.currentTimeMillis()
+
+                    // Verificar que paso 1 se completo hace menos de 10 segundos
+                    if (!step1Completed || now - step1CompletedTime > 10000) {
+                        step1Completed = false
+                        aboutSectionTaps = 0
+                        return@AboutCard
+                    }
+
+                    if (now - aboutSectionLastTap < 2000) {
+                        aboutSectionTaps++
+                        if (aboutSectionTaps >= 7) {
+                            // Activar modo desarrollador
+                            viewModel.setDeveloperModeEnabled(true)
+                            step1Completed = false
+                            aboutSectionTaps = 0
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Modo desarrollador activado")
+                            }
+                        }
+                    } else {
+                        aboutSectionTaps = 1
+                    }
+                    aboutSectionLastTap = now
+                }
+            )
+
+            // Seccion de Desarrollador (oculta por defecto)
+            if (settings.developerModeEnabled) {
+                Spacer(modifier = Modifier.height(24.dp))
+                HorizontalDivider()
+                Spacer(modifier = Modifier.height(16.dp))
+
+                SectionHeader("Desarrollador")
+
+                SettingsSwitch(
+                    title = "Detectar SIM por formato",
+                    description = "+52 = Bait (SIM1), sin +52 = AT&T (SIM2)",
+                    checked = settings.devSimDetectionByFormat,
+                    onCheckedChange = { viewModel.setDevSimDetectionByFormat(it) }
+                )
+
+                if (settings.devSimDetectionByFormat) {
+                    SettingsSwitch(
+                        title = "Bloquear en SIM 1 (Bait)",
+                        description = "Llamadas con +52",
+                        checked = settings.devBlockSim1,
+                        onCheckedChange = { viewModel.setDevBlockSim1(it) }
+                    )
+                    SettingsSwitch(
+                        title = "Bloquear en SIM 2 (AT&T)",
+                        description = "Llamadas sin +52",
+                        checked = settings.devBlockSim2,
+                        onCheckedChange = { viewModel.setDevBlockSim2(it) }
+                    )
+                }
+
+                SettingsSwitch(
+                    title = "Desactivar modo dev",
+                    description = "Oculta esta seccion",
+                    checked = false,
+                    onCheckedChange = {
+                        viewModel.setDeveloperModeEnabled(false)
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Modo desarrollador desactivado")
+                        }
+                    }
+                )
+            }
         }
     }
 }
@@ -222,9 +321,14 @@ private fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun InfoCard(items: List<Pair<String, String>>) {
+private fun InfoCard(
+    items: List<Pair<String, String>>,
+    onTap: () -> Unit = {}
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onTap() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
@@ -293,9 +397,13 @@ private fun SimInfoCard(simCards: List<SimConfig>) {
 }
 
 @Composable
-private fun AboutCard() {
+private fun AboutCard(
+    onTap: () -> Unit = {}
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onTap() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
