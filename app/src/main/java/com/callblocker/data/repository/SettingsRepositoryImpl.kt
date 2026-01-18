@@ -47,6 +47,15 @@ class SettingsRepositoryImpl @Inject constructor(
         settingsDao.setEnabledSimSlots(simSlots.joinToString(","))
     }
 
+    override suspend fun setPersistentServiceEnabled(enabled: Boolean) {
+        ensureSettingsExist()
+        settingsDao.setPersistentServiceEnabled(enabled)
+    }
+
+    override suspend fun isPersistentServiceEnabled(): Boolean {
+        return settingsDao.isPersistentServiceEnabled() ?: false
+    }
+
     private suspend fun ensureSettingsExist() {
         settingsDao.insert(SettingsEntity())
     }

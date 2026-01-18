@@ -11,4 +11,6 @@ interface SettingsRepository {
     suspend fun setBlockPrivateNumbers(enabled: Boolean)
     suspend fun setShowNotifications(enabled: Boolean)
     suspend fun setEnabledSimSlots(simSlots: Set<Int>)
+    suspend fun setPersistentServiceEnabled(enabled: Boolean)
+    suspend fun isPersistentServiceEnabled(): Boolean
 }

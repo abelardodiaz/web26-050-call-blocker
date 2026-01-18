@@ -15,4 +15,10 @@ object Migrations {
             db.execSQL("ALTER TABLE settings ADD COLUMN enabled_sim_slots TEXT NOT NULL DEFAULT ''")
         }
     }
+
+    val MIGRATION_3_4 = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE settings ADD COLUMN persistent_service_enabled INTEGER NOT NULL DEFAULT 0")
+        }
+    }
 }

@@ -29,4 +29,10 @@ interface SettingsDao {
 
     @Query("UPDATE settings SET enabled_sim_slots = :simSlots WHERE id = 1")
     suspend fun setEnabledSimSlots(simSlots: String)
+
+    @Query("UPDATE settings SET persistent_service_enabled = :enabled WHERE id = 1")
+    suspend fun setPersistentServiceEnabled(enabled: Boolean)
+
+    @Query("SELECT persistent_service_enabled FROM settings WHERE id = 1")
+    suspend fun isPersistentServiceEnabled(): Boolean?
 }

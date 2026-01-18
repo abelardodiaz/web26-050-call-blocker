@@ -18,13 +18,16 @@ import com.callblocker.presentation.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
- * Legacy foreground service for Android 9 (API 28) call blocking.
+ * Foreground service for persistent call blocking protection.
  *
- * On Android 10+, CallScreeningService is used instead.
- * This service keeps the app alive to receive phone state broadcasts.
+ * This service keeps the app alive with a notification to ensure
+ * reliable call blocking on all Android versions.
+ *
+ * On Android 9 (API 28): Also handles call blocking via PhoneStateReceiver
+ * On Android 10+: Ensures CallScreeningService is promptly awakened
  */
 @AndroidEntryPoint
-class LegacyCallBlockerService : Service() {
+class CallBlockerForegroundService : Service() {
 
     private var phoneStateReceiver: PhoneStateReceiver? = null
 
@@ -32,14 +35,19 @@ class LegacyCallBlockerService : Service() {
         private const val NOTIFICATION_ID = 1001
         private const val CHANNEL_ID = "call_blocker_service"
 
-        fun isRequired(): Boolean {
-            return Build.VERSION.SDK_INT < Build.VERSION_CODES.Q
+        fun isRunning(context: Context): Boolean {
+            val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+            @Suppress("DEPRECATION")
+            for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+                if (CallBlockerForegroundService::class.java.name == service.service.className) {
+                    return true
+                }
+            }
+            return false
         }
 
         fun start(context: Context) {
-            if (!isRequired()) return
-
-            val intent = Intent(context, LegacyCallBlockerService::class.java)
+            val intent = Intent(context, CallBlockerForegroundService::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(intent)
             } else {
@@ -48,7 +56,7 @@ class LegacyCallBlockerService : Service() {
         }
 
         fun stop(context: Context) {
-            val intent = Intent(context, LegacyCallBlockerService::class.java)
+            val intent = Intent(context, CallBlockerForegroundService::class.java)
             context.stopService(intent)
         }
     }
@@ -57,7 +65,11 @@ class LegacyCallBlockerService : Service() {
         super.onCreate()
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, createNotification())
-        registerPhoneStateReceiver()
+
+        // Solo registrar PhoneStateReceiver en Android 9 (legacy blocking)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            registerPhoneStateReceiver()
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -75,10 +87,10 @@ class LegacyCallBlockerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Call Blocker Service",
+                "Proteccion de Llamadas",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Keeps call blocking active in the background"
+                description = "Mantiene el bloqueo de llamadas activo"
                 setShowBadge(false)
             }
 
@@ -96,8 +108,8 @@ class LegacyCallBlockerService : Service() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Call Blocker Active")
-            .setContentText("Protecting you from unwanted calls")
+            .setContentTitle("Proteccion Activa")
+            .setContentText("Bloqueando llamadas no deseadas")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentIntent(pendingIntent)
             .setOngoing(true)

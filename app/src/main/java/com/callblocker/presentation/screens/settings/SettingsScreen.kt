@@ -131,6 +131,13 @@ fun SettingsScreen(
                 onCheckedChange = { }
             )
 
+            SettingsSwitch(
+                title = "Servicio Persistente",
+                description = "Notificacion activa para mejor bloqueo",
+                checked = settings.persistentServiceEnabled,
+                onCheckedChange = { viewModel.setPersistentServiceEnabled(it) }
+            )
+
             // Seccion de Tarjetas SIM (solo si hay SIMs detectadas)
             if (simCards.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(24.dp))

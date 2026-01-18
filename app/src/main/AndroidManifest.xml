@@ -65,9 +65,9 @@
             </intent-filter>
         </receiver>
 
-        <!-- Legacy Call Blocker Service for Android 9 (API 28) -->
+        <!-- Foreground Service for persistent call blocking -->
         <service
-            android:name=".core.service.LegacyCallBlockerService"
+            android:name=".core.service.CallBlockerForegroundService"
             android:foregroundServiceType="phoneCall"
             android:exported="false" />
 

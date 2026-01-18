@@ -14,14 +14,17 @@ data class SettingsEntity(
     val blockPrivateNumbers: Boolean = false,
     val showNotifications: Boolean = false,
     @ColumnInfo(name = "enabled_sim_slots", defaultValue = "")
-    val enabledSimSlots: String = "" // Comma-separated subscription IDs
+    val enabledSimSlots: String = "", // Comma-separated subscription IDs
+    @ColumnInfo(name = "persistent_service_enabled", defaultValue = "0")
+    val persistentServiceEnabled: Boolean = false
 ) {
     fun toDomain(): Settings = Settings(
         isBlockingEnabled = isBlockingEnabled,
         blockUnknownNumbers = blockUnknownNumbers,
         blockPrivateNumbers = blockPrivateNumbers,
         showNotifications = showNotifications,
-        enabledSimSlots = parseSimSlots(enabledSimSlots)
+        enabledSimSlots = parseSimSlots(enabledSimSlots),
+        persistentServiceEnabled = persistentServiceEnabled
     )
 
     companion object {
@@ -30,7 +33,8 @@ data class SettingsEntity(
             blockUnknownNumbers = domain.blockUnknownNumbers,
             blockPrivateNumbers = domain.blockPrivateNumbers,
             showNotifications = domain.showNotifications,
-            enabledSimSlots = domain.enabledSimSlots.joinToString(",")
+            enabledSimSlots = domain.enabledSimSlots.joinToString(","),
+            persistentServiceEnabled = domain.persistentServiceEnabled
         )
 
         private fun parseSimSlots(value: String): Set<Int> {

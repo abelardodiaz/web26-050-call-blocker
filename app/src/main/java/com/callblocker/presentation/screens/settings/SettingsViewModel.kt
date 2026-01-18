@@ -1,8 +1,10 @@
 package com.callblocker.presentation.screens.settings
 
+import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.callblocker.core.service.CallBlockerForegroundService
 import com.callblocker.domain.model.Settings
 import com.callblocker.domain.repository.SettingsRepository
 import com.callblocker.domain.usecase.ExportBlockedNumbersUseCase
@@ -18,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    private val application: Application,
     private val settingsRepository: SettingsRepository,
     private val exportBlockedNumbersUseCase: ExportBlockedNumbersUseCase,
     private val importBlockedNumbersUseCase: ImportBlockedNumbersUseCase
@@ -121,5 +124,16 @@ class SettingsViewModel @Inject constructor(
 
     fun clearBackupMessage() {
         _backupMessage.value = null
+    }
+
+    fun setPersistentServiceEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setPersistentServiceEnabled(enabled)
+            if (enabled) {
+                CallBlockerForegroundService.start(application)
+            } else {
+                CallBlockerForegroundService.stop(application)
+            }
+        }
     }
 }
