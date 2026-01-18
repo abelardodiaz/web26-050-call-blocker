@@ -13,6 +13,49 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 - Iconos de launcher personalizados (reemplazar placeholders)
 - Implementar funcionalidad de notificaciones
 - Implementar bloqueo de numeros desconocidos
+- Implementar bloqueo de numeros privados (ID oculto)
+
+---
+
+## [0.2.5] - 2026-01-17
+
+### Corregido
+
+- **Bug critico: settings se reseteaban entre si**
+  - Cambiar un setting (ej. SIM 1) reseteaba otros (ej. Servicio Persistente)
+  - Causa: SettingsDao usaba OnConflictStrategy.REPLACE
+  - Solucion: Cambiado a OnConflictStrategy.IGNORE
+
+### Cambiado
+
+- **"Bloquear Privados" deshabilitado**
+  - Funcionalidad no implementada aun
+  - Mostrado como "Proximamente..." igual que otras opciones pendientes
+
+---
+
+## [0.2.4] - 2026-01-17
+
+### Agregado
+
+- **Servicio Persistente (Foreground Service)**
+  - Nueva opcion "Servicio Persistente" en Ajustes
+  - Notificacion permanente "Proteccion Activa" cuando esta habilitado
+  - Mejora la confiabilidad del bloqueo en modo de bajo consumo
+  - Funciona en todas las versiones de Android (no solo Android 9)
+
+- **Auto-inicio al reiniciar**
+  - BootReceiver inicia el servicio si esta habilitado en settings
+  - En Android 9 siempre se inicia (necesario para bloqueo legacy)
+
+### Cambiado
+
+- Renombrado LegacyCallBlockerService → CallBlockerForegroundService
+- Migracion de base de datos v3 → v4 (campo persistentServiceEnabled)
+
+### Conocido
+
+- Desactivar optimizacion de bateria manualmente para mejor funcionamiento
 
 ---
 
