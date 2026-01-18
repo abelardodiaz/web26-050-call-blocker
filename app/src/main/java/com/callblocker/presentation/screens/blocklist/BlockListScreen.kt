@@ -28,8 +28,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.callblocker.R
 import com.callblocker.presentation.components.AddNumberDialog
 import com.callblocker.presentation.components.BlockedNumberCard
 
@@ -44,7 +46,7 @@ fun BlockListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Lista de Bloqueo") },
+                title = { Text(stringResource(R.string.screen_title_block_list)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -56,7 +58,10 @@ fun BlockListScreen(
                 onClick = { showAddDialog = true },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Agregar numero")
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = stringResource(R.string.content_desc_add_number)
+                )
             }
         }
     ) { padding ->
@@ -108,12 +113,12 @@ private fun EmptyState(modifier: Modifier = Modifier) {
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Sin numeros bloqueados",
+                text = stringResource(R.string.block_list_empty),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "Agrega numeros para bloquear llamadas no deseadas",
+                text = stringResource(R.string.block_list_empty_description),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

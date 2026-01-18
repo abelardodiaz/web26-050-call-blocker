@@ -16,9 +16,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.callblocker.R
 
 /**
  * Modo del dialogo de contrasena.
@@ -48,14 +50,18 @@ fun PasswordDialog(
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     val title = when (mode) {
-        PasswordDialogMode.ENCRYPT -> "Proteger Backup"
-        PasswordDialogMode.DECRYPT -> "Backup Protegido"
+        PasswordDialogMode.ENCRYPT -> stringResource(R.string.password_title_encrypt)
+        PasswordDialogMode.DECRYPT -> stringResource(R.string.password_title_decrypt)
     }
 
     val description = when (mode) {
-        PasswordDialogMode.ENCRYPT -> "Ingresa una contrasena para proteger el backup. Dejala vacia para no encriptar."
-        PasswordDialogMode.DECRYPT -> "Este backup esta protegido. Ingresa la contrasena para restaurarlo."
+        PasswordDialogMode.ENCRYPT -> stringResource(R.string.password_desc_encrypt)
+        PasswordDialogMode.DECRYPT -> stringResource(R.string.password_desc_decrypt)
     }
+
+    val errorMismatch = stringResource(R.string.password_error_mismatch)
+    val errorTooShort = stringResource(R.string.password_error_too_short)
+    val errorEmpty = stringResource(R.string.password_error_empty)
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -75,7 +81,7 @@ fun PasswordDialog(
                         password = it
                         errorMessage = null
                     },
-                    label = { Text("Contrasena") },
+                    label = { Text(stringResource(R.string.password_label)) },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -92,7 +98,7 @@ fun PasswordDialog(
                             confirmPassword = it
                             errorMessage = null
                         },
-                        label = { Text("Confirmar contrasena") },
+                        label = { Text(stringResource(R.string.password_confirm_label)) },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -119,16 +125,16 @@ fun PasswordDialog(
                                 // Sin encriptacion
                                 onConfirm(null)
                             } else if (password != confirmPassword) {
-                                errorMessage = "Las contrasenas no coinciden"
+                                errorMessage = errorMismatch
                             } else if (password.length < 4) {
-                                errorMessage = "La contrasena debe tener al menos 4 caracteres"
+                                errorMessage = errorTooShort
                             } else {
                                 onConfirm(password)
                             }
                         }
                         PasswordDialogMode.DECRYPT -> {
                             if (password.isEmpty()) {
-                                errorMessage = "Ingresa la contrasena"
+                                errorMessage = errorEmpty
                             } else {
                                 onConfirm(password)
                             }
@@ -138,15 +144,19 @@ fun PasswordDialog(
             ) {
                 Text(
                     when (mode) {
-                        PasswordDialogMode.ENCRYPT -> if (password.isEmpty()) "Sin contrasena" else "Encriptar"
-                        PasswordDialogMode.DECRYPT -> "Desencriptar"
+                        PasswordDialogMode.ENCRYPT -> if (password.isEmpty()) {
+                            stringResource(R.string.password_btn_no_password)
+                        } else {
+                            stringResource(R.string.password_btn_encrypt)
+                        }
+                        PasswordDialogMode.DECRYPT -> stringResource(R.string.password_btn_decrypt)
                     }
                 )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
@@ -163,18 +173,18 @@ fun BackupPasswordPromptDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Backup Completo") },
+        title = { Text(stringResource(R.string.backup_prompt_title)) },
         text = {
-            Text("Quieres proteger el backup con contrasena? Los backups encriptados son mas seguros pero requieren la contrasena para restaurar.")
+            Text(stringResource(R.string.backup_prompt_message))
         },
         confirmButton = {
             TextButton(onClick = onWithPassword) {
-                Text("Con contrasena")
+                Text(stringResource(R.string.backup_prompt_with_password))
             }
         },
         dismissButton = {
             TextButton(onClick = onWithoutPassword) {
-                Text("Sin contrasena")
+                Text(stringResource(R.string.backup_prompt_without_password))
             }
         }
     )

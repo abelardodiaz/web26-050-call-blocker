@@ -19,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.callblocker.R
 
 @Composable
 fun AddNumberDialog(
@@ -34,7 +36,7 @@ fun AddNumberDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Agregar Numero Bloqueado") },
+        title = { Text(stringResource(R.string.dialog_title_add_number)) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -45,18 +47,18 @@ fun AddNumberDialog(
                         phoneNumber = it
                         isError = false
                     },
-                    label = { Text("Numero de telefono") },
+                    label = { Text(stringResource(R.string.phone_number_hint)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     isError = isError,
                     supportingText = if (isError) {
-                        { Text("Por favor ingresa un numero") }
+                        { Text(stringResource(R.string.phone_number_error)) }
                     } else null,
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = label,
                     onValueChange = { label = it },
-                    label = { Text("Etiqueta (opcional)") },
+                    label = { Text(stringResource(R.string.label_hint)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Row(
@@ -64,7 +66,7 @@ fun AddNumberDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("Bloquear como prefijo")
+                    Text(stringResource(R.string.block_as_prefix))
                     Switch(
                         checked = isPrefix,
                         onCheckedChange = { isPrefix = it }
@@ -82,12 +84,12 @@ fun AddNumberDialog(
                     }
                 }
             ) {
-                Text("Guardar", color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(R.string.save), color = MaterialTheme.colorScheme.primary)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

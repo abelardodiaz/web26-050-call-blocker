@@ -21,7 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.callblocker.R
 import com.callblocker.domain.model.BlockedNumber
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -33,6 +36,12 @@ fun BlockedNumberCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val deleteContentDesc = stringResource(R.string.content_desc_delete_number)
+
+    // Get current locale for date formatting
+    val configuration = LocalConfiguration.current
+    val locale = configuration.locales[0]
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -56,7 +65,7 @@ fun BlockedNumberCard(
                     if (blockedNumber.isPrefix) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "PREFIJO",
+                            text = stringResource(R.string.prefix_badge),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier
@@ -74,7 +83,7 @@ fun BlockedNumberCard(
                     )
                 }
                 Text(
-                    text = "Agregado ${formatDate(blockedNumber.createdAt)}",
+                    text = stringResource(R.string.added_date, formatDate(blockedNumber.createdAt, locale)),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -82,7 +91,7 @@ fun BlockedNumberCard(
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Eliminar",
+                    contentDescription = deleteContentDesc,
                     tint = MaterialTheme.colorScheme.error
                 )
             }
@@ -90,7 +99,7 @@ fun BlockedNumberCard(
     }
 }
 
-private fun formatDate(timestamp: Long): String {
-    val sdf = SimpleDateFormat("dd MMM yyyy", Locale("es", "ES"))
+private fun formatDate(timestamp: Long, locale: Locale): String {
+    val sdf = SimpleDateFormat("dd MMM yyyy", locale)
     return sdf.format(Date(timestamp))
 }
