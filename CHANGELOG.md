@@ -14,6 +14,40 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 - Implementar funcionalidad de notificaciones
 - Implementar bloqueo de numeros desconocidos
 - Implementar bloqueo de numeros privados (ID oculto)
+- v0.4.0: Backup en la nube (Google Drive/Firebase)
+
+---
+
+## [0.3.0-fdroid] - 2026-01-18
+
+### Agregado (Preparacion para Open Source)
+
+- **Licencia GPLv3**
+  - Archivo LICENSE con texto completo de GNU GPL v3.0
+  - Seccion de licencia en README.md
+
+- **Screenshots para documentacion**
+  - 5 capturas de pantalla en `docs/screenshots/`
+  - Seccion Screenshots en README.md con galeria
+
+- **Metadata F-Droid (fastlane)**
+  - Estructura `fastlane/metadata/android/`
+  - Locales: es-MX (espanol Mexico) y en-US (ingles)
+  - Descripciones corta y larga
+  - Changelogs por version
+  - Screenshots por locale
+
+- **Solicitud F-Droid enviada**
+  - MR #32092: https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092
+  - Archivo `metadata/com.callblocker.yml` en fdroiddata
+  - Tag v0.3.0 creado para referencia de build
+  - Documentacion en `docs/fdroid-submission.md`
+
+### Documentacion
+
+- `docs/fdroid-submission.md` - Detalles completos de la solicitud
+- `fdroid-metadata.yml` - Template de metadata para F-Droid
+- Roadmap actualizado con progreso de publicacion
 
 ---
 
