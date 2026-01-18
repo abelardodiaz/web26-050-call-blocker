@@ -1,5 +1,153 @@
 # Notas de Desarrollo - Call Blocker
 
+## Comandos ADB para Debug y Testing
+
+### Conexion y Dispositivos
+
+```bash
+# Ver dispositivos conectados
+adb devices
+
+# Conectar a dispositivo por IP (WiFi debugging)
+adb connect 192.168.1.100:5555
+
+# Desconectar dispositivo
+adb disconnect 192.168.1.100:5555
+
+# Reiniciar servidor ADB (si hay problemas de conexion)
+adb kill-server
+adb start-server
+```
+
+### Instalacion de APK
+
+```bash
+# Instalar APK (reemplaza si ya existe)
+adb install -r app-debug.apk
+
+# Instalar APK con ruta completa
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# Desinstalar app
+adb uninstall com.callblocker
+
+# Instalar y reemplazar forzando (si hay problemas de firma)
+adb install -r -d app-debug.apk
+```
+
+### Monitoreo de Logs (Logcat)
+
+```bash
+# Ver logs en tiempo real (todos)
+adb logcat
+
+# Limpiar buffer de logs y luego ver
+adb logcat -c; adb logcat
+
+# Filtrar por tags especificos de Call Blocker
+adb logcat -s CallBlockerApp:D CallBlockerScreening:D CallBlockerFgService:D MainActivity:D
+
+# Limpiar y filtrar (RECOMENDADO para testing)
+adb logcat -c; adb logcat -s CallBlockerApp:D CallBlockerScreening:D CallBlockerFgService:D MainActivity:D
+
+# Filtrar solo errores
+adb logcat *:E
+
+# Filtrar por tag con nivel de debug
+adb logcat -s CallBlockerScreening:D
+
+# Guardar logs a archivo
+adb logcat -s CallBlockerScreening:D > logs.txt
+
+# Ver logs con timestamp
+adb logcat -v time -s CallBlockerScreening:D
+```
+
+### Tags de Log en Call Blocker
+
+| Tag | Clase | Descripcion |
+|-----|-------|-------------|
+| `CallBlockerApp` | CallBlockerApplication | Inicio de aplicacion |
+| `CallBlockerScreening` | CallBlockerScreeningService | Screening de llamadas |
+| `CallBlockerFgService` | CallBlockerForegroundService | Servicio foreground |
+| `MainActivity` | MainActivity | Actividad principal, permisos |
+| `BlockedNumberRepo` | BlockedNumberRepositoryImpl | Verificacion de bloqueo |
+
+### Comandos Utiles de Shell
+
+```bash
+# Abrir shell en dispositivo
+adb shell
+
+# Ver info del dispositivo
+adb shell getprop ro.build.version.sdk    # API level
+adb shell getprop ro.product.model        # Modelo
+adb shell getprop ro.product.manufacturer # Fabricante
+
+# Ver permisos de la app
+adb shell dumpsys package com.callblocker | grep permission
+
+# Ver servicios activos de la app
+adb shell dumpsys activity services com.callblocker
+
+# Forzar cierre de la app
+adb shell am force-stop com.callblocker
+
+# Iniciar actividad principal
+adb shell am start -n com.callblocker/.presentation.MainActivity
+
+# Limpiar datos de la app (reset completo)
+adb shell pm clear com.callblocker
+```
+
+### Flujo de Testing Recomendado
+
+```bash
+# 1. Compilar APK
+./gradlew assembleDebug --no-daemon
+
+# 2. Instalar en dispositivo
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# 3. Limpiar logs y monitorear
+adb logcat -c; adb logcat -s CallBlockerApp:D CallBlockerScreening:D CallBlockerFgService:D MainActivity:D
+
+# 4. Abrir app manualmente o via ADB
+adb shell am start -n com.callblocker/.presentation.MainActivity
+
+# 5. Realizar llamada de prueba y observar logs
+```
+
+### Copiar APK a Windows (desde Server005)
+
+```bash
+# Obtener version y copiar via SCP
+VERSION=$(grep 'versionName' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
+scp app/build/outputs/apk/debug/app-debug.apk wrr@10.254.0.133:/mnt/c/Users/abela/Downloads/CallBlocker-v${VERSION}-debug.apk
+```
+
+### Troubleshooting
+
+```bash
+# Si adb no reconoce el dispositivo:
+adb kill-server
+adb start-server
+adb devices
+
+# Si la instalacion falla por firma diferente:
+adb uninstall com.callblocker
+adb install app-debug.apk
+
+# Si los logs no aparecen:
+adb logcat -c              # Limpiar buffer
+adb logcat -G 16M          # Aumentar buffer si es necesario
+
+# Ver todos los procesos de la app
+adb shell ps | grep callblocker
+```
+
+---
+
 ## 2026-01-17: Version 0.2.8 - Normalizacion de Numeros por Operador
 
 ### El Problema
