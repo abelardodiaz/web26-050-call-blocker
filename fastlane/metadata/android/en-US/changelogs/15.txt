@@ -1,0 +1,2 @@
+• In-app language selector (Auto/Spanish/English)
+• Language preference persisted across restarts

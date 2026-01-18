@@ -1,0 +1,2 @@
+• Selector de idioma en la app (Auto/Español/Inglés)
+• Preferencia de idioma persistente entre reinicios
