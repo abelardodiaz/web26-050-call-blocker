@@ -58,6 +58,14 @@ scp app/build/outputs/apk/debug/app-debug.apk wrr@10.254.0.133:/mnt/c/Users/abel
 
 Destino: `/mnt/c/Users/abela/Downloads/CallBlocker-vX.X.X-debug.apk`
 
+## Dispositivo de Pruebas Principal
+
+- **Modelo**: Samsung Galaxy S23 (SM-S911B)
+- **Android**: 16 (API 36)
+- **One UI**: 7
+- **Configuracion**: Dual SIM (Bait + AT&T Mexico)
+- **Nota**: Bait envia numeros con +52, AT&T sin codigo de pais
+
 ## Permisos Requeridos
 
 - READ_PHONE_STATE
