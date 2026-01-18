@@ -36,12 +36,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import com.callblocker.BuildConfig
+import com.callblocker.R
 import com.callblocker.core.util.PermissionHandler
 import com.callblocker.core.util.SimManager
 import com.callblocker.domain.model.SimConfig
@@ -106,6 +108,10 @@ fun SettingsScreen(
             viewModel.clearBackupMessage()
         }
     }
+
+    // Strings for snackbar messages
+    val devEnabledMessage = stringResource(R.string.settings_dev_enabled)
+    val devDisabledMessage = stringResource(R.string.settings_dev_disabled)
 
     // Manejar dialogos de contrasena
     when (val state = passwordDialogState) {
@@ -181,7 +187,7 @@ fun SettingsScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text("Ajustes") },
+                title = { Text(stringResource(R.string.screen_title_settings)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -197,42 +203,42 @@ fun SettingsScreen(
                 .padding(16.dp)
         ) {
             // Seccion de Bloqueo
-            SectionHeader("Bloqueo de Llamadas")
+            SectionHeader(stringResource(R.string.settings_section_blocking))
 
             SettingsSwitch(
-                title = "Bloqueo Activo",
-                description = "Bloquear llamadas de numeros en tu lista",
+                title = stringResource(R.string.settings_blocking_enabled),
+                description = stringResource(R.string.settings_blocking_enabled_desc),
                 checked = settings.isBlockingEnabled,
                 onCheckedChange = { viewModel.setBlockingEnabled(it) }
             )
 
             SettingsSwitch(
-                title = "Bloquear Desconocidos",
-                description = "Proximamente...",
+                title = stringResource(R.string.settings_block_unknown),
+                description = stringResource(R.string.settings_coming_soon),
                 checked = false,
                 enabled = false,
                 onCheckedChange = { }
             )
 
             SettingsSwitch(
-                title = "Bloquear Privados",
-                description = "Proximamente...",
+                title = stringResource(R.string.settings_block_private),
+                description = stringResource(R.string.settings_coming_soon),
                 checked = false,
                 enabled = false,
                 onCheckedChange = { }
             )
 
             SettingsSwitch(
-                title = "Mostrar Notificaciones",
-                description = "Proximamente...",
+                title = stringResource(R.string.settings_notifications),
+                description = stringResource(R.string.settings_coming_soon),
                 checked = false,
                 enabled = false,
                 onCheckedChange = { }
             )
 
             SettingsSwitch(
-                title = "Servicio Persistente",
-                description = "Notificacion activa para mejor bloqueo",
+                title = stringResource(R.string.settings_persistent_service),
+                description = stringResource(R.string.settings_persistent_service_desc),
                 checked = settings.persistentServiceEnabled,
                 onCheckedChange = { viewModel.setPersistentServiceEnabled(it) }
             )
@@ -243,7 +249,7 @@ fun SettingsScreen(
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(16.dp))
 
-                SectionHeader("Tarjetas SIM Detectadas")
+                SectionHeader(stringResource(R.string.settings_section_sim))
 
                 SimInfoCard(simCards)
             }
@@ -253,19 +259,19 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Seccion de Respaldo
-            SectionHeader("Respaldo")
+            SectionHeader(stringResource(R.string.settings_section_backup))
 
             // Backup completo (nuevo)
             SettingsButton(
-                title = "Backup Completo",
-                description = "Guardar numeros, historial y configuracion",
+                title = stringResource(R.string.settings_full_backup),
+                description = stringResource(R.string.settings_full_backup_desc),
                 onClick = { showBackupPrompt = true },
                 isLoading = isFullExporting
             )
 
             SettingsButton(
-                title = "Restaurar Backup",
-                description = "Recuperar datos desde archivo de backup",
+                title = stringResource(R.string.settings_restore_backup),
+                description = stringResource(R.string.settings_restore_backup_desc),
                 onClick = {
                     fullRestoreLauncher.launch(arrayOf("application/json", "application/octet-stream", "*/*"))
                 },
@@ -276,22 +282,22 @@ fun SettingsScreen(
 
             // Legacy backup (solo numeros)
             Text(
-                text = "Solo Lista Bloqueados",
+                text = stringResource(R.string.settings_legacy_backup_label),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 4.dp)
             )
 
             SettingsButton(
-                title = "Exportar Lista",
-                description = "Guardar solo numeros bloqueados (JSON)",
+                title = stringResource(R.string.settings_export_list),
+                description = stringResource(R.string.settings_export_list_desc),
                 onClick = { viewModel.exportBlockedNumbers() },
                 isLoading = isExporting
             )
 
             SettingsButton(
-                title = "Importar Lista",
-                description = "Cargar numeros desde archivo JSON",
+                title = stringResource(R.string.settings_import_list),
+                description = stringResource(R.string.settings_import_list_desc),
                 onClick = { importLauncher.launch(arrayOf("application/json")) },
                 isLoading = isImporting
             )
@@ -301,16 +307,21 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Seccion de Informacion del Sistema
-            SectionHeader("Informacion del Sistema")
+            SectionHeader(stringResource(R.string.settings_section_system))
+
+            val androidLabel = stringResource(R.string.settings_android)
+            val androidVersion = stringResource(R.string.settings_android_version_format, Build.VERSION.SDK_INT, getAndroidVersionName())
+            val blockingMethodLabel = stringResource(R.string.settings_blocking_method)
+            val blockingMethodValue = if (PermissionHandler.supportsCallScreeningService()) {
+                stringResource(R.string.settings_method_screening)
+            } else {
+                stringResource(R.string.settings_method_legacy)
+            }
 
             InfoCard(
                 items = listOf(
-                    "Android" to "API ${Build.VERSION.SDK_INT} (${getAndroidVersionName()})",
-                    "Metodo de Bloqueo" to if (PermissionHandler.supportsCallScreeningService()) {
-                        "CallScreeningService"
-                    } else {
-                        "TelecomManager (Legacy)"
-                    }
+                    androidLabel to androidVersion,
+                    blockingMethodLabel to blockingMethodValue
                 ),
                 onTap = {
                     val now = System.currentTimeMillis()
@@ -331,7 +342,7 @@ fun SettingsScreen(
             if (PermissionHandler.requiresLegacyBlocker()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Android 9: El bloqueo puede tener un breve retraso.",
+                    text = stringResource(R.string.settings_android9_note),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -342,7 +353,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Seccion Acerca de
-            SectionHeader("Acerca de")
+            SectionHeader(stringResource(R.string.settings_section_about))
 
             AboutCard(
                 onTap = {
@@ -363,7 +374,7 @@ fun SettingsScreen(
                             step1Completed = false
                             aboutSectionTaps = 0
                             scope.launch {
-                                snackbarHostState.showSnackbar("Modo desarrollador activado")
+                                snackbarHostState.showSnackbar(devEnabledMessage)
                             }
                         }
                     } else {
@@ -379,38 +390,38 @@ fun SettingsScreen(
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(16.dp))
 
-                SectionHeader("Desarrollador")
+                SectionHeader(stringResource(R.string.settings_section_developer))
 
                 SettingsSwitch(
-                    title = "Detectar SIM por formato",
-                    description = "+52 = Bait (SIM1), sin +52 = AT&T (SIM2)",
+                    title = stringResource(R.string.settings_dev_sim_detection),
+                    description = stringResource(R.string.settings_dev_sim_detection_desc),
                     checked = settings.devSimDetectionByFormat,
                     onCheckedChange = { viewModel.setDevSimDetectionByFormat(it) }
                 )
 
                 if (settings.devSimDetectionByFormat) {
                     SettingsSwitch(
-                        title = "Bloquear en SIM 1 (Bait)",
-                        description = "Llamadas con +52",
+                        title = stringResource(R.string.settings_dev_block_sim1),
+                        description = stringResource(R.string.settings_dev_block_sim1_desc),
                         checked = settings.devBlockSim1,
                         onCheckedChange = { viewModel.setDevBlockSim1(it) }
                     )
                     SettingsSwitch(
-                        title = "Bloquear en SIM 2 (AT&T)",
-                        description = "Llamadas sin +52",
+                        title = stringResource(R.string.settings_dev_block_sim2),
+                        description = stringResource(R.string.settings_dev_block_sim2_desc),
                         checked = settings.devBlockSim2,
                         onCheckedChange = { viewModel.setDevBlockSim2(it) }
                     )
                 }
 
                 SettingsSwitch(
-                    title = "Desactivar modo dev",
-                    description = "Oculta esta seccion",
+                    title = stringResource(R.string.settings_dev_disable),
+                    description = stringResource(R.string.settings_dev_disable_desc),
                     checked = false,
                     onCheckedChange = {
                         viewModel.setDeveloperModeEnabled(false)
                         scope.launch {
-                            snackbarHostState.showSnackbar("Modo desarrollador desactivado")
+                            snackbarHostState.showSnackbar(devDisabledMessage)
                         }
                     }
                 )
@@ -472,6 +483,9 @@ private fun InfoRow(label: String, value: String) {
 
 @Composable
 private fun SimInfoCard(simCards: List<SimConfig>) {
+    val simNoNumber = stringResource(R.string.sim_no_number)
+    val simBlockingAll = stringResource(R.string.sim_blocking_all)
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -482,12 +496,12 @@ private fun SimInfoCard(simCards: List<SimConfig>) {
             simCards.forEachIndexed { index, sim ->
                 Column {
                     Text(
-                        text = "SIM ${sim.simSlot + 1}: ${sim.carrierName}",
+                        text = stringResource(R.string.sim_card_format, sim.simSlot + 1, sim.carrierName),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium
                     )
                     Text(
-                        text = sim.phoneNumber ?: "Sin numero",
+                        text = sim.phoneNumber ?: simNoNumber,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -498,7 +512,7 @@ private fun SimInfoCard(simCards: List<SimConfig>) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "El bloqueo aplica a todas las SIMs",
+                text = simBlockingAll,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -525,31 +539,31 @@ private fun AboutCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Call Blocker",
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "Version ${BuildConfig.VERSION_NAME}",
+                text = stringResource(R.string.about_version, BuildConfig.VERSION_NAME),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Desarrollado por",
+                text = stringResource(R.string.about_developed_by),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                text = "redv6.com",
+                text = stringResource(R.string.about_developer),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Compatible con Android 9 - 17",
+                text = stringResource(R.string.about_compatibility),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center

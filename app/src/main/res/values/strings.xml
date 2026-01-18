@@ -3,64 +3,131 @@
     <string name="app_name">Call Blocker</string>
 
     <!-- Navigation -->
-    <string name="nav_blocked_calls">Llamadas Bloqueadas</string>
-    <string name="nav_block_list">Lista de Bloqueo</string>
+    <string name="nav_blocked_calls">Llamadas</string>
+    <string name="nav_block_list">Lista</string>
     <string name="nav_settings">Ajustes</string>
 
     <!-- Blocked Calls Screen -->
+    <string name="screen_title_blocked_calls">Llamadas Bloqueadas</string>
     <string name="blocked_calls_empty">Sin llamadas bloqueadas</string>
-    <string name="blocked_calls_empty_description">Las llamadas de numeros bloqueados apareceran aqui</string>
+    <string name="blocked_calls_empty_description">Las llamadas bloqueadas apareceran aqui</string>
 
     <!-- Block List Screen -->
+    <string name="screen_title_block_list">Lista de Bloqueo</string>
     <string name="block_list_empty">Sin numeros bloqueados</string>
     <string name="block_list_empty_description">Agrega numeros para bloquear llamadas no deseadas</string>
-    <string name="add_number">Agregar Numero</string>
+    <string name="add_number">Agregar numero</string>
+
+    <!-- Add Number Dialog -->
+    <string name="dialog_title_add_number">Agregar Numero Bloqueado</string>
     <string name="phone_number_hint">Numero de telefono</string>
+    <string name="phone_number_error">Por favor ingresa un numero</string>
     <string name="label_hint">Etiqueta (opcional)</string>
+    <string name="block_as_prefix">Bloquear como prefijo</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
+
+    <!-- Blocked Number Card -->
+    <string name="prefix_badge">PREFIJO</string>
+    <string name="added_date">Agregado %1$s</string>
     <string name="delete">Eliminar</string>
-    <string name="block_as_prefix">Bloquear como prefijo</string>
+
+    <!-- Blocked Call Card -->
+    <string name="private_number">Numero Privado</string>
+    <string name="sim_slot_format"> \u2022 SIM %1$d</string>
+    <string name="block_reason_list">Bloqueado (en lista)</string>
+    <string name="block_reason_unknown">Bloqueado (desconocido)</string>
+    <string name="block_reason_private">Bloqueado (privado)</string>
 
     <!-- Settings Screen -->
+    <string name="screen_title_settings">Ajustes</string>
+
+    <!-- Settings: Call Blocking Section -->
+    <string name="settings_section_blocking">Bloqueo de Llamadas</string>
     <string name="settings_blocking_enabled">Bloqueo Activo</string>
-    <string name="settings_blocking_enabled_description">Bloquear llamadas de numeros en tu lista</string>
+    <string name="settings_blocking_enabled_desc">Bloquear llamadas de numeros en tu lista</string>
     <string name="settings_block_unknown">Bloquear Desconocidos</string>
-    <string name="settings_block_unknown_description">Bloquear llamadas de numeros que no estan en contactos</string>
+    <string name="settings_coming_soon">Proximamente...</string>
     <string name="settings_block_private">Bloquear Privados</string>
-    <string name="settings_block_private_description">Bloquear llamadas con ID oculto</string>
     <string name="settings_notifications">Mostrar Notificaciones</string>
-    <string name="settings_notifications_description">Recibir notificacion cuando se bloquea una llamada</string>
-    <string name="settings_default_app">App de Filtrado Predeterminada</string>
-    <string name="settings_set_default">Establecer como Predeterminada</string>
-    <string name="settings_is_default">Esta app es el filtro de llamadas predeterminado</string>
+    <string name="settings_persistent_service">Servicio Persistente</string>
+    <string name="settings_persistent_service_desc">Notificacion activa para mejor bloqueo</string>
 
-    <!-- Android Version Info -->
-    <string name="settings_android_version">Version de Android</string>
+    <!-- Settings: SIM Section -->
+    <string name="settings_section_sim">Tarjetas SIM Detectadas</string>
+    <string name="sim_card_format">SIM %1$d: %2$s</string>
+    <string name="sim_no_number">Sin numero</string>
+    <string name="sim_blocking_all">El bloqueo aplica a todas las SIMs</string>
+
+    <!-- Settings: Backup Section -->
+    <string name="settings_section_backup">Respaldo</string>
+    <string name="settings_full_backup">Backup Completo</string>
+    <string name="settings_full_backup_desc">Guardar numeros, historial y configuracion</string>
+    <string name="settings_restore_backup">Restaurar Backup</string>
+    <string name="settings_restore_backup_desc">Recuperar datos desde archivo de backup</string>
+    <string name="settings_legacy_backup_label">Solo Lista Bloqueados</string>
+    <string name="settings_export_list">Exportar Lista</string>
+    <string name="settings_export_list_desc">Guardar solo numeros bloqueados (JSON)</string>
+    <string name="settings_import_list">Importar Lista</string>
+    <string name="settings_import_list_desc">Cargar numeros desde archivo JSON</string>
+
+    <!-- Settings: System Info Section -->
+    <string name="settings_section_system">Informacion del Sistema</string>
+    <string name="settings_android">Android</string>
+    <string name="settings_android_version_format">API %1$d (%2$s)</string>
     <string name="settings_blocking_method">Metodo de Bloqueo</string>
-    <string name="settings_blocking_method_screening">CallScreeningService (Android 10+)</string>
-    <string name="settings_blocking_method_legacy">TelecomManager (Android 9)</string>
-    <string name="settings_legacy_service_running">Servicio de bloqueo activo</string>
-    <string name="settings_legacy_service_stopped">Servicio de bloqueo detenido</string>
+    <string name="settings_method_screening">CallScreeningService</string>
+    <string name="settings_method_legacy">TelecomManager (Legacy)</string>
+    <string name="settings_android9_note">Android 9: El bloqueo puede tener un breve retraso.</string>
 
-    <!-- Permissions -->
-    <string name="permission_required">Permiso Requerido</string>
-    <string name="permission_phone_rationale">Permiso de telefono necesario para identificar y bloquear llamadas</string>
-    <string name="permission_call_log_rationale">Permiso de registro de llamadas necesario para guardar historial</string>
-    <string name="permission_notification_rationale">Permiso de notificaciones necesario para alertar de llamadas bloqueadas</string>
-    <string name="grant_permission">Conceder Permiso</string>
+    <!-- Settings: About Section -->
+    <string name="settings_section_about">Acerca de</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_developed_by">Desarrollado por</string>
+    <string name="about_developer">redv6.com</string>
+    <string name="about_compatibility">Compatible con Android 9 - 17</string>
 
-    <!-- Common -->
-    <string name="unknown_number">Numero Desconocido</string>
-    <string name="private_number">Numero Privado</string>
+    <!-- Settings: Developer Section -->
+    <string name="settings_section_developer">Desarrollador</string>
+    <string name="settings_dev_sim_detection">Detectar SIM por formato</string>
+    <string name="settings_dev_sim_detection_desc">+52 = Bait (SIM1), sin +52 = AT\u0026T (SIM2)</string>
+    <string name="settings_dev_block_sim1">Bloquear en SIM 1 (Bait)</string>
+    <string name="settings_dev_block_sim1_desc">Llamadas con +52</string>
+    <string name="settings_dev_block_sim2">Bloquear en SIM 2 (AT\u0026T)</string>
+    <string name="settings_dev_block_sim2_desc">Llamadas sin +52</string>
+    <string name="settings_dev_disable">Desactivar modo dev</string>
+    <string name="settings_dev_disable_desc">Oculta esta seccion</string>
+    <string name="settings_dev_enabled">Modo desarrollador activado</string>
+    <string name="settings_dev_disabled">Modo desarrollador desactivado</string>
+
+    <!-- Password Dialog -->
+    <string name="password_title_encrypt">Proteger Backup</string>
+    <string name="password_title_decrypt">Backup Protegido</string>
+    <string name="password_desc_encrypt">Ingresa una contrasena para proteger el backup. Dejala vacia para no encriptar.</string>
+    <string name="password_desc_decrypt">Este backup esta protegido. Ingresa la contrasena para restaurarlo.</string>
+    <string name="password_label">Contrasena</string>
+    <string name="password_confirm_label">Confirmar contrasena</string>
+    <string name="password_error_mismatch">Las contrasenas no coinciden</string>
+    <string name="password_error_too_short">La contrasena debe tener al menos 4 caracteres</string>
+    <string name="password_error_empty">Ingresa la contrasena</string>
+    <string name="password_btn_no_password">Sin contrasena</string>
+    <string name="password_btn_encrypt">Encriptar</string>
+    <string name="password_btn_decrypt">Desencriptar</string>
+
+    <!-- Backup Prompt Dialog -->
+    <string name="backup_prompt_title">Backup Completo</string>
+    <string name="backup_prompt_message">Quieres proteger el backup con contrasena? Los backups encriptados son mas seguros pero requieren la contrasena para restaurar.</string>
+    <string name="backup_prompt_with_password">Con contrasena</string>
+    <string name="backup_prompt_without_password">Sin contrasena</string>
+
+    <!-- Accessibility -->
+    <string name="content_desc_delete_number">Eliminar numero bloqueado</string>
+    <string name="content_desc_delete_call">Eliminar llamada del historial</string>
+    <string name="content_desc_add_number">Agregar numero a la lista de bloqueo</string>
+
+    <!-- Legacy/Compatibility -->
     <string name="blocked">Bloqueado</string>
     <string name="today">Hoy</string>
     <string name="yesterday">Ayer</string>
-    <string name="prefix">PREFIJO</string>
-
-    <!-- Developer Info -->
-    <string name="about_title">Acerca de</string>
-    <string name="about_developer">Desarrollado por</string>
-    <string name="about_developer_name">redv6.com</string>
-    <string name="about_version">Version</string>
+    <string name="unknown_number">Numero Desconocido</string>
 </resources>

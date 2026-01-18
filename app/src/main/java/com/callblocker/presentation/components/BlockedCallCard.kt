@@ -16,7 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.callblocker.R
 import com.callblocker.domain.model.BlockReason
 import com.callblocker.domain.model.BlockedCall
 import java.text.SimpleDateFormat
@@ -29,6 +32,13 @@ fun BlockedCallCard(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val privateNumber = stringResource(R.string.private_number)
+    val deleteContentDesc = stringResource(R.string.content_desc_delete_call)
+
+    // Get current locale for date formatting
+    val configuration = LocalConfiguration.current
+    val locale = configuration.locales[0]
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -44,15 +54,15 @@ fun BlockedCallCard(
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = blockedCall.phoneNumber.ifEmpty { "Numero Privado" },
+                    text = blockedCall.phoneNumber.ifEmpty { privateNumber },
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = buildString {
-                        append(formatTimestamp(blockedCall.timestamp))
+                        append(formatTimestamp(blockedCall.timestamp, locale))
                         blockedCall.simSlot?.let { slot ->
-                            append(" • SIM ${slot + 1}")
+                            append(stringResource(R.string.sim_slot_format, slot + 1))
                         }
                     },
                     style = MaterialTheme.typography.bodySmall,
@@ -67,7 +77,7 @@ fun BlockedCallCard(
             IconButton(onClick = onDelete) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Eliminar",
+                    contentDescription = deleteContentDesc,
                     tint = MaterialTheme.colorScheme.error
                 )
             }
@@ -75,15 +85,16 @@ fun BlockedCallCard(
     }
 }
 
-private fun formatTimestamp(timestamp: Long): String {
-    val sdf = SimpleDateFormat("dd MMM yyyy HH:mm", Locale("es", "ES"))
+private fun formatTimestamp(timestamp: Long, locale: Locale): String {
+    val sdf = SimpleDateFormat("dd MMM yyyy HH:mm", locale)
     return sdf.format(Date(timestamp))
 }
 
+@Composable
 private fun formatBlockReason(reason: BlockReason): String {
     return when (reason) {
-        BlockReason.BLOCK_LIST -> "Bloqueado (en lista)"
-        BlockReason.UNKNOWN_NUMBER -> "Bloqueado (desconocido)"
-        BlockReason.PRIVATE_NUMBER -> "Bloqueado (privado)"
+        BlockReason.BLOCK_LIST -> stringResource(R.string.block_reason_list)
+        BlockReason.UNKNOWN_NUMBER -> stringResource(R.string.block_reason_unknown)
+        BlockReason.PRIVATE_NUMBER -> stringResource(R.string.block_reason_private)
     }
 }
