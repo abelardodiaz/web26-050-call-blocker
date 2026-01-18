@@ -84,14 +84,44 @@ class CallBlockerScreeningService : CallScreeningService() {
             return BlockReason.PRIVATE_NUMBER
         }
 
-        val isBlocked = blockedNumberRepository.isNumberBlocked(phoneNumber)
-        Log.d(TAG, "determineBlockReason: isNumberBlocked('$phoneNumber') = $isBlocked")
+        // Normalizar el numero (quitar codigo de pais +52, +1, etc.)
+        val normalizedNumber = normalizePhoneNumber(phoneNumber)
+        Log.d(TAG, "determineBlockReason: normalizedNumber='$normalizedNumber'")
+
+        val isBlocked = blockedNumberRepository.isNumberBlocked(normalizedNumber)
+        Log.d(TAG, "determineBlockReason: isNumberBlocked('$normalizedNumber') = $isBlocked")
 
         if (isBlocked) {
             return BlockReason.BLOCK_LIST
         }
 
         return null
+    }
+
+    /**
+     * Normaliza un numero de telefono quitando el codigo de pais.
+     * +524441234567 -> 4441234567
+     * 4441234567 -> 4441234567
+     */
+    private fun normalizePhoneNumber(phoneNumber: String): String {
+        // Quitar todo excepto digitos
+        val digitsOnly = phoneNumber.replace(Regex("[^0-9]"), "")
+
+        // Si tiene mas de 10 digitos y empieza con 52 (Mexico), quitar el 52
+        if (digitsOnly.length > 10 && digitsOnly.startsWith("52")) {
+            val normalized = digitsOnly.substring(2)
+            Log.d(TAG, "normalizePhoneNumber: Removido codigo MX 52: $phoneNumber -> $normalized")
+            return normalized
+        }
+
+        // Si tiene mas de 10 digitos y empieza con 1 (USA/Canada), quitar el 1
+        if (digitsOnly.length > 10 && digitsOnly.startsWith("1")) {
+            val normalized = digitsOnly.substring(1)
+            Log.d(TAG, "normalizePhoneNumber: Removido codigo US/CA 1: $phoneNumber -> $normalized")
+            return normalized
+        }
+
+        return digitsOnly
     }
 
     private suspend fun blockCall(
