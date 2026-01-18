@@ -18,6 +18,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.1] - 2026-01-18
+
+### Added
+
+- **Internationalization (i18n)**
+  - Externalized all ~80 hardcoded strings to resources
+  - Spanish as default locale (values/strings.xml)
+  - English locale support (values-en/strings.xml)
+  - Locale-aware date formatting
+
+- **Accessibility improvements**
+  - contentDescription for all interactive icons
+  - Screen reader support for delete and add buttons
+
+- **Open source community documentation**
+  - CONTRIBUTING.md: Development setup, code style, PR process
+  - SECURITY.md: Vulnerability reporting, encryption details
+  - PRIVACY.md: Data handling, permissions, no tracking policy
+  - GitLab issue templates (bug report, feature request)
+
+- **README improvements**
+  - Translated to English
+  - Technology badges (Android, Kotlin, Jetpack Compose)
+
+### Technical
+
+- Navigation.kt: Changed `title: String` to `@StringRes titleResId: Int`
+- All composables updated to use `stringResource()`
+- Date formatting now uses device locale
+
+---
+
 ## [0.3.0-fdroid] - 2026-01-18
 
 ### Added (Open Source Preparation)
