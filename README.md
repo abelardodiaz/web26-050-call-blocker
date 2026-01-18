@@ -2,6 +2,15 @@
 
 App Android para bloquear llamadas no deseadas.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/01-blocked-calls.jpg" width="200" alt="Historial de llamadas bloqueadas"/>
+  <img src="docs/screenshots/02-block-list.jpg" width="200" alt="Lista de bloqueo"/>
+  <img src="docs/screenshots/03-settings-sim.jpg" width="200" alt="Ajustes y SIM"/>
+  <img src="docs/screenshots/04-settings-backup.jpg" width="200" alt="Backup y restore"/>
+</p>
+
 ## Stack
 
 - **Lenguaje**: Kotlin
