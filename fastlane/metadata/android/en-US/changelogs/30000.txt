@@ -1,0 +1,3 @@
+• Full backup/restore with AES-256 encryption
+• Improved dual SIM detection
+• Stability fixes

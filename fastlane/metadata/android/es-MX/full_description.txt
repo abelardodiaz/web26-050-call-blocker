@@ -1,0 +1,23 @@
+Call Blocker es una app para bloquear llamadas no deseadas en Android.
+
+<b>Características:</b>
+• Bloquea números específicos
+• Bloquea por prefijo (ej: 800 bloquea todos los 800xxxxxxx)
+• Historial de llamadas bloqueadas
+• Soporte Dual SIM
+• Backup y restore con encriptación opcional
+• Sin anuncios, sin rastreo
+• 100% código abierto (GPLv3)
+
+<b>Privacidad:</b>
+• No requiere conexión a internet
+• No envía datos a servidores externos
+• Tus números bloqueados se guardan solo en tu dispositivo
+
+<b>Compatibilidad:</b>
+• Android 9 - 17 (API 28+)
+• Usa CallScreeningService nativo de Android
+
+<b>Permisos:</b>
+• Teléfono: Para identificar y bloquear llamadas
+• Notificaciones: Para avisar cuando se bloquea una llamada
