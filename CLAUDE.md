@@ -73,3 +73,39 @@ Destino: `/mnt/c/Users/abela/Downloads/CallBlocker-vX.X.X-debug.apk`
 - ANSWER_PHONE_CALLS
 - POST_NOTIFICATIONS (Android 13+)
 - Role: ROLE_CALL_SCREENING
+
+## Consultas Multi-IA (interactions-pro - Server003)
+
+Sistema para obtener perspectivas de múltiples IAs (DeepSeek, OpenAI) via debate.
+
+### Endpoint ping-pong-papas (Debate bidireccional)
+
+```bash
+curl -X POST http://10.254.0.3/api/v1/ping-pong-papas \
+  -H "Host: interactions.redv6.com" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "titulo": "Título del debate",
+    "providers": ["deepseek", "openai"],
+    "initial_prompt": "Contexto y preguntas aquí...",
+    "proyecto_origen": "050",
+    "max_rounds": 3
+  }'
+```
+
+**Parámetros:**
+- `titulo`: Nombre descriptivo del debate
+- `providers`: Array de IAs participantes (deepseek, openai)
+- `initial_prompt`: Contexto + preguntas (usa `\n` para saltos de línea)
+- `proyecto_origen`: ID del proyecto (050 = Call Blocker)
+- `max_rounds`: Número de rondas de debate (2-5 recomendado)
+
+**Nota**: El debate puede tomar 3-5 minutos dependiendo de las rondas
+
+## Plan Mode - IMPORTANTE
+
+**Cuando entres en plan mode:**
+- SIEMPRE crea un archivo de plan NUEVO
+- NUNCA reutilices archivos de plan anteriores de otras tareas
+- Si existe un plan viejo de otra tarea, eliminalo primero con `rm`
+- Cada tarea nueva = archivo de plan nuevo
