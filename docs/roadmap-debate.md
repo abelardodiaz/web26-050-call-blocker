@@ -192,4 +192,37 @@
 
 ---
 
+## Resumen de Progreso (actualizado 2026-01-18)
+
+### Completado ✅
+
+| Item | Fecha | Detalles |
+|------|-------|----------|
+| v0.3.0 Backup/Restore | 2026-01-17 | AES-256-GCM, JSON format v2 |
+| Repo público GitLab | 2026-01-17 | gitlab.com/abelardodiaz/web26-050-call-blocker |
+| Licencia GPLv3 | 2026-01-17 | LICENSE file |
+| Screenshots | 2026-01-17 | 5 capturas en docs/screenshots/ |
+| README con galería | 2026-01-17 | Badges, screenshots, documentación |
+| Fastlane metadata | 2026-01-18 | es-MX y en-US |
+| F-Droid MR enviado | 2026-01-18 | MR #32092 |
+| Tag v0.3.0 | 2026-01-18 | Para referencia F-Droid |
+
+### Pendiente ⏳
+
+| Item | Prioridad | Notas |
+|------|-----------|-------|
+| Aprobación F-Droid | Alta | Esperar revisión (~1-2 semanas) |
+| v0.4.0 Backup cloud | Media | Decidir Firebase vs Google Drive |
+| Play Store | Baja | Después de F-Droid |
+| Tests unitarios | Baja | Mejorar cobertura |
+| Iconos personalizados | Baja | Reemplazar placeholders |
+
+### Siguiente Paso
+
+**Esperar aprobación de F-Droid MR #32092**
+
+Monitorear: https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092
+
+---
+
 *Generado via interactions-pro ping-pong-papas*

@@ -2,6 +2,9 @@
 
 App Android para bloquear llamadas no deseadas.
 
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![F-Droid](https://img.shields.io/badge/F--Droid-pending-yellow.svg)](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092)
+
 ## Screenshots
 
 <p align="center">
@@ -164,6 +167,15 @@ export ANDROID_HOME=/home/ubuntu/android-sdk
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export PATH=$PATH:/home/ubuntu/gradle-8.7/bin
 ```
+
+## F-Droid
+
+Esta app esta siendo revisada para inclusion en F-Droid.
+
+**Estado:** Pendiente de revision
+**MR:** [#32092](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092)
+
+Una vez aprobada, estara disponible en el catalogo de F-Droid.
 
 ## Licencia
 
