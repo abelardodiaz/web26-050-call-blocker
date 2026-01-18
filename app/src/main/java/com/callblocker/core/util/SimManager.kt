@@ -20,18 +20,30 @@ object SimManager {
      * Gets the list of active SIM cards on the device.
      *
      * Requires READ_PHONE_STATE permission.
+     * On Android 12+ (API 31+), also requires READ_PHONE_NUMBERS for SIM detection.
      *
      * @param context Application context
      * @return List of SimConfig for each active SIM, or empty list if no SIMs or no permission
      */
     fun getActiveSimCards(context: Context): List<SimConfig> {
-        // Check permission
+        // Check READ_PHONE_STATE permission
         if (ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.READ_PHONE_STATE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             return emptyList()
+        }
+
+        // Android 12+: Also check READ_PHONE_NUMBERS (required for getActiveSubscriptionInfoList)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.READ_PHONE_NUMBERS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return emptyList()
+            }
         }
 
         return try {
@@ -56,19 +68,11 @@ object SimManager {
      * Gets phone number for a SIM if available.
      *
      * May return null if number is not available (carrier restriction).
-     * Note: getPhoneNumber(subscriptionId) is only available on API 33+.
+     * Requires READ_PHONE_NUMBERS permission on API 31+.
      */
     private fun getPhoneNumber(context: Context, subscriptionId: Int): String? {
-        // getPhoneNumber(subscriptionId) solo disponible en API 33+
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            return null
-        }
-
-        return try {
-            val subscriptionManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)
-                as? SubscriptionManager ?: return null
-
-            // Check for READ_PHONE_NUMBERS permission (required for getPhoneNumber on API 33+)
+        // Check for READ_PHONE_NUMBERS permission (required on API 31+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.READ_PHONE_NUMBERS
@@ -76,8 +80,23 @@ object SimManager {
             ) {
                 return null
             }
+        }
 
-            subscriptionManager.getPhoneNumber(subscriptionId).takeIf { it.isNotBlank() }
+        return try {
+            val subscriptionManager = context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)
+                as? SubscriptionManager ?: return null
+
+            // API 33+: Use SubscriptionManager.getPhoneNumber()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                subscriptionManager.getPhoneNumber(subscriptionId).takeIf { it.isNotBlank() }
+            } else {
+                // API 31-32: Try to get from SubscriptionInfo (may not be available)
+                @Suppress("DEPRECATION")
+                subscriptionManager.activeSubscriptionInfoList
+                    ?.find { it.subscriptionId == subscriptionId }
+                    ?.number
+                    ?.takeIf { it.isNotBlank() }
+            }
         } catch (e: Exception) {
             null
         }

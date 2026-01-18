@@ -17,6 +17,25 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
+## [0.2.6] - 2026-01-17
+
+### Corregido
+
+- **SIMs no detectadas en Android 12+ (API 31+)**
+  - `getActiveSubscriptionInfoList()` requiere **ambos** permisos: READ_PHONE_STATE y READ_PHONE_NUMBERS
+  - `READ_PHONE_NUMBERS` movido de permisos opcionales a requeridos (solo en API 31+)
+  - PermissionHandler.kt: Agrega READ_PHONE_NUMBERS en `getRequiredPermissions()` para API 31+
+  - SimManager.kt: Verifica READ_PHONE_NUMBERS antes de consultar SIMs en API 31+
+
+### Mejorado
+
+- **Detección de números de teléfono por SIM**
+  - API 33+: Usa `SubscriptionManager.getPhoneNumber()`
+  - API 31-32: Usa `SubscriptionInfo.number` (deprecado pero funcional)
+  - Soporta SIMs físicas y eSIM
+
+---
+
 ## [0.2.5] - 2026-01-17
 
 ### Corregido

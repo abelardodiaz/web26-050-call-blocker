@@ -29,6 +29,11 @@ object PermissionHandler {
             permissions.add(Manifest.permission.CALL_PHONE)
         }
 
+        // Android 12+: READ_PHONE_NUMBERS needed for SIM detection
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            permissions.add(Manifest.permission.READ_PHONE_NUMBERS)
+        }
+
         // Android 13+: POST_NOTIFICATIONS needed
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissions.add(Manifest.permission.POST_NOTIFICATIONS)
@@ -39,11 +44,11 @@ object PermissionHandler {
 
     /**
      * Returns the list of optional permissions for enhanced functionality.
+     * Note: READ_PHONE_NUMBERS moved to required on API 31+ for SIM detection.
      */
     fun getOptionalPermissions(): List<String> {
         return listOf(
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.READ_PHONE_NUMBERS
+            Manifest.permission.READ_CONTACTS
         )
     }
 
