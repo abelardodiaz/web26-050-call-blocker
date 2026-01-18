@@ -1,6 +1,6 @@
 # Call Blocker (web26-050)
 
-App Android para bloquear llamadas no deseadas.
+Android app to block unwanted calls.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![F-Droid](https://img.shields.io/badge/F--Droid-pending-yellow.svg)](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092)
@@ -8,30 +8,30 @@ App Android para bloquear llamadas no deseadas.
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/01-blocked-calls.jpg" width="200" alt="Historial de llamadas bloqueadas"/>
-  <img src="docs/screenshots/02-block-list.jpg" width="200" alt="Lista de bloqueo"/>
-  <img src="docs/screenshots/03-settings-sim.jpg" width="200" alt="Ajustes y SIM"/>
-  <img src="docs/screenshots/04-settings-backup.jpg" width="200" alt="Backup y restore"/>
+  <img src="docs/screenshots/01-blocked-calls.jpg" width="200" alt="Blocked calls history"/>
+  <img src="docs/screenshots/02-block-list.jpg" width="200" alt="Block list"/>
+  <img src="docs/screenshots/03-settings-sim.jpg" width="200" alt="Settings and SIM"/>
+  <img src="docs/screenshots/04-settings-backup.jpg" width="200" alt="Backup and restore"/>
 </p>
 
 ## Stack
 
-- **Lenguaje**: Kotlin
+- **Language**: Kotlin
 - **UI**: Jetpack Compose + Material 3
-- **Arquitectura**: Clean Architecture + MVVM
+- **Architecture**: Clean Architecture + MVVM
 - **DI**: Hilt
-- **Base de datos**: Room
+- **Database**: Room
 - **Min SDK**: 28 (Android 9+)
 
-## Requisitos
+## Requirements
 
 - JDK 17
 - Android SDK 34
-- Dispositivo/Emulador Android 9+ (API 28+)
+- Device/Emulator Android 9+ (API 28+)
 
 ## Build
 
-### En servidor (server005)
+### On server (server005)
 
 ```bash
 cd /home/ubuntu/projects/web26-050-call-blocker
@@ -43,25 +43,25 @@ cd /home/ubuntu/projects/web26-050-call-blocker
 ls app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### En local (Android Studio)
+### Local (Android Studio)
 
 ```bash
-# Clonar
+# Clone
 git clone <repo-url>
 cd web26-050-call-blocker
 
-# Abrir en Android Studio y sincronizar Gradle
-# O desde CLI:
+# Open in Android Studio and sync Gradle
+# Or from CLI:
 ./gradlew assembleDebug
 ```
 
-### Instalar en dispositivo
+### Install on device
 
 ```bash
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 app/src/main/java/com/callblocker/
@@ -83,86 +83,86 @@ app/src/main/java/com/callblocker/
 |   +-- usecase/         # Use cases
 |
 +-- presentation/
-    |-- components/      # Composables reutilizables
+    |-- components/      # Reusable composables
     |-- navigation/      # Navigation setup
-    |-- screens/         # Pantallas (ViewModels + Composables)
+    |-- screens/         # Screens (ViewModels + Composables)
     +-- theme/           # Material 3 theme
 ```
 
-## Funcionalidades
+## Features
 
-- [x] Bloquear numeros especificos
-- [x] **Bloquear por prefijo** (ej: 442 bloquea todos los que empiecen con 442)
-- [x] Ver historial de llamadas bloqueadas
-- [x] Configurar bloqueo de numeros privados
-- [x] **Soporte Dual SIM** - bloqueo individual por tarjeta
-- [x] **Tema oscuro** forzado para mejor legibilidad
-- [x] **Interfaz en espanol**
-- [x] Compatible Android 9 - 17
-- [x] **Backup/Restore completo** con encriptacion AES-256-GCM opcional
-- [ ] Notificaciones de llamadas bloqueadas
+- [x] Block specific numbers
+- [x] **Block by prefix** (e.g.: 442 blocks all numbers starting with 442)
+- [x] View blocked calls history
+- [x] Configure blocking of private numbers
+- [x] **Dual SIM support** - individual blocking per card
+- [x] **Dark theme** forced for better readability
+- [x] **Interface in Spanish and English**
+- [x] Compatible with Android 9 - 17
+- [x] **Complete Backup/Restore** with optional AES-256-GCM encryption
+- [ ] Blocked call notifications
 
-## Bloqueo por Prefijo
+## Prefix Blocking
 
-Nueva funcionalidad que permite bloquear rangos de numeros:
+Feature that allows blocking number ranges:
 
-1. Abrir la app > Block List > Boton (+)
-2. Ingresar el prefijo (ej: "442")
-3. Activar switch "Block as prefix"
-4. Guardar
+1. Open the app > Block List > (+) button
+2. Enter the prefix (e.g.: "442")
+3. Enable "Block as prefix" switch
+4. Save
 
-Todos los numeros que empiecen con ese prefijo seran bloqueados.
+All numbers starting with that prefix will be blocked.
 
-## Backup y Restauracion
+## Backup and Restore
 
-### Backup Completo
-1. Abrir la app > Ajustes > Respaldo
-2. Tocar "Backup Completo"
-3. Elegir si proteger con contrasena
-4. El archivo se guarda en Downloads
+### Complete Backup
+1. Open the app > Settings > Backup
+2. Tap "Complete Backup"
+3. Choose whether to protect with password
+4. File is saved in Downloads
 
-### Restaurar Backup
-1. Ajustes > Respaldo > "Restaurar Backup"
-2. Seleccionar archivo (.json o .cbbk)
-3. Si esta encriptado, ingresar contrasena
-4. Los datos se agregan sin duplicar existentes
+### Restore Backup
+1. Settings > Backup > "Restore Backup"
+2. Select file (.json or .cbbk)
+3. If encrypted, enter password
+4. Data is added without duplicating existing entries
 
-**Formatos:**
-- `.json` - Backup sin encriptar (legible)
-- `.cbbk` - Backup encriptado con AES-256-GCM
+**Formats:**
+- `.json` - Unencrypted backup (readable)
+- `.cbbk` - Encrypted backup with AES-256-GCM
 
-## Permisos
+## Permissions
 
-| Permiso | Uso |
-|---------|-----|
-| `READ_PHONE_STATE` | Identificar llamadas entrantes |
-| `READ_CALL_LOG` | Registrar llamadas bloqueadas |
-| `ANSWER_PHONE_CALLS` | Rechazar llamadas |
-| `POST_NOTIFICATIONS` | Notificar bloqueos |
-| `ROLE_CALL_SCREENING` | Actuar como screening service |
+| Permission | Usage |
+|------------|-------|
+| `READ_PHONE_STATE` | Identify incoming calls |
+| `READ_CALL_LOG` | Log blocked calls |
+| `ANSWER_PHONE_CALLS` | Reject calls |
+| `POST_NOTIFICATIONS` | Notify blocks |
+| `ROLE_CALL_SCREENING` | Act as screening service |
 
-## Comandos
+## Commands
 
-| Comando | Descripcion |
+| Command | Description |
 |---------|-------------|
 | `./gradlew assembleDebug` | Build debug APK |
 | `./gradlew assembleRelease` | Build release APK |
 | `./gradlew test` | Run unit tests |
 | `./gradlew connectedAndroidTest` | Run instrumented tests |
-| `./gradlew clean` | Limpiar build |
+| `./gradlew clean` | Clean build |
 
-## Documentacion
+## Documentation
 
-| Documento | Contenido |
-|-----------|-----------|
-| `docs/DEV_NOTES.md` | Notas tecnicas de desarrollo |
-| `CHANGELOG.md` | Historial de cambios |
-| `.claude/doc/` | Documentacion arquitectura 996 |
+| Document | Content |
+|----------|---------|
+| `docs/DEV_NOTES.md` | Technical development notes |
+| `CHANGELOG.md` | Change history |
+| `.claude/doc/` | Architecture documentation 996 |
 
-## Entorno de Desarrollo (Server005)
+## Development Environment (Server005)
 
 ```bash
-# Variables de entorno (ya en ~/.bashrc)
+# Environment variables (already in ~/.bashrc)
 export ANDROID_HOME=/home/ubuntu/android-sdk
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export PATH=$PATH:/home/ubuntu/gradle-8.7/bin
@@ -170,15 +170,15 @@ export PATH=$PATH:/home/ubuntu/gradle-8.7/bin
 
 ## F-Droid
 
-Esta app esta siendo revisada para inclusion en F-Droid.
+This app is being reviewed for inclusion in F-Droid.
 
-**Estado:** Pendiente de revision
+**Status:** Pending review
 **MR:** [#32092](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092)
 
-Una vez aprobada, estara disponible en el catalogo de F-Droid.
+Once approved, it will be available in the F-Droid catalog.
 
-## Licencia
+## License
 
-Este proyecto está licenciado bajo **GNU General Public License v3.0**.
+This project is licensed under **GNU General Public License v3.0**.
 
-Ver [LICENSE](LICENSE) para más detalles.
+See [LICENSE](LICENSE) for more details.

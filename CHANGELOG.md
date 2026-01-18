@@ -1,379 +1,379 @@
 # Changelog
 
-Todos los cambios notables seran documentados aqui.
+All notable changes to this project will be documented in this file.
 
-Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
 ## [Unreleased]
 
-### Pendiente
-- Tests unitarios e instrumentados
-- Iconos de launcher personalizados (reemplazar placeholders)
-- Implementar funcionalidad de notificaciones
-- Implementar bloqueo de numeros desconocidos
-- Implementar bloqueo de numeros privados (ID oculto)
-- v0.4.0: Backup en la nube (Google Drive/Firebase)
+### Pending
+- Unit and instrumented tests
+- Custom launcher icons (replace placeholders)
+- Implement notifications functionality
+- Implement blocking of unknown numbers
+- Implement blocking of private numbers (hidden ID)
+- v0.4.0: Cloud backup (Google Drive/Firebase)
 
 ---
 
 ## [0.3.0-fdroid] - 2026-01-18
 
-### Agregado (Preparacion para Open Source)
+### Added (Open Source Preparation)
 
-- **Licencia GPLv3**
-  - Archivo LICENSE con texto completo de GNU GPL v3.0
-  - Seccion de licencia en README.md
+- **GPLv3 License**
+  - LICENSE file with full GNU GPL v3.0 text
+  - License section in README.md
 
-- **Screenshots para documentacion**
-  - 5 capturas de pantalla en `docs/screenshots/`
-  - Seccion Screenshots en README.md con galeria
+- **Documentation screenshots**
+  - 5 screenshots in `docs/screenshots/`
+  - Screenshots section in README.md with gallery
 
-- **Metadata F-Droid (fastlane)**
-  - Estructura `fastlane/metadata/android/`
-  - Locales: es-MX (espanol Mexico) y en-US (ingles)
-  - Descripciones corta y larga
-  - Changelogs por version
-  - Screenshots por locale
+- **F-Droid Metadata (fastlane)**
+  - Structure `fastlane/metadata/android/`
+  - Locales: es-MX (Spanish Mexico) and en-US (English)
+  - Short and long descriptions
+  - Changelogs per version
+  - Screenshots per locale
 
-- **Solicitud F-Droid enviada**
+- **F-Droid submission sent**
   - MR #32092: https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092
-  - Archivo `metadata/com.callblocker.yml` en fdroiddata
-  - Tag v0.3.0 creado para referencia de build
-  - Documentacion en `docs/fdroid-submission.md`
+  - File `metadata/com.callblocker.yml` in fdroiddata
+  - Tag v0.3.0 created for build reference
+  - Documentation in `docs/fdroid-submission.md`
 
-### Documentacion
+### Documentation
 
-- `docs/fdroid-submission.md` - Detalles completos de la solicitud
-- `fdroid-metadata.yml` - Template de metadata para F-Droid
-- Roadmap actualizado con progreso de publicacion
+- `docs/fdroid-submission.md` - Complete submission details
+- `fdroid-metadata.yml` - Metadata template for F-Droid
+- Updated roadmap with publication progress
 
 ---
 
 ## [0.3.0] - 2026-01-17
 
-### Agregado
+### Added
 
-- **Backup completo con encriptacion opcional**
-  - Exporta numeros bloqueados, historial de llamadas y configuracion
-  - Encriptacion AES-256-GCM con contrasena opcional
-  - Formato JSON sin encriptar (.json) o encriptado (.cbbk)
-  - Magic header "CBBK" para identificar archivos encriptados
-  - PBKDF2 con 100,000 iteraciones para derivacion de clave
+- **Complete backup with optional encryption**
+  - Exports blocked numbers, call history, and settings
+  - AES-256-GCM encryption with optional password
+  - Unencrypted JSON format (.json) or encrypted (.cbbk)
+  - Magic header "CBBK" to identify encrypted files
+  - PBKDF2 with 100,000 iterations for key derivation
 
-- **Restauracion inteligente**
-  - Detecta automaticamente si el backup esta encriptado
-  - Merge inteligente: agrega numeros nuevos, omite duplicados
-  - Importa historial completo de llamadas bloqueadas
-  - Restaura configuracion si esta presente en el backup
-  - Compatible con backups v1 (solo numeros) y v2 (completo)
+- **Smart restore**
+  - Automatically detects if backup is encrypted
+  - Smart merge: adds new numbers, skips duplicates
+  - Imports complete blocked call history
+  - Restores settings if present in backup
+  - Compatible with v1 (numbers only) and v2 (complete) backups
 
-- **Nuevos dialogos de UI**
-  - Dialogo para elegir si proteger con contrasena
-  - Dialogo para ingresar/confirmar contrasena
-  - Snackbar con estadisticas de importacion
+- **New UI dialogs**
+  - Dialog to choose whether to protect with password
+  - Dialog to enter/confirm password
+  - Snackbar with import statistics
 
-### Tecnico
+### Technical
 
-- Nuevos modelos: `BackupData`, `BackupMetadata`, `BackupCounts`, `ImportResult`
-- Nueva clase `BackupJsonSerializer` con soporte v1 y v2
-- Nueva clase `BackupEncryption` para AES-256-GCM
+- New models: `BackupData`, `BackupMetadata`, `BackupCounts`, `ImportResult`
+- New class `BackupJsonSerializer` with v1 and v2 support
+- New class `BackupEncryption` for AES-256-GCM
 - Use cases: `ExportFullBackupUseCase`, `ImportFullBackupUseCase`
-- `PasswordDialogState` sealed class para manejo de estados
-- Componente `PasswordDialog` y `BackupPasswordPromptDialog`
+- `PasswordDialogState` sealed class for state management
+- Component `PasswordDialog` and `BackupPasswordPromptDialog`
 
-### Archivos Nuevos
+### New Files
 
-| Archivo | Proposito |
-|---------|-----------|
-| `domain/model/BackupData.kt` | Modelos de backup |
-| `data/backup/BackupJsonSerializer.kt` | Serializacion JSON |
-| `data/backup/BackupEncryption.kt` | Encriptacion AES |
-| `domain/usecase/ExportFullBackupUseCase.kt` | Export completo |
-| `domain/usecase/ImportFullBackupUseCase.kt` | Import con merge |
-| `presentation/components/PasswordDialog.kt` | Dialogos UI |
+| File | Purpose |
+|------|---------|
+| `domain/model/BackupData.kt` | Backup models |
+| `data/backup/BackupJsonSerializer.kt` | JSON serialization |
+| `data/backup/BackupEncryption.kt` | AES encryption |
+| `domain/usecase/ExportFullBackupUseCase.kt` | Complete export |
+| `domain/usecase/ImportFullBackupUseCase.kt` | Import with merge |
+| `presentation/components/PasswordDialog.kt` | UI dialogs |
 
 ---
 
 ## [0.2.8.1] - 2026-01-17
 
-### Agregado
+### Added
 
-- **Modo desarrollador oculto con activación de 2 pasos**
-  - Paso 1: Tocar "Información del Sistema" 7 veces rápido
-  - Paso 2: Tocar "Acerca de" 7 veces (dentro de 10 segundos)
-  - Snackbar confirma activación/desactivación
-  - Sección de desarrollador solo visible cuando está activado
+- **Hidden developer mode with 2-step activation**
+  - Step 1: Tap "System Information" 7 times quickly
+  - Step 2: Tap "About" 7 times (within 10 seconds)
+  - Snackbar confirms activation/deactivation
+  - Developer section only visible when activated
 
-- **Detección de SIM por formato de número**
-  - Nuevo toggle "Detectar SIM por formato" en sección desarrollador
-  - Números con +52 = SIM 1 (Bait)
-  - Números sin +52 = SIM 2 (AT&T)
-  - Toggles individuales para habilitar/deshabilitar bloqueo por SIM
+- **SIM detection by number format**
+  - New toggle "Detect SIM by format" in developer section
+  - Numbers with +52 = SIM 1 (Bait)
+  - Numbers without +52 = SIM 2 (AT&T)
+  - Individual toggles to enable/disable blocking per SIM
 
-### Técnico
+### Technical
 
-- Nuevos campos en Settings: `developerModeEnabled`, `devSimDetectionByFormat`, `devBlockSim1`, `devBlockSim2`
-- Migración de base de datos v5 → v6
-- Lógica de detección en `CallBlockerScreeningService.determineBlockReason()`
-- Estados de tap detector con `mutableIntStateOf` y `mutableLongStateOf`
+- New fields in Settings: `developerModeEnabled`, `devSimDetectionByFormat`, `devBlockSim1`, `devBlockSim2`
+- Database migration v5 → v6
+- Detection logic in `CallBlockerScreeningService.determineBlockReason()`
+- Tap detector states with `mutableIntStateOf` and `mutableLongStateOf`
 
-### Advertencia
+### Warning
 
-- La detección de SIM por formato es **frágil y específica del dispositivo**
-- Si cambian las SIMs de slot o de operador, la lógica dejará de funcionar
-- Esta función es experimental y está oculta por defecto
+- SIM detection by format is **fragile and device-specific**
+- If SIMs are swapped slots or carriers change, the logic will stop working
+- This feature is experimental and hidden by default
 
 ---
 
 ## [0.2.8] - 2026-01-17
 
-### Corregido
+### Fixed
 
-- **Llamadas con codigo de pais no se bloqueaban**
-  - SIM 1 enviaba numeros con prefijo `+52` (ej: `+524441390343`)
-  - SIM 2 enviaba numeros sin prefijo (ej: `4441390343`)
-  - El prefijo `444` no hacia match con `+524441390343`
-  - Nueva funcion `normalizePhoneNumber()` quita codigo de pais antes de verificar
-  - Soporta codigos de Mexico (+52) y USA/Canada (+1)
+- **Calls with country code were not being blocked**
+  - SIM 1 sent numbers with prefix `+52` (e.g.: `+524441390343`)
+  - SIM 2 sent numbers without prefix (e.g.: `4441390343`)
+  - Prefix `444` didn't match `+524441390343`
+  - New function `normalizePhoneNumber()` removes country code before checking
+  - Supports Mexico (+52) and USA/Canada (+1) codes
 
-### Tecnico
+### Technical
 
-- `CallBlockerScreeningService.normalizePhoneNumber()` normaliza numeros entrantes
-- Remueve `+52` y `+1` de numeros con mas de 10 digitos
-- Logs agregados para diagnostico de normalizacion
+- `CallBlockerScreeningService.normalizePhoneNumber()` normalizes incoming numbers
+- Removes `+52` and `+1` from numbers with more than 10 digits
+- Added logs for normalization diagnostics
 
 ---
 
 ## [0.2.7] - 2026-01-17
 
-### Cambiado
+### Changed
 
-- **Simplificacion Dual SIM: Toggles removidos**
-  - `PhoneAccountHandle` es `null` en Samsung Android 16 durante screening
-  - No es posible determinar SIM durante el screening de llamada
-  - Toggles por SIM removidos - el bloqueo aplica a todas las SIMs
-  - Settings ahora muestra SIMs detectadas como informacion visual solamente
+- **Dual SIM Simplification: Toggles removed**
+  - `PhoneAccountHandle` is `null` on Samsung Android 16 during screening
+  - Not possible to determine SIM during call screening
+  - Per-SIM toggles removed - blocking applies to all SIMs
+  - Settings now shows detected SIMs as visual information only
 
-### Agregado
+### Added
 
-- **Enriquecimiento del historial: SIM leida post-bloqueo**
-  - Nuevo campo `simSlot` en modelo `BlockedCall` y `BlockedCallEntity`
-  - Despues de bloquear, se consulta el Call Log del sistema
-  - El campo `subscription_id` del Call Log permite identificar la SIM
-  - El historial de llamadas bloqueadas ahora muestra "SIM 1" o "SIM 2"
-  - Migracion de base de datos v4 → v5
+- **History enrichment: SIM read post-block**
+  - New field `simSlot` in `BlockedCall` model and `BlockedCallEntity`
+  - After blocking, the system Call Log is queried
+  - The `subscription_id` field from Call Log allows identifying the SIM
+  - Blocked calls history now shows "SIM 1" or "SIM 2"
+  - Database migration v4 → v5
 
-### Tecnico
+### Technical
 
-- Nueva funcion `updateBlockedCallWithSimInfo()` en `CallBlockerScreeningService`
-- Usa delay de 1.5s para dar tiempo al sistema de registrar la llamada
-- Compara numeros normalizados (ultimos 10 digitos)
-- Mapea `subscriptionId` a `simSlotIndex` via `SubscriptionManager`
+- New function `updateBlockedCallWithSimInfo()` in `CallBlockerScreeningService`
+- Uses 1.5s delay to give the system time to log the call
+- Compares normalized numbers (last 10 digits)
+- Maps `subscriptionId` to `simSlotIndex` via `SubscriptionManager`
 
-### Aprendizajes
+### Lessons Learned
 
-- `CallScreeningService` no recibe `PhoneAccountHandle` confiable en todos los dispositivos
-- El Call Log del sistema SI tiene el `subscription_id` correcto despues del hecho
-- La estrategia "enriquecer despues" es mas robusta que "detectar durante"
+- `CallScreeningService` doesn't receive reliable `PhoneAccountHandle` on all devices
+- System Call Log DOES have the correct `subscription_id` after the fact
+- The "enrich after" strategy is more robust than "detect during"
 
 ---
 
 ## [0.2.6] - 2026-01-17
 
-### Corregido
+### Fixed
 
-- **SIMs no detectadas en Android 12+ (API 31+)**
-  - `getActiveSubscriptionInfoList()` requiere **ambos** permisos: READ_PHONE_STATE y READ_PHONE_NUMBERS
-  - `READ_PHONE_NUMBERS` movido de permisos opcionales a requeridos (solo en API 31+)
-  - PermissionHandler.kt: Agrega READ_PHONE_NUMBERS en `getRequiredPermissions()` para API 31+
-  - SimManager.kt: Verifica READ_PHONE_NUMBERS antes de consultar SIMs en API 31+
+- **SIMs not detected on Android 12+ (API 31+)**
+  - `getActiveSubscriptionInfoList()` requires **both** permissions: READ_PHONE_STATE and READ_PHONE_NUMBERS
+  - `READ_PHONE_NUMBERS` moved from optional to required permissions (only on API 31+)
+  - PermissionHandler.kt: Adds READ_PHONE_NUMBERS in `getRequiredPermissions()` for API 31+
+  - SimManager.kt: Checks READ_PHONE_NUMBERS before querying SIMs on API 31+
 
-### Mejorado
+### Improved
 
-- **Detección de números de teléfono por SIM**
-  - API 33+: Usa `SubscriptionManager.getPhoneNumber()`
-  - API 31-32: Usa `SubscriptionInfo.number` (deprecado pero funcional)
-  - Soporta SIMs físicas y eSIM
+- **Phone number detection per SIM**
+  - API 33+: Uses `SubscriptionManager.getPhoneNumber()`
+  - API 31-32: Uses `SubscriptionInfo.number` (deprecated but functional)
+  - Supports physical SIMs and eSIM
 
 ---
 
 ## [0.2.5] - 2026-01-17
 
-### Corregido
+### Fixed
 
-- **Bug critico: settings se reseteaban entre si**
-  - Cambiar un setting (ej. SIM 1) reseteaba otros (ej. Servicio Persistente)
-  - Causa: SettingsDao usaba OnConflictStrategy.REPLACE
-  - Solucion: Cambiado a OnConflictStrategy.IGNORE
+- **Critical bug: settings were resetting each other**
+  - Changing one setting (e.g. SIM 1) reset others (e.g. Persistent Service)
+  - Cause: SettingsDao used OnConflictStrategy.REPLACE
+  - Solution: Changed to OnConflictStrategy.IGNORE
 
-### Cambiado
+### Changed
 
-- **"Bloquear Privados" deshabilitado**
-  - Funcionalidad no implementada aun
-  - Mostrado como "Proximamente..." igual que otras opciones pendientes
+- **"Block Private" disabled**
+  - Functionality not yet implemented
+  - Shown as "Coming soon..." like other pending options
 
 ---
 
 ## [0.2.4] - 2026-01-17
 
-### Agregado
+### Added
 
-- **Servicio Persistente (Foreground Service)**
-  - Nueva opcion "Servicio Persistente" en Ajustes
-  - Notificacion permanente "Proteccion Activa" cuando esta habilitado
-  - Mejora la confiabilidad del bloqueo en modo de bajo consumo
-  - Funciona en todas las versiones de Android (no solo Android 9)
+- **Persistent Service (Foreground Service)**
+  - New option "Persistent Service" in Settings
+  - Permanent notification "Active Protection" when enabled
+  - Improves blocking reliability in low power mode
+  - Works on all Android versions (not just Android 9)
 
-- **Auto-inicio al reiniciar**
-  - BootReceiver inicia el servicio si esta habilitado en settings
-  - En Android 9 siempre se inicia (necesario para bloqueo legacy)
+- **Auto-start on reboot**
+  - BootReceiver starts the service if enabled in settings
+  - On Android 9 always starts (required for legacy blocking)
 
-### Cambiado
+### Changed
 
-- Renombrado LegacyCallBlockerService → CallBlockerForegroundService
-- Migracion de base de datos v3 → v4 (campo persistentServiceEnabled)
+- Renamed LegacyCallBlockerService → CallBlockerForegroundService
+- Database migration v3 → v4 (field persistentServiceEnabled)
 
-### Conocido
+### Known Issues
 
-- Desactivar optimizacion de bateria manualmente para mejor funcionamiento
+- Manually disable battery optimization for better operation
 
 ---
 
 ## [0.2.3] - 2026-01-17
 
-### Agregado
+### Added
 
-- **Export/Import de lista de bloqueados**
-  - Exportar numeros bloqueados a archivo JSON en Downloads
-  - Importar numeros desde archivo JSON
-  - Nueva seccion "Respaldo" en Ajustes
+- **Export/Import of blocked list**
+  - Export blocked numbers to JSON file in Downloads
+  - Import numbers from JSON file
+  - New "Backup" section in Settings
   - Use cases: ExportBlockedNumbersUseCase, ImportBlockedNumbersUseCase
-  - Componente SettingsButton para botones de accion
+  - SettingsButton component for action buttons
 
-### Corregido
+### Fixed
 
-- **Crash en Android 9 al abrir Ajustes**
-  - SimManager.getPhoneNumber() ahora verifica API level >= 33
-  - Metodo getPhoneNumber(subscriptionId) solo disponible en API 33+
+- **Crash on Android 9 when opening Settings**
+  - SimManager.getPhoneNumber() now checks API level >= 33
+  - Method getPhoneNumber(subscriptionId) only available on API 33+
 
-- **SIMs no aparecen en Android 16**
-  - Cambiado de `remember {}` a estado reactivo con `LaunchedEffect`
-  - SIMs se re-evaluan cuando cambia el estado de permisos
+- **SIMs not appearing on Android 16**
+  - Changed from `remember {}` to reactive state with `LaunchedEffect`
+  - SIMs are re-evaluated when permission state changes
 
-- **Mejora en deteccion de SIM para dual SIM**
-  - getSubscriptionIdFromCall() ahora usa multiples metodos de deteccion
-  - Busqueda por ICC ID para mayor compatibilidad
-  - Logging agregado para diagnostico
+- **Improved SIM detection for dual SIM**
+  - getSubscriptionIdFromCall() now uses multiple detection methods
+  - Search by ICC ID for greater compatibility
+  - Added logging for diagnostics
 
-### Conocido
+### Known Issues
 
-- **Android 9**: Bloqueo solo funciona con telefono desbloqueado
-- **Android 16**: Llamadas bloqueadas se registran como perdidas
+- **Android 9**: Blocking only works with phone unlocked
+- **Android 16**: Blocked calls are logged as missed
 
 ---
 
 ## [0.2.2] - 2026-01-17
 
-### Corregido
+### Fixed
 
-- **Bloqueo dual SIM funcional**
-  - CallBlockerScreeningService ahora verifica de que SIM viene la llamada
-  - Respeta la configuracion por SIM en Ajustes
-  - Si no hay SIMs configuradas, bloquea en todas (comportamiento legacy)
+- **Dual SIM blocking functional**
+  - CallBlockerScreeningService now checks which SIM the call comes from
+  - Respects per-SIM settings configuration
+  - If no SIMs configured, blocks on all (legacy behavior)
 
 ---
 
 ## [0.2.1] - 2026-01-17
 
-### Agregado
+### Added
 
-- **Tema oscuro por defecto**
-  - Colores optimizados para modo oscuro
-  - Tema forzado (sin opcion de tema claro)
-  - Cards con surfaceVariant del tema
+- **Dark theme by default**
+  - Colors optimized for dark mode
+  - Forced theme (no light theme option)
+  - Cards with surfaceVariant from theme
 
-- **Interfaz completa en espanol**
+- **Complete interface in Spanish**
   - BlockListScreen: "Lista de Bloqueo", "Agregar numero", etc.
   - BlockedCallsScreen: "Llamadas Bloqueadas", etc.
   - AddNumberDialog: "Agregar Numero Bloqueado", etc.
   - Navigation: "Llamadas Bloqueadas", "Lista de Bloqueo", "Ajustes"
 
-- **Soporte Dual SIM**
-  - SimManager para deteccion de SIMs activas
-  - Seccion de configuracion por SIM en Ajustes
-  - Campo enabledSimSlots en Settings para persistencia
-  - Bloqueo individual habilitado/deshabilitado por SIM
+- **Dual SIM Support**
+  - SimManager for detecting active SIMs
+  - Per-SIM configuration section in Settings
+  - enabledSimSlots field in Settings for persistence
+  - Individual blocking enabled/disabled per SIM
 
-### Cambiado
+### Changed
 
-- Opciones "Bloquear Desconocidos" y "Mostrar Notificaciones" deshabilitadas (pendiente implementacion)
-- Colores del tema actualizados para mejor legibilidad en modo oscuro
+- Options "Block Unknown" and "Show Notifications" disabled (pending implementation)
+- Theme colors updated for better dark mode readability
 
-### Corregido
+### Fixed
 
-- Correccion de historial de versiones (0.1.0 -> 0.2.0 -> 0.2.1)
+- Version history correction (0.1.0 -> 0.2.0 -> 0.2.1)
 
 ---
 
 ## [0.2.0] - 2026-01-17
 
-### Agregado
+### Added
 
-- **Bloqueo por prefijo**
-  - Nuevo campo `isPrefix` en modelo BlockedNumber
-  - Switch "Block as prefix" en dialogo de agregar numero
-  - Badge "PREFIX" en tarjetas de numeros bloqueados
-  - Migracion de base de datos v1 → v2
+- **Prefix blocking**
+  - New field `isPrefix` in BlockedNumber model
+  - Switch "Block as prefix" in add number dialog
+  - Badge "PREFIX" on blocked number cards
+  - Database migration v1 → v2
 
-- **Entorno de build**
+- **Build environment**
   - Gradle wrapper (gradlew, gradlew.bat)
-  - gradle.properties con configuracion AndroidX
-  - Iconos de launcher (placeholder)
-  - Iconos adaptativos (vector XML)
+  - gradle.properties with AndroidX configuration
+  - Launcher icons (placeholder)
+  - Adaptive icons (vector XML)
 
-- **Documentacion**
-  - docs/DEV_NOTES.md con notas tecnicas de desarrollo
+- **Documentation**
+  - docs/DEV_NOTES.md with technical development notes
 
-### Cambiado
+### Changed
 
-- Query `isNumberBlocked()` corregido para matching exacto + prefijo
+- Query `isNumberBlocked()` fixed for exact + prefix matching
 - AppDatabase version 1 → 2
-- AppModule incluye migracion MIGRATION_1_2
+- AppModule includes migration MIGRATION_1_2
 
-### Arreglado
+### Fixed
 
-- Query de bloqueo que hacia matching bidireccional incorrecto
+- Blocking query that was doing incorrect bidirectional matching
 
 ---
 
 ## [0.1.0] - 2026-01-17
 
-### Agregado
+### Added
 
-- **Estructura inicial del proyecto**
+- **Initial project structure**
   - Clean Architecture (domain, data, presentation)
   - Hilt dependency injection
-  - Room database con 3 entidades
+  - Room database with 3 entities
 
 - **CallScreeningService**
-  - Intercepta llamadas entrantes
-  - Bloquea segun configuracion
-  - Registra llamadas bloqueadas
+  - Intercepts incoming calls
+  - Blocks according to configuration
+  - Logs blocked calls
 
-- **UI con Jetpack Compose**
-  - Pantalla de llamadas bloqueadas
-  - Pantalla de lista de bloqueados
-  - Pantalla de configuracion
+- **UI with Jetpack Compose**
+  - Blocked calls screen
+  - Block list screen
+  - Settings screen
   - Bottom navigation
 
-- **Modelos de datos**
-  - BlockedNumber (numero, label, fecha)
-  - BlockedCall (numero, timestamp, razon)
-  - Settings (flags de configuracion)
+- **Data models**
+  - BlockedNumber (number, label, date)
+  - BlockedCall (number, timestamp, reason)
+  - Settings (configuration flags)
 
-- **Documentacion 996**
+- **Documentation 996**
   - Context session file
   - system-architecture.md
   - ui-design.md
@@ -381,11 +381,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
-## Tipos de Cambios
+## Change Types
 
-- **Agregado**: Nuevas funcionalidades
-- **Cambiado**: Cambios en funcionalidades existentes
-- **Obsoleto**: Funcionalidades que seran removidas
-- **Removido**: Funcionalidades eliminadas
-- **Arreglado**: Correcciones de bugs
-- **Seguridad**: Correcciones de vulnerabilidades
+- **Added**: New features
+- **Changed**: Changes to existing features
+- **Deprecated**: Features that will be removed
+- **Removed**: Deleted features
+- **Fixed**: Bug fixes
+- **Security**: Vulnerability fixes
