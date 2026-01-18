@@ -1,5 +1,126 @@
 # Notas de Desarrollo - Call Blocker
 
+## 2026-01-17: Version 0.2.7 - Simplificar Dual SIM + Enriquecer Historial
+
+### El Problema
+
+Durante las pruebas en Samsung Android 16, descubrimos que `PhoneAccountHandle` es `null` durante el screening de llamadas:
+
+```
+D/CallBlockerScreening: getSubscriptionId: PhoneAccountHandle is null
+```
+
+Esto significa que **no podemos saber qué SIM recibe la llamada DURANTE el screening**.
+
+### Investigacion
+
+1. **PhoneAccountHandle.id**: Puede ser null, un entero, o un ICC ID dependiendo del dispositivo
+2. **TelecomManager.getPhoneAccount()**: Requiere permisos adicionales y puede fallar
+3. **Call.Details.getExtras()**: No contiene informacion de SIM de manera confiable
+4. **Sistema de toggles por SIM**: Inutil si no podemos detectar la SIM
+
+### Solucion: Cambio de Estrategia
+
+En lugar de intentar detectar la SIM durante el screening, adoptamos un enfoque diferente:
+
+1. **Bloquear siempre** (sin importar la SIM)
+2. **Enriquecer despues** consultando el Call Log del sistema
+
+### Implementacion
+
+**Paso 1: Leer el Call Log despues de bloquear**
+
+```kotlin
+// Despues de bloquear, delay para que el sistema registre
+delay(1500)
+
+val cursor = contentResolver.query(
+    CallLog.Calls.CONTENT_URI,
+    arrayOf(CallLog.Calls.NUMBER, "subscription_id"),
+    "${CallLog.Calls.DATE} > ?",
+    arrayOf(thirtySecondsAgo.toString()),
+    "${CallLog.Calls.DATE} DESC"
+)
+```
+
+**Paso 2: Mapear subscription_id a simSlot**
+
+```kotlin
+val subInfo = subscriptionManager.activeSubscriptionInfoList?.find {
+    it.subscriptionId == subscriptionId
+}
+return subInfo?.simSlotIndex  // 0 = SIM 1, 1 = SIM 2
+```
+
+### Por que Funciona
+
+- El Call Log del sistema **SI** tiene el `subscription_id` correcto
+- Android lo registra DESPUES de que la llamada es procesada
+- El delay de 1.5s es suficiente para que el sistema registre la entrada
+
+### Migracion de Base de Datos v4 → v5
+
+```kotlin
+val MIGRATION_4_5 = object : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE blocked_calls ADD COLUMN simSlot INTEGER DEFAULT NULL")
+    }
+}
+```
+
+### UI Simplificada
+
+**Antes (Settings)**:
+```
+[x] SIM 1 - Telcel
+[x] SIM 2 - AT&T
+```
+
+**Despues (Settings)**:
+```
+Tarjetas SIM Detectadas
+-----------------------
+SIM 1: Telcel
+SIM 2: AT&T
+El bloqueo aplica a todas las SIMs
+```
+
+**Historial de llamadas bloqueadas**:
+```
++52 55 1234 5678
+17 Ene 2026 15:30 • SIM 1
+Bloqueado (en lista)
+```
+
+### Lecciones Aprendidas
+
+| Aspecto | Aprendizaje |
+|---------|-------------|
+| CallScreeningService | No garantiza PhoneAccountHandle en todos los dispositivos |
+| Samsung Android 16 | PhoneAccountHandle es null - no es un bug, es comportamiento |
+| Call Log | Fuente confiable de subscription_id post-facto |
+| Estrategia | "Enriquecer despues" > "Detectar durante" |
+| Simplicidad | Mejor UX con menos opciones que no funcionan |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `domain/model/BlockedCall.kt` | +simSlot: Int? |
+| `data/local/entity/BlockedCallEntity.kt` | +simSlot columna |
+| `data/local/dao/BlockedCallDao.kt` | +updateSimSlot() |
+| `domain/repository/BlockedCallRepository.kt` | +updateSimSlot(), addBlockedCall retorna Long |
+| `data/repository/BlockedCallRepositoryImpl.kt` | Implementaciones |
+| `data/local/migration/Migrations.kt` | MIGRATION_4_5 |
+| `data/local/AppDatabase.kt` | version = 5 |
+| `core/di/AppModule.kt` | +MIGRATION_4_5 |
+| `core/service/CallBlockerScreeningService.kt` | Simplificado + updateBlockedCallWithSimInfo() |
+| `presentation/screens/settings/SettingsScreen.kt` | SimInfoCard (solo visual) |
+| `presentation/screens/settings/SettingsViewModel.kt` | -setSimBlockingEnabled() |
+| `presentation/components/BlockedCallCard.kt` | Muestra SIM en timestamp |
+
+---
+
 ## 2026-01-17: Version 0.2.2 - Bloqueo Dual SIM Funcional
 
 ### Problema

@@ -139,23 +139,15 @@ fun SettingsScreen(
                 onCheckedChange = { viewModel.setPersistentServiceEnabled(it) }
             )
 
-            // Seccion de Tarjetas SIM (solo si hay SIMs detectadas)
+            // Seccion de Tarjetas SIM (info visual, sin control)
             if (simCards.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(24.dp))
                 HorizontalDivider()
                 Spacer(modifier = Modifier.height(16.dp))
 
-                SectionHeader("Tarjetas SIM")
+                SectionHeader("Tarjetas SIM Detectadas")
 
-                simCards.forEach { sim ->
-                    val isEnabled = settings.enabledSimSlots.contains(sim.subscriptionId)
-                    SettingsSwitch(
-                        title = "${sim.carrierName} (SIM ${sim.simSlot + 1})",
-                        description = sim.phoneNumber ?: "Sin numero",
-                        checked = isEnabled,
-                        onCheckedChange = { viewModel.setSimBlockingEnabled(sim.subscriptionId, it) }
-                    )
-                }
+                SimInfoCard(simCards)
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -261,6 +253,42 @@ private fun InfoRow(label: String, value: String) {
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium
         )
+    }
+}
+
+@Composable
+private fun SimInfoCard(simCards: List<SimConfig>) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            simCards.forEachIndexed { index, sim ->
+                Column {
+                    Text(
+                        text = "SIM ${sim.simSlot + 1}: ${sim.carrierName}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Text(
+                        text = sim.phoneNumber ?: "Sin numero",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                if (index < simCards.size - 1) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "El bloqueo aplica a todas las SIMs",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
 

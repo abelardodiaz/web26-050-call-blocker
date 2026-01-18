@@ -49,7 +49,12 @@ fun BlockedCallCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = formatTimestamp(blockedCall.timestamp),
+                    text = buildString {
+                        append(formatTimestamp(blockedCall.timestamp))
+                        blockedCall.simSlot?.let { slot ->
+                            append(" • SIM ${slot + 1}")
+                        }
+                    },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

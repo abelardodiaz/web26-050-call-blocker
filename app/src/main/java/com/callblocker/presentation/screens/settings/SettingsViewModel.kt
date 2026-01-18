@@ -68,18 +68,6 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setSimBlockingEnabled(subscriptionId: Int, enabled: Boolean) {
-        viewModelScope.launch {
-            val currentSlots = settings.value.enabledSimSlots.toMutableSet()
-            if (enabled) {
-                currentSlots.add(subscriptionId)
-            } else {
-                currentSlots.remove(subscriptionId)
-            }
-            settingsRepository.setEnabledSimSlots(currentSlots)
-        }
-    }
-
     fun exportBlockedNumbers() {
         viewModelScope.launch {
             _isExporting.value = true

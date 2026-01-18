@@ -18,8 +18,12 @@ class BlockedCallRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addBlockedCall(blockedCall: BlockedCall) {
-        blockedCallDao.insert(BlockedCallEntity.fromDomain(blockedCall))
+    override suspend fun addBlockedCall(blockedCall: BlockedCall): Long {
+        return blockedCallDao.insert(BlockedCallEntity.fromDomain(blockedCall))
+    }
+
+    override suspend fun updateSimSlot(id: Long, simSlot: Int) {
+        blockedCallDao.updateSimSlot(id, simSlot)
     }
 
     override suspend fun deleteBlockedCall(id: Long) {

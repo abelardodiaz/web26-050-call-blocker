@@ -17,6 +17,40 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
+## [0.2.7] - 2026-01-17
+
+### Cambiado
+
+- **Simplificacion Dual SIM: Toggles removidos**
+  - `PhoneAccountHandle` es `null` en Samsung Android 16 durante screening
+  - No es posible determinar SIM durante el screening de llamada
+  - Toggles por SIM removidos - el bloqueo aplica a todas las SIMs
+  - Settings ahora muestra SIMs detectadas como informacion visual solamente
+
+### Agregado
+
+- **Enriquecimiento del historial: SIM leida post-bloqueo**
+  - Nuevo campo `simSlot` en modelo `BlockedCall` y `BlockedCallEntity`
+  - Despues de bloquear, se consulta el Call Log del sistema
+  - El campo `subscription_id` del Call Log permite identificar la SIM
+  - El historial de llamadas bloqueadas ahora muestra "SIM 1" o "SIM 2"
+  - Migracion de base de datos v4 → v5
+
+### Tecnico
+
+- Nueva funcion `updateBlockedCallWithSimInfo()` en `CallBlockerScreeningService`
+- Usa delay de 1.5s para dar tiempo al sistema de registrar la llamada
+- Compara numeros normalizados (ultimos 10 digitos)
+- Mapea `subscriptionId` a `simSlotIndex` via `SubscriptionManager`
+
+### Aprendizajes
+
+- `CallScreeningService` no recibe `PhoneAccountHandle` confiable en todos los dispositivos
+- El Call Log del sistema SI tiene el `subscription_id` correcto despues del hecho
+- La estrategia "enriquecer despues" es mas robusta que "detectar durante"
+
+---
+
 ## [0.2.6] - 2026-01-17
 
 ### Corregido

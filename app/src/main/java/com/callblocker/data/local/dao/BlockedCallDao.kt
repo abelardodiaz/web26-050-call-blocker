@@ -13,7 +13,10 @@ interface BlockedCallDao {
     fun getAllBlockedCalls(): Flow<List<BlockedCallEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(entity: BlockedCallEntity)
+    suspend fun insert(entity: BlockedCallEntity): Long
+
+    @Query("UPDATE blocked_calls SET simSlot = :simSlot WHERE id = :id")
+    suspend fun updateSimSlot(id: Long, simSlot: Int)
 
     @Query("DELETE FROM blocked_calls WHERE id = :id")
     suspend fun deleteById(id: Long)

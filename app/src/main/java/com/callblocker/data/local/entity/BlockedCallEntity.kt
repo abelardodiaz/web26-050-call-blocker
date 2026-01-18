@@ -11,13 +11,15 @@ data class BlockedCallEntity(
     val id: Long = 0,
     val phoneNumber: String,
     val timestamp: Long = System.currentTimeMillis(),
-    val reason: String = BlockReason.BLOCK_LIST.name
+    val reason: String = BlockReason.BLOCK_LIST.name,
+    val simSlot: Int? = null // 0 = SIM 1, 1 = SIM 2, null = desconocido
 ) {
     fun toDomain(): BlockedCall = BlockedCall(
         id = id,
         phoneNumber = phoneNumber,
         timestamp = timestamp,
-        reason = BlockReason.valueOf(reason)
+        reason = BlockReason.valueOf(reason),
+        simSlot = simSlot
     )
 
     companion object {
@@ -25,7 +27,8 @@ data class BlockedCallEntity(
             id = domain.id,
             phoneNumber = domain.phoneNumber,
             timestamp = domain.timestamp,
-            reason = domain.reason.name
+            reason = domain.reason.name,
+            simSlot = domain.simSlot
         )
     }
 }
