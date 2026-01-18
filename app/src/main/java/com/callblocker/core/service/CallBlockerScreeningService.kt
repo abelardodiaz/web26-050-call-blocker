@@ -84,6 +84,28 @@ class CallBlockerScreeningService : CallScreeningService() {
             return BlockReason.PRIVATE_NUMBER
         }
 
+        // Deteccion de SIM por formato (modo desarrollador)
+        if (settings.devSimDetectionByFormat) {
+            val hasCountryCode = phoneNumber.startsWith("+52") ||
+                    phoneNumber.replace(Regex("[^0-9]"), "").let {
+                        it.length > 10 && it.startsWith("52")
+                    }
+
+            // Si tiene +52 = SIM 1 (Bait)
+            if (hasCountryCode && !settings.devBlockSim1) {
+                Log.d(TAG, "DEV: Llamada de SIM 1 (Bait), bloqueo deshabilitado")
+                return null
+            }
+
+            // Si NO tiene +52 = SIM 2 (AT&T)
+            if (!hasCountryCode && !settings.devBlockSim2) {
+                Log.d(TAG, "DEV: Llamada de SIM 2 (AT&T), bloqueo deshabilitado")
+                return null
+            }
+
+            Log.d(TAG, "DEV: hasCountryCode=$hasCountryCode, devBlockSim1=${settings.devBlockSim1}, devBlockSim2=${settings.devBlockSim2}")
+        }
+
         // Normalizar el numero (quitar codigo de pais +52, +1, etc.)
         val normalizedNumber = normalizePhoneNumber(phoneNumber)
         Log.d(TAG, "determineBlockReason: normalizedNumber='$normalizedNumber'")

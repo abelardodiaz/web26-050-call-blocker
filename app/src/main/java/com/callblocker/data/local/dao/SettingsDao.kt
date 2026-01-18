@@ -35,4 +35,17 @@ interface SettingsDao {
 
     @Query("SELECT persistent_service_enabled FROM settings WHERE id = 1")
     suspend fun isPersistentServiceEnabled(): Boolean?
+
+    // Developer mode queries
+    @Query("UPDATE settings SET developer_mode_enabled = :enabled WHERE id = 1")
+    suspend fun setDeveloperModeEnabled(enabled: Boolean)
+
+    @Query("UPDATE settings SET dev_sim_detection_by_format = :enabled WHERE id = 1")
+    suspend fun setDevSimDetectionByFormat(enabled: Boolean)
+
+    @Query("UPDATE settings SET dev_block_sim1 = :enabled WHERE id = 1")
+    suspend fun setDevBlockSim1(enabled: Boolean)
+
+    @Query("UPDATE settings SET dev_block_sim2 = :enabled WHERE id = 1")
+    suspend fun setDevBlockSim2(enabled: Boolean)
 }

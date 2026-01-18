@@ -15,7 +15,7 @@ import com.callblocker.data.local.entity.SettingsEntity
         BlockedCallEntity::class,
         SettingsEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

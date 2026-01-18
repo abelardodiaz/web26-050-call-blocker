@@ -124,4 +124,29 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
+
+    // Developer mode functions
+    fun setDeveloperModeEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDeveloperModeEnabled(enabled)
+        }
+    }
+
+    fun setDevSimDetectionByFormat(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDevSimDetectionByFormat(enabled)
+        }
+    }
+
+    fun setDevBlockSim1(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDevBlockSim1(enabled)
+        }
+    }
+
+    fun setDevBlockSim2(enabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.setDevBlockSim2(enabled)
+        }
+    }
 }

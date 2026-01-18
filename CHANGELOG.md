@@ -17,6 +17,37 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
 ---
 
+## [0.2.8.1] - 2026-01-17
+
+### Agregado
+
+- **Modo desarrollador oculto con activación de 2 pasos**
+  - Paso 1: Tocar "Información del Sistema" 7 veces rápido
+  - Paso 2: Tocar "Acerca de" 7 veces (dentro de 10 segundos)
+  - Snackbar confirma activación/desactivación
+  - Sección de desarrollador solo visible cuando está activado
+
+- **Detección de SIM por formato de número**
+  - Nuevo toggle "Detectar SIM por formato" en sección desarrollador
+  - Números con +52 = SIM 1 (Bait)
+  - Números sin +52 = SIM 2 (AT&T)
+  - Toggles individuales para habilitar/deshabilitar bloqueo por SIM
+
+### Técnico
+
+- Nuevos campos en Settings: `developerModeEnabled`, `devSimDetectionByFormat`, `devBlockSim1`, `devBlockSim2`
+- Migración de base de datos v5 → v6
+- Lógica de detección en `CallBlockerScreeningService.determineBlockReason()`
+- Estados de tap detector con `mutableIntStateOf` y `mutableLongStateOf`
+
+### Advertencia
+
+- La detección de SIM por formato es **frágil y específica del dispositivo**
+- Si cambian las SIMs de slot o de operador, la lógica dejará de funcionar
+- Esta función es experimental y está oculta por defecto
+
+---
+
 ## [0.2.8] - 2026-01-17
 
 ### Corregido
