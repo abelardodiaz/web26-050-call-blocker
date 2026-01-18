@@ -14,7 +14,7 @@ Repo: https://gitlab.com/abelardodiaz/web26-050-call-blocker.git
 Builds:
   - versionName: 0.3.0
     versionCode: 13
-    commit: v0.3.0
+    commit: bf21a787776a8206426aac3c0b3068c77946189e
     subdir: app
     gradle:
       - yes

@@ -56,7 +56,7 @@ Repo: https://gitlab.com/abelardodiaz/web26-050-call-blocker.git
 Builds:
   - versionName: 0.3.0
     versionCode: 13
-    commit: v0.3.0
+    commit: bf21a787776a8206426aac3c0b3068c77946189e
     subdir: app
     gradle:
       - yes
@@ -168,6 +168,20 @@ curl -s "https://gitlab.com/api/v4/projects/36528/merge_requests/32092" | jq '.s
 | 2026-01-18 06:14 | Branch `add-call-blocker` creado |
 | 2026-01-18 06:15 | Archivo `com.callblocker.yml` agregado |
 | 2026-01-18 06:16 | MR #32092 enviado |
+| 2026-01-18 06:45 | Reviewer (linsui) solicita cambios: usar commit hash |
+| 2026-01-18 20:43 | Metadata actualizada con commit hash |
+
+## Revisiones Solicitadas
+
+### 2026-01-18 - linsui
+
+**Comentario 1:** "Use the commit hash"
+- **Problema:** Usamos `commit: v0.3.0` (tag name)
+- **Solución:** Cambiado a `commit: bf21a787776a8206426aac3c0b3068c77946189e`
+
+**Comentario 2:** "Follow the MR template"
+- **Problema:** Descripción del MR no seguía el template de F-Droid
+- **Solución:** Comentario agregado explicando los cambios
 
 ---
 
