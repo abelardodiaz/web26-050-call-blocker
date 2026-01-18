@@ -1,0 +1,3 @@
+• Full internationalization (English/Spanish)
+• Accessibility improvements for screen readers
+• Open source community documentation
