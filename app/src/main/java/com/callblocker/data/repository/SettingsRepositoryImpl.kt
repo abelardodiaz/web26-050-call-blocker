@@ -56,6 +56,15 @@ class SettingsRepositoryImpl @Inject constructor(
         return settingsDao.isPersistentServiceEnabled() ?: false
     }
 
+    override suspend fun setAppLanguage(language: String) {
+        ensureSettingsExist()
+        settingsDao.setAppLanguage(language)
+    }
+
+    override suspend fun getAppLanguage(): String {
+        return settingsDao.getAppLanguage() ?: "system"
+    }
+
     override suspend fun setDeveloperModeEnabled(enabled: Boolean) {
         ensureSettingsExist()
         settingsDao.setDeveloperModeEnabled(enabled)

@@ -42,6 +42,13 @@
     <!-- Settings Screen -->
     <string name="screen_title_settings">Ajustes</string>
 
+    <!-- Settings: Language Section -->
+    <string name="settings_section_language">Idioma</string>
+    <string name="settings_app_language">Idioma de la aplicacion</string>
+    <string name="settings_language_system">Automatico (sistema)</string>
+    <string name="settings_language_spanish">Espanol</string>
+    <string name="settings_language_english">Ingles</string>
+
     <!-- Settings: Call Blocking Section -->
     <string name="settings_section_blocking">Bloqueo de Llamadas</string>
     <string name="settings_blocking_enabled">Bloqueo Activo</string>

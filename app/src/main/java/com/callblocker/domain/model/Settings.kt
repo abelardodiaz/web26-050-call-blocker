@@ -7,6 +7,7 @@ data class Settings(
     val showNotifications: Boolean = false,
     val enabledSimSlots: Set<Int> = emptySet(), // Subscription IDs with blocking enabled
     val persistentServiceEnabled: Boolean = false, // Foreground service for reliable blocking
+    val appLanguage: String = "system", // "system", "es", "en"
     // Developer mode settings
     val developerModeEnabled: Boolean = false,
     val devSimDetectionByFormat: Boolean = false,  // Detect SIM by +52 format
