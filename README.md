@@ -158,4 +158,6 @@ export PATH=$PATH:/home/ubuntu/gradle-8.7/bin
 
 ## Licencia
 
-Proyecto privado - Uso interno.
+Este proyecto está licenciado bajo **GNU General Public License v3.0**.
+
+Ver [LICENSE](LICENSE) para más detalles.
