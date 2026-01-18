@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.callblocker.core.service.CallBlockerForegroundService
+import com.callblocker.core.util.LocaleHelper
 import com.callblocker.domain.model.BackupData
 import com.callblocker.domain.model.Settings
 import com.callblocker.domain.repository.SettingsRepository
@@ -232,6 +233,13 @@ class SettingsViewModel @Inject constructor(
             } else {
                 CallBlockerForegroundService.stop(application)
             }
+        }
+    }
+
+    fun setAppLanguage(language: String) {
+        viewModelScope.launch {
+            settingsRepository.setAppLanguage(language)
+            LocaleHelper.setAppLanguage(language)
         }
     }
 

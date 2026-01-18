@@ -17,6 +17,8 @@ data class SettingsEntity(
     val enabledSimSlots: String = "", // Comma-separated subscription IDs
     @ColumnInfo(name = "persistent_service_enabled", defaultValue = "0")
     val persistentServiceEnabled: Boolean = false,
+    @ColumnInfo(name = "app_language", defaultValue = "system")
+    val appLanguage: String = "system",
     // Developer mode columns
     @ColumnInfo(name = "developer_mode_enabled", defaultValue = "0")
     val developerModeEnabled: Boolean = false,
@@ -34,6 +36,7 @@ data class SettingsEntity(
         showNotifications = showNotifications,
         enabledSimSlots = parseSimSlots(enabledSimSlots),
         persistentServiceEnabled = persistentServiceEnabled,
+        appLanguage = appLanguage,
         developerModeEnabled = developerModeEnabled,
         devSimDetectionByFormat = devSimDetectionByFormat,
         devBlockSim1 = devBlockSim1,
@@ -48,6 +51,7 @@ data class SettingsEntity(
             showNotifications = domain.showNotifications,
             enabledSimSlots = domain.enabledSimSlots.joinToString(","),
             persistentServiceEnabled = domain.persistentServiceEnabled,
+            appLanguage = domain.appLanguage,
             developerModeEnabled = domain.developerModeEnabled,
             devSimDetectionByFormat = domain.devSimDetectionByFormat,
             devBlockSim1 = domain.devBlockSim1,

@@ -18,6 +18,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.2] - 2026-01-18
+
+### Added
+
+- **In-app language selector**
+  - New "Language" section at top of Settings
+  - Three options: Automatic (system), Spanish, English
+  - Uses AppCompatDelegate.setApplicationLocales() for per-app language
+  - Preference persisted in database
+  - Language applied on app startup via MainActivity
+
+### Technical
+
+- Database migration v6 → v7 (appLanguage field in Settings)
+- New LocaleHelper utility class for locale management
+- New methods in SettingsDao/Repository for language persistence
+- LanguageSelector composable with RadioButton options
+- Added appcompat dependency for AppCompatDelegate
+
+---
+
 ## [0.3.1] - 2026-01-18
 
 ### Added

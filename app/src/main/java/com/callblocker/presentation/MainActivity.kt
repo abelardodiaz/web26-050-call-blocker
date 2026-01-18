@@ -25,6 +25,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.callblocker.core.service.CallBlockerForegroundService
+import com.callblocker.core.util.LocaleHelper
 import com.callblocker.domain.repository.SettingsRepository
 import com.callblocker.presentation.navigation.AppNavigation
 import com.callblocker.presentation.navigation.Screen
@@ -51,6 +52,7 @@ class MainActivity : ComponentActivity() {
             super.onCreate(savedInstanceState)
             logPermissionsStatus()
             startPersistentServiceIfEnabled()
+            applySavedLanguage()
             enableEdgeToEdge()
             setContent {
                 CallBlockerTheme {
@@ -83,6 +85,18 @@ class MainActivity : ComponentActivity() {
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Error checking/starting persistent service", e)
+            }
+        }
+    }
+
+    private fun applySavedLanguage() {
+        lifecycleScope.launch {
+            try {
+                val language = settingsRepository.getAppLanguage()
+                Log.d(TAG, "Applying saved language: $language")
+                LocaleHelper.setAppLanguage(language)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error applying saved language", e)
             }
         }
     }

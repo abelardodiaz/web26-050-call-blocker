@@ -13,6 +13,8 @@ interface SettingsRepository {
     suspend fun setEnabledSimSlots(simSlots: Set<Int>)
     suspend fun setPersistentServiceEnabled(enabled: Boolean)
     suspend fun isPersistentServiceEnabled(): Boolean
+    suspend fun setAppLanguage(language: String)
+    suspend fun getAppLanguage(): String
     // Developer mode methods
     suspend fun setDeveloperModeEnabled(enabled: Boolean)
     suspend fun setDevSimDetectionByFormat(enabled: Boolean)

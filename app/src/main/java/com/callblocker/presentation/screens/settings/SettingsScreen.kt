@@ -5,8 +5,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -44,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import com.callblocker.BuildConfig
 import com.callblocker.R
+import com.callblocker.core.util.LocaleHelper
 import com.callblocker.core.util.PermissionHandler
 import com.callblocker.core.util.SimManager
 import com.callblocker.domain.model.SimConfig
@@ -202,6 +206,18 @@ fun SettingsScreen(
                 .verticalScroll(scrollState)
                 .padding(16.dp)
         ) {
+            // Seccion de Idioma
+            SectionHeader(stringResource(R.string.settings_section_language))
+
+            LanguageSelector(
+                currentLanguage = settings.appLanguage,
+                onLanguageSelected = { viewModel.setAppLanguage(it) }
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Seccion de Bloqueo
             SectionHeader(stringResource(R.string.settings_section_blocking))
 
@@ -569,6 +585,66 @@ private fun AboutCard(
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@Composable
+private fun LanguageSelector(
+    currentLanguage: String,
+    onLanguageSelected: (String) -> Unit
+) {
+    val languageOptions = listOf(
+        LocaleHelper.LANGUAGE_SYSTEM to stringResource(R.string.settings_language_system),
+        LocaleHelper.LANGUAGE_SPANISH to stringResource(R.string.settings_language_spanish),
+        LocaleHelper.LANGUAGE_ENGLISH to stringResource(R.string.settings_language_english)
+    )
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(R.string.settings_app_language),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+            languageOptions.forEach { (code, displayName) ->
+                LanguageOption(
+                    displayName = displayName,
+                    isSelected = currentLanguage == code,
+                    onClick = { onLanguageSelected(code) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LanguageOption(
+    displayName: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = isSelected,
+            onClick = onClick
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = displayName,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
 

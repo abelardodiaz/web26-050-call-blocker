@@ -36,6 +36,12 @@ interface SettingsDao {
     @Query("SELECT persistent_service_enabled FROM settings WHERE id = 1")
     suspend fun isPersistentServiceEnabled(): Boolean?
 
+    @Query("UPDATE settings SET app_language = :language WHERE id = 1")
+    suspend fun setAppLanguage(language: String)
+
+    @Query("SELECT app_language FROM settings WHERE id = 1")
+    suspend fun getAppLanguage(): String?
+
     // Developer mode queries
     @Query("UPDATE settings SET developer_mode_enabled = :enabled WHERE id = 1")
     suspend fun setDeveloperModeEnabled(enabled: Boolean)
