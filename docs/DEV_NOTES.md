@@ -148,6 +148,141 @@ adb shell ps | grep callblocker
 
 ---
 
+## 2026-01-17: Version 0.3.0 - Backup/Restore Completo con Encriptacion
+
+### El Concepto
+
+Sistema de backup/restore completo que incluye todos los datos de la app (numeros bloqueados, historial de llamadas, configuracion) con encriptacion opcional AES-256-GCM.
+
+### Formatos de Backup
+
+| Extension | Contenido | Uso |
+|-----------|-----------|-----|
+| `.json` | Backup sin encriptar | Legible, compatible con v1 |
+| `.cbbk` | Backup encriptado | Protegido con contrasena |
+
+### Estructura del Archivo Backup v2
+
+```json
+{
+  "metadata": {
+    "format_version": 2,
+    "app_version": "0.3.0",
+    "created_at": 1705500000000,
+    "device_model": "SM-S911B",
+    "android_version": 36,
+    "encrypted": false,
+    "counts": {
+      "blocked_numbers": 25,
+      "blocked_calls": 150,
+      "has_settings": true
+    }
+  },
+  "blocked_numbers": [...],
+  "blocked_calls": [...],
+  "settings": {...}
+}
+```
+
+### Encriptacion AES-256-GCM
+
+**Formato del archivo .cbbk:**
+```
+[4 bytes: "CBBK"]     <- Magic header
+[16 bytes: salt]      <- Para PBKDF2
+[12 bytes: IV]        <- Nonce para GCM
+[N bytes: ciphertext] <- Datos + authentication tag
+```
+
+**Derivacion de clave:**
+- Algoritmo: PBKDF2WithHmacSHA256
+- Iteraciones: 100,000
+- Longitud de clave: 256 bits
+- Salt: 16 bytes aleatorios por backup
+
+### Compatibilidad con Backups Anteriores
+
+| Format Version | Contenido | Soporte |
+|----------------|-----------|---------|
+| v1 | Solo `blocked_numbers` | Importa solo numeros |
+| v2 | Todo (numeros, llamadas, settings) | Importa todo |
+
+La deteccion de version es automatica al importar.
+
+### Merge Inteligente al Restaurar
+
+| Tipo de Dato | Estrategia |
+|--------------|------------|
+| Numeros bloqueados | Agregar nuevos, omitir duplicados (por phoneNumber) |
+| Llamadas bloqueadas | Agregar todas (historial no verifica duplicados) |
+| Settings | Sobrescribir si existen en backup |
+
+### Flujo de Usuario
+
+**Export:**
+```
+[Backup Completo] -> "Con contrasena?" -> [Si/No]
+                                              |
+                     [Ingresar contrasena] <--+
+                              |
+                     [Guardar .cbbk/.json en Downloads]
+```
+
+**Import:**
+```
+[Restaurar Backup] -> [Seleccionar archivo]
+                              |
+                     [Detectar encriptacion]
+                              |
+        [Solicitar contrasena] (si encriptado)
+                              |
+                     [Merge inteligente]
+                              |
+                     [Snackbar con estadisticas]
+```
+
+### Archivos Nuevos
+
+| Archivo | Proposito |
+|---------|-----------|
+| `domain/model/BackupData.kt` | Modelos: BackupData, BackupMetadata, BackupCounts, ImportResult |
+| `data/backup/BackupJsonSerializer.kt` | Serializacion JSON con soporte v1 y v2 |
+| `data/backup/BackupEncryption.kt` | Encriptacion AES-256-GCM |
+| `domain/usecase/ExportFullBackupUseCase.kt` | Exporta backup completo |
+| `domain/usecase/ImportFullBackupUseCase.kt` | Importa con merge inteligente |
+| `presentation/components/PasswordDialog.kt` | Dialogos de contrasena |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `SettingsViewModel.kt` | +startFullBackup(), +executeFullBackup(), +startFullRestore(), +executeFullRestore() |
+| `SettingsScreen.kt` | Nuevos botones y dialogos de backup |
+| `build.gradle.kts` | versionCode=13, versionName="0.3.0" |
+
+### Estados del ViewModel para Backup
+
+```kotlin
+sealed class PasswordDialogState {
+    data object Hidden : PasswordDialogState()
+    data object PromptEncrypt : PasswordDialogState()       // Pregunta si encriptar
+    data object EnterEncryptPassword : PasswordDialogState() // Ingresar contrasena
+    data class RequestDecrypt(val uri: Uri) : PasswordDialogState() // Pedir contrasena
+}
+```
+
+### Lecciones Aprendidas
+
+| Aspecto | Aprendizaje |
+|---------|-------------|
+| Extension personalizada | `.cbbk` ayuda a identificar backups encriptados |
+| Magic header | "CBBK" permite detectar encriptacion sin extension |
+| PBKDF2 | 100k iteraciones es balance entre seguridad y UX |
+| GCM vs CBC | GCM incluye autenticacion, detecta contrasena incorrecta |
+| Format version | Permite evolucion del formato sin romper backups antiguos |
+
+---
+
 ## 2026-01-17: Version 0.2.8.1 - Settings Ocultas de Desarrollador
 
 ### El Concepto
