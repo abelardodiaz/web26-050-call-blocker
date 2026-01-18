@@ -1,5 +1,119 @@
 # Notas de Desarrollo - Call Blocker
 
+## 2026-01-17: Version 0.2.8 - Normalizacion de Numeros por Operador
+
+### El Problema
+
+Durante pruebas en Samsung Galaxy S25 Ultra (Android 16) con Dual SIM, descubrimos que **cada operador envia los numeros en formato diferente**:
+
+```
+=== LLAMADA ENTRANTE ===
+Numero: 4441390343          <-- SIM 2 (AT&T Mexico)
+isNumberBlocked('4441390343') = true
+RESULTADO: BLOQUEAR ✅
+
+=== LLAMADA ENTRANTE ===
+Numero: +524441390343       <-- SIM 1 (Bait)
+isNumberBlocked('+524441390343') = false
+RESULTADO: PERMITIR ❌
+```
+
+### Configuracion de Pruebas
+
+| Slot | Operador | Formato de numero entrante |
+|------|----------|---------------------------|
+| SIM 1 | **Bait** (OMV de AT&T) | `+524441390343` (con codigo de pais) |
+| SIM 2 | **AT&T Mexico** | `4441390343` (sin codigo de pais) |
+
+**Dispositivo:** Samsung Galaxy S25 Ultra
+**Android:** 16 (API 36)
+**One UI:** 7
+
+### Por que Falla el Bloqueo por Prefijo
+
+El usuario tenia bloqueado el prefijo `444`. La query SQL para prefijos es:
+
+```sql
+-- Para prefijos: el numero entrante debe EMPEZAR con el prefijo
+SELECT EXISTS(
+  SELECT 1 FROM blocked_numbers
+  WHERE is_prefix = 1 AND :phoneNumber LIKE phoneNumber || '%'
+)
+```
+
+**Evaluacion:**
+- `'4441390343' LIKE '444%'` → **TRUE** ✅
+- `'+524441390343' LIKE '444%'` → **FALSE** ❌ (empieza con +52, no con 444)
+
+### Solucion: Normalizar Antes de Verificar
+
+Nueva funcion `normalizePhoneNumber()` en `CallBlockerScreeningService`:
+
+```kotlin
+private fun normalizePhoneNumber(phoneNumber: String): String {
+    // Quitar todo excepto digitos
+    val digitsOnly = phoneNumber.replace(Regex("[^0-9]"), "")
+
+    // Mexico: quitar codigo 52 si tiene mas de 10 digitos
+    if (digitsOnly.length > 10 && digitsOnly.startsWith("52")) {
+        return digitsOnly.substring(2)  // 524441390343 -> 4441390343
+    }
+
+    // USA/Canada: quitar codigo 1 si tiene mas de 10 digitos
+    if (digitsOnly.length > 10 && digitsOnly.startsWith("1")) {
+        return digitsOnly.substring(1)  // 14155551234 -> 4155551234
+    }
+
+    return digitsOnly
+}
+```
+
+### Flujo Corregido
+
+```
+Llamada entrante: +524441390343 (Bait)
+                      ↓
+normalizePhoneNumber("+524441390343")
+                      ↓
+                 "4441390343"
+                      ↓
+isNumberBlocked("4441390343")
+                      ↓
+       '4441390343' LIKE '444%' → TRUE ✅
+                      ↓
+              BLOQUEAR
+```
+
+### Lecciones Aprendidas
+
+| Aspecto | Aprendizaje |
+|---------|-------------|
+| Formato de numeros | **Cada operador puede enviar formato diferente** |
+| Bait (OMV) | Envia numeros con codigo de pais +52 |
+| AT&T Mexico | Envia numeros sin codigo de pais |
+| Normalizacion | **SIEMPRE normalizar antes de comparar** |
+| Prefijos | Solo funcionan si el numero esta normalizado |
+| Codigos de pais | Mexico = 52, USA/Canada = 1 |
+
+### Operadores Mexicanos - Comportamiento Conocido
+
+| Operador | Tipo | Formato Observado |
+|----------|------|-------------------|
+| AT&T Mexico | Principal | `4441234567` (10 digitos) |
+| Bait | OMV (AT&T) | `+524441234567` (con +52) |
+| Telcel | Principal | Pendiente de pruebas |
+| Movistar | Principal | Pendiente de pruebas |
+
+**Nota:** Los OMVs (Operadores Moviles Virtuales) pueden tener comportamiento diferente a la red que usan.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `core/service/CallBlockerScreeningService.kt` | +normalizePhoneNumber() |
+
+---
+
 ## 2026-01-17: Version 0.2.7 - Simplificar Dual SIM + Enriquecer Historial
 
 ### El Problema
