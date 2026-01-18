@@ -165,7 +165,7 @@ Solo quien conoce la secuencia exacta puede activar el modo desarrollador.
 
 ### Lógica de Detección de SIM por Formato
 
-Observación empírica en Samsung Galaxy S25 Ultra con Dual SIM:
+Observación empírica en Samsung Galaxy S23 con Dual SIM:
 
 | Formato de número | Operador | SIM |
 |-------------------|----------|-----|
@@ -281,7 +281,7 @@ val MIGRATION_5_6 = object : Migration(5, 6) {
 
 ### El Problema
 
-Durante pruebas en Samsung Galaxy S25 Ultra (Android 16) con Dual SIM, descubrimos que **cada operador envia los numeros en formato diferente**:
+Durante pruebas en Samsung Galaxy S23 (Android 16) con Dual SIM, descubrimos que **cada operador envia los numeros en formato diferente**:
 
 ```
 === LLAMADA ENTRANTE ===
@@ -302,7 +302,7 @@ RESULTADO: PERMITIR ❌
 | SIM 1 | **Bait** (OMV de AT&T) | `+524441390343` (con codigo de pais) |
 | SIM 2 | **AT&T Mexico** | `4441390343` (sin codigo de pais) |
 
-**Dispositivo:** Samsung Galaxy S25 Ultra
+**Dispositivo:** Samsung Galaxy S23
 **Android:** 16 (API 36)
 **One UI:** 7
 
