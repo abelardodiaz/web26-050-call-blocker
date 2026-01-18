@@ -147,10 +147,31 @@
 ### Secuencia Recomendada
 
 1. ~~**v0.3.0**: Implementar backup/restore local~~ **COMPLETADO 2026-01-17**
-2. **Post v0.3.0**: Publicar en GitHub (open source) ← **SIGUIENTE**
-3. **F-Droid**: Lanzar versión gratis
-4. **v0.4.0**: Backup cloud + features premium
-5. **Play Store**: Lanzar con modelo freemium
+2. ~~**Post v0.3.0**: Publicar en GitLab (open source)~~ **COMPLETADO 2026-01-17**
+3. ~~**Licencia GPLv3**~~ **COMPLETADO 2026-01-17**
+4. ~~**Screenshots y README**~~ **COMPLETADO 2026-01-17**
+5. ~~**F-Droid metadata (fastlane)**~~ **COMPLETADO 2026-01-18**
+6. ~~**F-Droid**: Enviar MR a fdroiddata~~ **ENVIADO 2026-01-18** [MR #32092](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092)
+7. **v0.4.0**: Backup cloud + features premium
+8. **Play Store**: Lanzar con modelo freemium
+
+### Proceso F-Droid (documentado 2026-01-18)
+
+**Pasos para publicar en F-Droid:**
+
+1. Fork https://gitlab.com/fdroid/fdroiddata
+2. Crear archivo `metadata/com.callblocker.yml` (template en repo: `fdroid-metadata.yml`)
+3. Crear Merge Request con título: `New app: Call Blocker`
+4. Esperar revisión del equipo F-Droid (~1-2 semanas)
+5. Una vez aprobado, aparece en F-Droid en el siguiente ciclo de build
+
+**Requisitos cumplidos:**
+- [x] Código fuente público (GitLab)
+- [x] Licencia open source (GPLv3)
+- [x] Sin dependencias propietarias
+- [x] Fastlane metadata (es-MX, en-US)
+- [x] Tag de versión (v0.3.0)
+- [x] Screenshots
 
 ### Decisiones Pendientes
 
