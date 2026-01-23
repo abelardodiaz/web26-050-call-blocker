@@ -1,7 +1,7 @@
 # F-Droid Submission - Call Blocker
 
 **Fecha de envío:** 2026-01-18
-**Estado:** Pendiente de revisión
+**Estado:** Pendiente de revisión (rebase completado 2026-01-23)
 
 ---
 
@@ -170,6 +170,9 @@ curl -s "https://gitlab.com/api/v4/projects/36528/merge_requests/32092" | jq '.s
 | 2026-01-18 06:16 | MR #32092 enviado |
 | 2026-01-18 06:45 | Reviewer (linsui) solicita cambios: usar commit hash |
 | 2026-01-18 20:43 | Metadata actualizada con commit hash |
+| 2026-01-18 21:59 | Comentario añadido sobre v0.3.1 y v0.3.2 disponibles |
+| 2026-01-23 07:38 | Rebase sobre upstream/master completado |
+| 2026-01-23 07:42 | Comentario notificando rebase al reviewer |
 
 ## Revisiones Solicitadas
 
@@ -185,4 +188,94 @@ curl -s "https://gitlab.com/api/v4/projects/36528/merge_requests/32092" | jq '.s
 
 ---
 
-*Documento generado automáticamente - Call Blocker v0.3.0*
+---
+
+## Mantenimiento del MR: Rebase
+
+### Por qué se necesita rebase
+
+El repositorio `fdroid/fdroiddata` recibe cientos de commits diarios (bots de actualización automática). Si tu branch se queda atrás, GitLab muestra `need_rebase` y el label `waiting-for-upstream` aparece en el MR. Los reviewers no procesan MRs que necesitan rebase.
+
+### Cómo detectar que se necesita rebase
+
+```bash
+# Verificar estado del MR via API
+curl -s "https://gitlab.com/api/v4/projects/36528/merge_requests/32092" | \
+  python3 -c "import json,sys; d=json.loads(sys.stdin.read()); print(f'Merge status: {d[\"detailed_merge_status\"]}\nLabels: {d[\"labels\"]}')"
+```
+
+Si `detailed_merge_status` es `need_rebase` o `conflict`, hay que rebaser.
+
+### Proceso de rebase paso a paso
+
+```bash
+# 1. Clonar el fork (con historial completo)
+git clone https://gitlab.com/abelardodiaz/fdroiddata.git /tmp/fdroiddata
+cd /tmp/fdroiddata
+
+# 2. Checkout la rama del MR
+git checkout add-call-blocker
+
+# 3. Agregar upstream (el repo original de F-Droid)
+git remote add upstream https://gitlab.com/fdroid/fdroiddata.git
+
+# 4. Fetch solo master del upstream
+git fetch upstream master
+
+# 5. Rebase sobre upstream/master
+git rebase upstream/master
+
+# 6. Push forzado (seguro) al fork
+git push --force-with-lease origin add-call-blocker
+
+# 7. Limpiar
+rm -rf /tmp/fdroiddata
+```
+
+### Notas importantes sobre el rebase
+
+- **Pipeline del fork falla** - Es normal. Los forks no tienen los runners de F-Droid. El pipeline real lo ejecutan los maintainers en el proyecto upstream.
+- **Project ID de fdroiddata** - Es `36528` (necesario para API calls).
+- **Autenticación** - Los endpoints de notes/discussions requieren token. El MR metadata es público.
+- **Después del rebase** - Dejar un comentario avisando al reviewer:
+  ```bash
+  curl -s -X POST \
+    -H "PRIVATE-TOKEN: <tu-token>" \
+    -H "Content-Type: application/json" \
+    -d '{"body": "Rebased on latest master. Ready for review."}' \
+    "https://gitlab.com/api/v4/projects/36528/merge_requests/32092/notes"
+  ```
+
+### Frecuencia recomendada
+
+Si el MR lleva más de 5 días sin actividad del reviewer, verificar si necesita rebase. El repo fdroiddata se mueve rápido.
+
+---
+
+## Monitoreo via API (referencia rápida)
+
+```bash
+# Estado general del MR
+curl -s "https://gitlab.com/api/v4/projects/36528/merge_requests/32092" | python3 -m json.tool | head -20
+
+# Leer comentarios (requiere token)
+curl -s -H "PRIVATE-TOKEN: <token>" \
+  "https://gitlab.com/api/v4/projects/36528/merge_requests/32092/notes?sort=desc&per_page=5" | \
+  python3 -c "
+import json,sys
+for n in json.loads(sys.stdin.read()):
+    if not n.get('system'):
+        print(f'[{n[\"created_at\"][:16]}] @{n[\"author\"][\"username\"]}: {n[\"body\"][:100]}')
+"
+
+# Publicar comentario
+curl -s -X POST \
+  -H "PRIVATE-TOKEN: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"body": "Tu mensaje aquí"}' \
+  "https://gitlab.com/api/v4/projects/36528/merge_requests/32092/notes"
+```
+
+---
+
+*Documento actualizado: 2026-01-23 - Call Blocker v0.3.0*
