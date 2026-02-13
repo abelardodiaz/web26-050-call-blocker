@@ -10,11 +10,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Pending
 - Unit and instrumented tests
-- Custom launcher icons (replace placeholders)
 - Implement notifications functionality
 - Implement blocking of unknown numbers
 - Implement blocking of private numbers (hidden ID)
 - v0.4.0: Cloud backup (Google Drive/Firebase)
+
+---
+
+## [0.3.3] - 2026-02-13
+
+### Fixed
+
+- **F-Droid build: regenerate launcher icon PNGs**
+  - All 10 PNG icons were degenerate 91-byte placeholders (48x48 for all densities)
+  - AAPT2 failed during `:app:mergeReleaseResources` in F-Droid pipeline
+  - Regenerated with correct sizes: mdpi 48, hdpi 72, xhdpi 96, xxhdpi 144, xxxhdpi 192
+  - Design matches adaptive vector drawable (purple #6200EE background + white circle/checkmark)
+
+### Added
+
+- **Icon generation script** (`scripts/generate_icons.py`)
+  - Uses Pillow to generate launcher PNGs programmatically
+  - Generates both regular (rounded rectangle) and round (circular) variants
+  - Reproduces the vector drawable design at all Android density levels
 
 ---
 

@@ -1,0 +1,3 @@
+* Corregir build de F-Droid: regenerar iconos PNG del launcher con tamaños correctos por densidad
+* Reemplazar PNGs placeholder degenerados de 48x48 que causaban fallos de build AAPT2
+* Los iconos ahora coinciden con el diseño del vector drawable adaptativo (púrpura + checkmark)
