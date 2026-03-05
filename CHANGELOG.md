@@ -13,7 +13,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Implement notifications functionality
 - Implement blocking of unknown numbers
 - Implement blocking of private numbers (hidden ID)
-- v0.4.0: Cloud backup (Google Drive/Firebase)
+- Cloud backup (Google Drive/Firebase)
+
+---
+
+## [0.4.0] - 2026-03-05
+
+### Changed
+
+- **BREAKING: applicationId renamed from `com.callblocker` to `com.redv6.callblocker`**
+  - Required for F-Droid acceptance (generic package name was a blocker)
+  - Users must uninstall the old app before installing this version
+  - Room database and app data are NOT migrated (fresh install required)
+
+### Technical
+
+- All Kotlin source files moved from `com/callblocker/` to `com/redv6/callblocker/`
+- Package declarations and imports updated across 52 files
+- ProGuard keep rules updated with new package path
+- versionCode bumped to 17
 
 ---
 

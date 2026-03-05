@@ -7,15 +7,15 @@ plugins {
 }
 
 android {
-    namespace = "com.callblocker"
+    namespace = "com.redv6.callblocker"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.callblocker"
+        applicationId = "com.redv6.callblocker"
         minSdk = 28
         targetSdk = 34
-        versionCode = 16
-        versionName = "0.3.3"
+        versionCode = 17
+        versionName = "0.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
