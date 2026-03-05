@@ -1,0 +1,5 @@
+v0.4.0 - Package Rename
+
+- BREAKING: applicationId renamed to com.redv6.callblocker
+- Uninstall previous version before installing this update
+- Required for F-Droid publication

@@ -160,7 +160,7 @@
 **Pasos para publicar en F-Droid:**
 
 1. Fork https://gitlab.com/fdroid/fdroiddata
-2. Crear archivo `metadata/com.callblocker.yml` (template en repo: `fdroid-metadata.yml`)
+2. Crear archivo `metadata/com.redv6.callblocker.yml` (template en repo: `fdroid-metadata.yml`)
 3. Crear Merge Request con título: `New app: Call Blocker`
 4. Esperar revisión del equipo F-Droid (~1-2 semanas)
 5. Una vez aprobado, aparece en F-Droid en el siguiente ciclo de build
