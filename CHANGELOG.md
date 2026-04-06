@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Implement blocking of unknown numbers
 - Implement blocking of private numbers (hidden ID)
 - Cloud backup (Google Drive/Firebase)
+- Address backlog items (see `.claude/doc/BACKLOG.md`)
 
 ---
 
@@ -25,6 +26,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Required for F-Droid acceptance (generic package name was a blocker)
   - Users must uninstall the old app before installing this version
   - Room database and app data are NOT migrated (fresh install required)
+
+### Milestone
+
+- **F-Droid accepted** (MR [#32092](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092) merged 2026-04-05)
+  - App available at: https://f-droid.org/packages/com.redv6.callblocker/
+  - Reviewer: @linsui
 
 ### Technical
 
@@ -44,6 +51,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - AAPT2 failed during `:app:mergeReleaseResources` in F-Droid pipeline
   - Regenerated with correct sizes: mdpi 48, hdpi 72, xhdpi 96, xxhdpi 144, xxxhdpi 192
   - Design matches adaptive vector drawable (purple #6200EE background + white circle/checkmark)
+
+- **Android 13+ language switching**
+  - LocaleManager now used instead of AppCompatDelegate for API 33+
+  - Fixes language not persisting correctly on Android 13+ devices
 
 ### Added
 
