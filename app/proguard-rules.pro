@@ -8,7 +8,7 @@
 -keep class * extends dagger.hilt.android.internal.managers.ComponentSupplier { *; }
 
 # Keep Room entities
--keep class com.redv6.callblocker.data.local.entity.** { *; }
+-keep class com.callblocker.data.local.entity.** { *; }
 
 # Keep CallScreeningService
--keep class com.redv6.callblocker.core.service.CallBlockerScreeningService { *; }
+-keep class com.callblocker.core.service.CallBlockerScreeningService { *; }

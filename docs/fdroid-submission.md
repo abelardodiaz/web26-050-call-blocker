@@ -1,7 +1,7 @@
 # F-Droid Submission - Call Blocker
 
 **Fecha de envío:** 2026-01-18
-**Estado:** Actualizando - applicationId renombrado a com.redv6.callblocker (2026-03-05)
+**Estado:** Pendiente de revisión (rebase completado 2026-01-23)
 
 ---
 
@@ -22,7 +22,7 @@
 ### Fork (tu copia)
 - **URL:** https://gitlab.com/abelardodiaz/fdroiddata
 - **Branch:** add-call-blocker
-- **Archivo creado:** `metadata/com.redv6.callblocker.yml`
+- **Archivo creado:** `metadata/com.callblocker.yml`
 
 ### Original (F-Droid)
 - **URL:** https://gitlab.com/fdroid/fdroiddata
@@ -37,7 +37,7 @@
 
 ## Contenido del Archivo Metadata
 
-**Archivo:** `metadata/com.redv6.callblocker.yml`
+**Archivo:** `metadata/com.callblocker.yml`
 
 ```yaml
 Categories:
@@ -54,17 +54,17 @@ RepoType: git
 Repo: https://gitlab.com/abelardodiaz/web26-050-call-blocker.git
 
 Builds:
-  - versionName: 0.4.0
-    versionCode: 17
-    commit: <commit-hash-of-v0.4.0-tag>
+  - versionName: 0.3.0
+    versionCode: 13
+    commit: bf21a787776a8206426aac3c0b3068c77946189e
     subdir: app
     gradle:
       - yes
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 0.4.0
-CurrentVersionCode: 17
+CurrentVersion: 0.3.0
+CurrentVersionCode: 13
 ```
 
 ---
@@ -75,7 +75,7 @@ CurrentVersionCode: 17
 ## App Info
 
 **Name:** Call Blocker
-**Package:** com.redv6.callblocker
+**Package:** com.callblocker
 **License:** GPL-3.0-only
 **Source:** https://gitlab.com/abelardodiaz/web26-050-call-blocker
 
@@ -99,7 +99,7 @@ Android app to block unwanted calls using CallScreeningService.
 - [x] Open source license (GPL-3.0)
 - [x] No proprietary dependencies
 - [x] Fastlane metadata included
-- [x] Version tag exists (v0.4.0)
+- [x] Version tag exists (v0.3.0)
 - [x] Builds successfully
 ```
 
@@ -115,7 +115,7 @@ Android app to block unwanted calls using CallScreeningService.
 | Sin Firebase | ✅ | - |
 | Sin Ads (AdMob) | ✅ | - |
 | Fastlane metadata | ✅ | es-MX y en-US |
-| Tag de versión | ✅ | v0.4.0 |
+| Tag de versión | ✅ | v0.3.0 |
 | Screenshots | ✅ | 5 capturas |
 
 ---
@@ -173,8 +173,6 @@ curl -s "https://gitlab.com/api/v4/projects/36528/merge_requests/32092" | jq '.s
 | 2026-01-18 21:59 | Comentario añadido sobre v0.3.1 y v0.3.2 disponibles |
 | 2026-01-23 07:38 | Rebase sobre upstream/master completado |
 | 2026-01-23 07:42 | Comentario notificando rebase al reviewer |
-| 2026-03-05 | applicationId renombrado de com.callblocker a com.redv6.callblocker |
-| 2026-03-05 | Metadata actualizada a v0.4.0 con nuevo applicationId |
 
 ## Revisiones Solicitadas
 
@@ -280,4 +278,4 @@ curl -s -X POST \
 
 ---
 
-*Documento actualizado: 2026-03-05 - Call Blocker v0.4.0*
+*Documento actualizado: 2026-01-23 - Call Blocker v0.3.0*

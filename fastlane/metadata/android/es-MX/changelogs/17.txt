@@ -1,5 +1,0 @@
-v0.4.0 - Cambio de paquete
-
-- IMPORTANTE: applicationId renombrado a com.redv6.callblocker
-- Desinstalar la version anterior antes de instalar esta actualizacion
-- Requerido para publicacion en F-Droid
