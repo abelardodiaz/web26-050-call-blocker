@@ -24,6 +24,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.4] - 2026-04-14
+
+### Changed
+
+- Maintenance release to validate F-Droid auto-update flow (`UpdateCheckMode: Tags`)
+- applicationId kept as `com.callblocker` (rename to `com.redv6.callblocker` reverted to preserve continuity with the published F-Droid package)
+
+### Technical
+
+- versionCode bumped to 17
+- fdroid-metadata.yml extended with v0.3.4 build entry
+
+---
+
 ## [0.3.3] - 2026-02-13
 
 ### Fixed
