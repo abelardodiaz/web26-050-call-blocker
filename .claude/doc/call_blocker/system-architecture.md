@@ -25,11 +25,11 @@ Este documento define la arquitectura de sistema para la app de bloqueo de llama
 
 ```kotlin
 // core/service/CallBlockerScreeningService.kt
-package com.redv6.callblocker.core.service
+package com.callblocker.core.service
 
 import android.telecom.Call
 import android.telecom.CallScreeningService
-import com.redv6.callblocker.domain.repository.BlockedNumberRepository
+import com.callblocker.domain.repository.BlockedNumberRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -191,7 +191,7 @@ enum class BlockReason {
 
 ```kotlin
 // core/util/PermissionHandler.kt
-package com.redv6.callblocker.core.util
+package com.callblocker.core.util
 
 import android.Manifest
 import android.content.Context
@@ -234,7 +234,7 @@ object PermissionHandler {
 
 ```kotlin
 // core/util/CallScreeningRoleManager.kt
-package com.redv6.callblocker.core.util
+package com.callblocker.core.util
 
 import android.app.role.RoleManager
 import android.content.Context

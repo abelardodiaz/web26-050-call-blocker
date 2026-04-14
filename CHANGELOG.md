@@ -16,29 +16,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Cloud backup (Google Drive/Firebase)
 - Address backlog items (see `.claude/doc/BACKLOG.md`)
 
----
-
-## [0.4.0] - 2026-03-05
-
-### Changed
-
-- **BREAKING: applicationId renamed from `com.callblocker` to `com.redv6.callblocker`**
-  - Required for F-Droid acceptance (generic package name was a blocker)
-  - Users must uninstall the old app before installing this version
-  - Room database and app data are NOT migrated (fresh install required)
-
 ### Milestone
 
 - **F-Droid accepted** (MR [#32092](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092) merged 2026-04-05)
-  - App available at: https://f-droid.org/packages/com.redv6.callblocker/
+  - App published at: https://f-droid.org/packages/com.callblocker/ (v0.3.3)
   - Reviewer: @linsui
-
-### Technical
-
-- All Kotlin source files moved from `com/callblocker/` to `com/redv6/callblocker/`
-- Package declarations and imports updated across 52 files
-- ProGuard keep rules updated with new package path
-- versionCode bumped to 17
 
 ---
 

@@ -29,7 +29,7 @@ adb install -r app-debug.apk
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 # Desinstalar app
-adb uninstall com.redv6.callblocker
+adb uninstall com.callblocker
 
 # Instalar y reemplazar forzando (si hay problemas de firma)
 adb install -r -d app-debug.apk
@@ -85,19 +85,19 @@ adb shell getprop ro.product.model        # Modelo
 adb shell getprop ro.product.manufacturer # Fabricante
 
 # Ver permisos de la app
-adb shell dumpsys package com.redv6.callblocker | grep permission
+adb shell dumpsys package com.callblocker | grep permission
 
 # Ver servicios activos de la app
-adb shell dumpsys activity services com.redv6.callblocker
+adb shell dumpsys activity services com.callblocker
 
 # Forzar cierre de la app
-adb shell am force-stop com.redv6.callblocker
+adb shell am force-stop com.callblocker
 
 # Iniciar actividad principal
-adb shell am start -n com.redv6.callblocker/.presentation.MainActivity
+adb shell am start -n com.callblocker/.presentation.MainActivity
 
 # Limpiar datos de la app (reset completo)
-adb shell pm clear com.redv6.callblocker
+adb shell pm clear com.callblocker
 ```
 
 ### Flujo de Testing Recomendado
@@ -113,7 +113,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb logcat -c; adb logcat -s CallBlockerApp:D CallBlockerScreening:D CallBlockerFgService:D MainActivity:D
 
 # 4. Abrir app manualmente o via ADB
-adb shell am start -n com.redv6.callblocker/.presentation.MainActivity
+adb shell am start -n com.callblocker/.presentation.MainActivity
 
 # 5. Realizar llamada de prueba y observar logs
 ```
@@ -135,7 +135,7 @@ adb start-server
 adb devices
 
 # Si la instalacion falla por firma diferente:
-adb uninstall com.redv6.callblocker
+adb uninstall com.callblocker
 adb install app-debug.apk
 
 # Si los logs no aparecen:
