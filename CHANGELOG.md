@@ -36,6 +36,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - versionCode bumped to 17
 - fdroid-metadata.yml extended with v0.3.4 build entry
 
+### Published
+
+- **F-Droid auto-publish confirmed**: v0.3.4 detected from tag and published on 2026-04-15 (~24h after tag push), no manual MR needed
+- Available at: https://f-droid.org/packages/com.callblocker/
+
 ---
 
 ## [0.3.3] - 2026-02-13
