@@ -144,6 +144,18 @@ All numbers starting with that prefix will be blocked.
 | `POST_NOTIFICATIONS` | Notify blocks |
 | `ROLE_CALL_SCREENING` | Act as screening service |
 
+## Compatibility Notes
+
+### Samsung devices (One UI)
+
+On Samsung devices running One UI, **calls from numbers saved in the system Contacts may not be delivered to third-party call screening services**. Samsung's internal telecom pipeline (`SamsungAutoRejectIncomingCallFiltering`) detects `contact exists` and allows the call through without delegating to the app that holds `ROLE_CALL_SCREENING`, even though the role is correctly assigned.
+
+**Workaround:** to block a number you have stored as a contact, remove it from Contacts first. Calls from numbers not in Contacts are blocked normally.
+
+This is platform behavior, not a defect in Call Blocker. AOSP and Pixel devices do not exhibit this restriction. Other OEMs with custom call managers (Xiaomi MIUI, Oppo ColorOS, Vivo FunTouch) may behave similarly — not yet verified.
+
+Confirmed on: Samsung Galaxy S23 (SM-S911B), Android 16, One UI 7.
+
 ## Commands
 
 | Command | Description |

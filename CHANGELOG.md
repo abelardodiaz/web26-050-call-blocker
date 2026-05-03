@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Documented
+- **Samsung One UI contact bypass** documented in `README.md` (Compatibility Notes) and `.claude/doc/SAMSUNG_CONTACT_BYPASS.md` (full diagnostic + triage procedure for future support sessions). On Samsung devices, calls from numbers saved in Contacts are filtered by Samsung's internal pipeline (`SamsungAutoRejectIncomingCallFiltering`) and never delegated to the third-party `CallScreeningService`, even with `ROLE_CALL_SCREENING` correctly held. Workaround: remove the number from Contacts. Confirmed via `dumpsys telecom` on Galaxy S23 / One UI 7 / Android 16 (2026-05-02). Not a defect in this app — no fix possible without becoming the default dialer (out of scope).
+
 ### Pending
 - Unit and instrumented tests
 - Implement notifications functionality
