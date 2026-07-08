@@ -5,6 +5,16 @@ Ninguno es critico ni bloquea F-Droid, pero deben resolverse en futuras versione
 
 ---
 
+## Features propuestas
+
+### A. Recordatorio de "app predeterminada" (ROLE_CALL_SCREENING)
+- **Contexto**: La app solo pide permisos runtime (telefono, contactos, etc.) pero NO solicita ni verifica el rol `ROLE_CALL_SCREENING`. Sin ese rol, Android nunca invoca el CallScreeningService aunque los permisos esten en verde — el usuario cree que todo esta bien pero no se bloquea nada.
+- **Confirmado**: 2026-07-08, usuario reinstalo desde F-Droid, dio todos los permisos, y no bloqueaba llamadas. Causa: falto activar la app como predeterminada en Ajustes > Apps predeterminadas > Identificador de llamadas y spam.
+- **Propuesta**: Agregar tarjeta de estado en SettingsScreen (mismo patron que permisos) usando `RoleManager.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)`. Si falta, boton que lance `roleManager.createRequestRoleIntent(ROLE_CALL_SCREENING)` para abrir el dialogo nativo del sistema directamente. Revalidar en cada `onResume`.
+- **Prioridad**: Alta — es la causa mas probable de "no bloquea nada" en instalaciones nuevas.
+
+---
+
 ## Moderados
 
 ### 1. Normalizar telefono: edge case con string vacio
