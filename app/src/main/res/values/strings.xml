@@ -92,6 +92,7 @@
     <string name="about_version">Version %1$s</string>
     <string name="about_developed_by">Desarrollado por</string>
     <string name="about_developer">abelardodiaz.dev</string>
+    <string name="about_contact" translatable="false">contacto@abelardodiaz.dev</string>
     <string name="about_compatibility">Compatible con Android 9 - 17</string>
 
     <!-- Settings: Developer Section -->

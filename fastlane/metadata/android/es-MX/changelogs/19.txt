@@ -1,0 +1,1 @@
+La pantalla Acerca de muestra el nuevo sitio y correo de contacto del desarrollador.

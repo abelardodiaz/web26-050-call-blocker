@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-10-09
+
+### Changed
+- About screen now shows the developer site `abelardodiaz.dev` and contact `contacto@abelardodiaz.dev`; F-Droid author metadata updated to match.
+
 ## [0.3.5] - 2026-10-09
 
 ### Fixed

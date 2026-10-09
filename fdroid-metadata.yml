@@ -1,8 +1,9 @@
 Categories:
   - Phone & SMS
 License: GPL-3.0-only
-AuthorName: redv6.com
-AuthorWebSite: https://redv6.com
+AuthorName: abelardodiaz.dev
+AuthorEmail: contacto@abelardodiaz.dev
+AuthorWebSite: https://abelardodiaz.dev
 SourceCode: https://gitlab.com/abelardodiaz/web26-050-call-blocker
 IssueTracker: https://gitlab.com/abelardodiaz/web26-050-call-blocker/-/issues
 
@@ -40,7 +41,14 @@ Builds:
     gradle:
       - yes
 
+  - versionName: 0.3.6
+    versionCode: 19
+    commit: v0.3.6
+    subdir: app
+    gradle:
+      - yes
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 0.3.5
-CurrentVersionCode: 18
+CurrentVersion: 0.3.6
+CurrentVersionCode: 19

@@ -577,6 +577,11 @@ private fun AboutCard(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
+            Text(
+                text = stringResource(R.string.about_contact),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.about_compatibility),
