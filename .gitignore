@@ -84,3 +84,7 @@ app/outputs/
 
 # Claude local settings (keep doc/ and sessions/ for portability)
 .claude/settings.local.json
+
+# Environment variables
+.env
+resume.txt

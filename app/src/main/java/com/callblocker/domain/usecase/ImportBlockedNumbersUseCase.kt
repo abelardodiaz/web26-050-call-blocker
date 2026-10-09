@@ -1,5 +1,6 @@
 package com.callblocker.domain.usecase
 
+import com.callblocker.core.util.PhoneNumberNormalizer
 import android.content.Context
 import android.net.Uri
 import com.callblocker.domain.model.BlockedNumber
@@ -91,12 +92,12 @@ class ImportBlockedNumbersUseCase @Inject constructor(
 
         // Obtener numeros existentes para evitar duplicados
         val existingNumbers = blockedNumberRepository.getAllBlockedNumbers().first()
-            .map { it.phoneNumber }
-            .toSet()
+            .map { PhoneNumberNormalizer.normalize(it.phoneNumber) }
+            .toMutableSet()
 
         blockedNumbers.forEach { number ->
             try {
-                if (existingNumbers.contains(number.phoneNumber)) {
+                if (!existingNumbers.add(PhoneNumberNormalizer.normalize(number.phoneNumber))) {
                     skipped++
                 } else {
                     blockedNumberRepository.addBlockedNumber(number)

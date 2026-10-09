@@ -1,0 +1,3 @@
+Maintenance release.
+- Validates F-Droid automatic update flow via Tags.
+- No behavior changes for end users.

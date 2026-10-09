@@ -1,6 +1,7 @@
 package com.callblocker.data.local.migration
 
 import androidx.room.migration.Migration
+import com.callblocker.core.util.PhoneNumberNormalizer
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object Migrations {
@@ -40,6 +41,22 @@ object Migrations {
     val MIGRATION_6_7 = object : Migration(6, 7) {
         override fun migrate(db: SupportSQLiteDatabase) {
             db.execSQL("ALTER TABLE settings ADD COLUMN app_language TEXT NOT NULL DEFAULT 'system'")
+        }
+    }
+
+    // Numeros guardados crudos (+33..., espacios) nunca coincidian con la llamada normalizada
+    val MIGRATION_7_8 = object : Migration(7, 8) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            val rows = mutableListOf<Pair<Long, String>>()
+            db.query("SELECT id, phoneNumber FROM blocked_numbers").use {
+                while (it.moveToNext()) rows.add(it.getLong(0) to it.getString(1))
+            }
+            rows.forEach { (id, number) ->
+                db.execSQL(
+                    "UPDATE blocked_numbers SET phoneNumber = ? WHERE id = ?",
+                    arrayOf(PhoneNumberNormalizer.normalize(number), id)
+                )
+            }
         }
     }
 }

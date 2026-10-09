@@ -1,0 +1,3 @@
+Version de mantenimiento.
+- Valida el flujo de actualizacion automatica de F-Droid via Tags.
+- Sin cambios de comportamiento para el usuario final.

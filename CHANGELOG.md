@@ -8,12 +8,46 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-10-09
+
+### Fixed
+- **Blocked numbers never matched incoming calls outside MX/US** (issue #9, user report on GrapheneOS/F-Droid). Numbers were stored as typed (`+33162...`, spaces, dashes) but compared against the incoming call stripped to digits, so any stored number containing `+` or separators, and every prefix like `+33162`, never matched. Added `PhoneNumberNormalizer` (digits only, strips MX `52` / US `1`), applied when saving, importing and matching. Room migration 7->8 normalizes existing entries. An empty "calls" tab was not evidence that `onScreenCall` was skipped: unmatched calls are allowed and not logged. National-format prefixes such as `0162` are not covered (calls arrive as `+33...`; use `+33162`). Memo with the analysis: `docs/procesados/001-20261009232338-...`.
+
+### Documented
+- **Samsung One UI contact bypass** documented in `README.md` (Compatibility Notes) and `.claude/doc/SAMSUNG_CONTACT_BYPASS.md` (full diagnostic + triage procedure for future support sessions). On Samsung devices, calls from numbers saved in Contacts are filtered by Samsung's internal pipeline (`SamsungAutoRejectIncomingCallFiltering`) and never delegated to the third-party `CallScreeningService`, even with `ROLE_CALL_SCREENING` correctly held. Workaround: remove the number from Contacts. Confirmed via `dumpsys telecom` on Galaxy S23 / One UI 7 / Android 16 (2026-05-02). Not a defect in this app — no fix possible without becoming the default dialer (out of scope).
+
 ### Pending
 - Unit and instrumented tests
 - Implement notifications functionality
 - Implement blocking of unknown numbers
 - Implement blocking of private numbers (hidden ID)
-- v0.4.0: Cloud backup (Google Drive/Firebase)
+- Cloud backup (Google Drive/Firebase)
+- Address backlog items (see `.claude/doc/BACKLOG.md`)
+
+### Milestone
+
+- **F-Droid accepted** (MR [#32092](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/32092) merged 2026-04-05)
+  - App published at: https://f-droid.org/packages/com.callblocker/ (v0.3.3)
+  - Reviewer: @linsui
+
+---
+
+## [0.3.4] - 2026-04-14
+
+### Changed
+
+- Maintenance release to validate F-Droid auto-update flow (`UpdateCheckMode: Tags`)
+- applicationId kept as `com.callblocker` (rename to `com.redv6.callblocker` reverted to preserve continuity with the published F-Droid package)
+
+### Technical
+
+- versionCode bumped to 17
+- fdroid-metadata.yml extended with v0.3.4 build entry
+
+### Published
+
+- **F-Droid auto-publish confirmed**: v0.3.4 detected from tag and published on 2026-04-15 (~24h after tag push), no manual MR needed
+- Available at: https://f-droid.org/packages/com.callblocker/
 
 ---
 
@@ -26,6 +60,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - AAPT2 failed during `:app:mergeReleaseResources` in F-Droid pipeline
   - Regenerated with correct sizes: mdpi 48, hdpi 72, xhdpi 96, xxhdpi 144, xxxhdpi 192
   - Design matches adaptive vector drawable (purple #6200EE background + white circle/checkmark)
+
+- **Android 13+ language switching**
+  - LocaleManager now used instead of AppCompatDelegate for API 33+
+  - Fixes language not persisting correctly on Android 13+ devices
 
 ### Added
 

@@ -1,0 +1,1 @@
+Fix: numbers with + or separators (e.g. +33...) and country-code prefixes now block correctly. Existing entries are migrated automatically.
