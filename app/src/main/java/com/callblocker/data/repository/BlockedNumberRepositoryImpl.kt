@@ -1,5 +1,6 @@
 package com.callblocker.data.repository
 
+import com.callblocker.core.util.PhoneNumberNormalizer
 import com.callblocker.data.local.dao.BlockedNumberDao
 import com.callblocker.data.local.entity.BlockedNumberEntity
 import com.callblocker.domain.model.BlockedNumber
@@ -19,11 +20,12 @@ class BlockedNumberRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getBlockedNumberByPhone(phoneNumber: String): BlockedNumber? {
-        return blockedNumberDao.getByPhoneNumber(phoneNumber)?.toDomain()
+        return blockedNumberDao.getByPhoneNumber(PhoneNumberNormalizer.normalize(phoneNumber))?.toDomain()
     }
 
     override suspend fun addBlockedNumber(blockedNumber: BlockedNumber) {
-        blockedNumberDao.insert(BlockedNumberEntity.fromDomain(blockedNumber))
+        val normalized = blockedNumber.copy(phoneNumber = PhoneNumberNormalizer.normalize(blockedNumber.phoneNumber))
+        blockedNumberDao.insert(BlockedNumberEntity.fromDomain(normalized))
     }
 
     override suspend fun deleteBlockedNumber(id: Long) {
