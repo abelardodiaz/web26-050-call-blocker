@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-10-09
+
 ### Fixed
 - **Blocked numbers never matched incoming calls outside MX/US** (issue #9, user report on GrapheneOS/F-Droid). Numbers were stored as typed (`+33162...`, spaces, dashes) but compared against the incoming call stripped to digits, so any stored number containing `+` or separators, and every prefix like `+33162`, never matched. Added `PhoneNumberNormalizer` (digits only, strips MX `52` / US `1`), applied when saving, importing and matching. Room migration 7->8 normalizes existing entries. An empty "calls" tab was not evidence that `onScreenCall` was skipped: unmatched calls are allowed and not logged. National-format prefixes such as `0162` are not covered (calls arrive as `+33...`; use `+33162`). Memo with the analysis: `docs/procesados/001-20261009232338-...`.
 

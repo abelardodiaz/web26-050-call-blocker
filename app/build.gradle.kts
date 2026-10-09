@@ -14,8 +14,8 @@ android {
         applicationId = "com.callblocker"
         minSdk = 28
         targetSdk = 34
-        versionCode = 17
-        versionName = "0.3.4"
+        versionCode = 18
+        versionName = "0.3.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
