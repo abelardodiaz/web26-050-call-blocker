@@ -91,7 +91,7 @@
     <string name="settings_section_about">About</string>
     <string name="about_version">Version %1$s</string>
     <string name="about_developed_by">Developed by</string>
-    <string name="about_developer">redv6.com</string>
+    <string name="about_developer">abelardodiaz.dev</string>
     <string name="about_compatibility">Compatible with Android 9 - 17</string>
 
     <!-- Settings: Developer Section -->
