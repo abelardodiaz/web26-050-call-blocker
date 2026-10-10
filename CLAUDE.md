@@ -108,6 +108,10 @@ curl -X POST http://10.254.0.3/api/v1/ping-pong-papas \
 
 **Nota**: El debate puede tomar 3-5 minutos dependiendo de las rondas
 
+## Pendientes
+
+- `docs/BACKLOG.md` es la lista UNICA de pendientes (revisiones, esperas, limpiezas). Leerlo al iniciar sesion y actualizarlo al cerrar/abrir items. NO guardar pendientes en la memoria de Claude.
+
 ## Runbooks (leer antes de repetir un trabajo)
 
 - `docs/RUNBOOK_purgar_datos_y_pruebas.md` — purgar datos personales del historial git (GitLab/GitHub/F-Droid), cambios por MR en `master` protegida, y probar CallScreeningService en emulador AOSP (server602b). Regla: nunca escribir numeros/correos reales en docs; usar 4441234567.
