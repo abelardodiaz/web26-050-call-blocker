@@ -108,6 +108,11 @@ curl -X POST http://10.254.0.3/api/v1/ping-pong-papas \
 
 **Nota**: El debate puede tomar 3-5 minutos dependiendo de las rondas
 
+## Runbooks (leer antes de repetir un trabajo)
+
+- `docs/RUNBOOK_purgar_datos_y_pruebas.md` — purgar datos personales del historial git (GitLab/GitHub/F-Droid), cambios por MR en `master` protegida, y probar CallScreeningService en emulador AOSP (server602b). Regla: nunca escribir numeros/correos reales en docs; usar 4441234567.
+- `docs/RUNBOOK_memos.md` — como procesar memos de `docs/incoming/` (verificar, actualizar docs, mover a `docs/procesados/`). Convencion de nombres: `docs/incoming/README.md`.
+
 ## Plan Mode - IMPORTANTE
 
 **Cuando entres en plan mode:**
