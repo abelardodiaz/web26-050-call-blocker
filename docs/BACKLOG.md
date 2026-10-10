@@ -19,6 +19,10 @@ Contexto y metodo: `docs/RUNBOOK_purgar_datos_y_pruebas.md`.
 - [ ] Revisar si f-droid.org/packages/com.callblocker/ publica 0.3.5 / 0.3.6 (a 2026-10-10 solo estaba 0.3.4). Si no aparecen en 2-3 dias, algo se trabo.
 - [ ] Opcional: probar el APK oficial 0.3.6 en el emulador de 602b.
 
+### Token GitLab (terminal)
+- [ ] Token fine-grained `claude-server005-callblocker` (solo web26-050, Merge Request Merge+Read) CADUCA 2026-11-09. Renovarlo antes o revocarlo si ya no se usa (`gitlab.com/-/user_settings/personal_access_tokens`) y borrar `~/.config/gitlab-callblocker-token` en server005. Uso: ver runbook seccion 2.
+- [ ] Aparte: el token `termux-s26` (del usuario) caducaba en menos de 2 semanas a 2026-10-10; decidir si renovarlo.
+
 ### S26
 - [ ] Actualizar el S26 (tiene 0.3.4 de F-Droid) cuando F-Droid publique 0.3.5/0.3.6, desde la app de F-Droid. NO instalar la APK debug encima: firma distinta (INSTALL_FAILED_UPDATE_INCOMPATIBLE), obligaria a desinstalar y perder datos. Decision del usuario 2026-10-10: esperar a F-Droid.
 

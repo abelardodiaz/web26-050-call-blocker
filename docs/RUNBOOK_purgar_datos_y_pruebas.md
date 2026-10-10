@@ -60,7 +60,21 @@ nuevo (tabla viejo->nuevo: `git rev-parse <tag>^{commit}` en backup vs repo nuev
 ## 2. Cambios en `master` de GitLab (protegida)
 
 No se hace push directo: rama + `git push -o merge_request.create -o merge_request.target=master`,
-merge en la web, luego `git pull` y `git push github master` (el espejo no se actualiza solo).
+merge (terminal o web), luego `git pull` y `git push github master` (el espejo no se actualiza solo).
+
+**Merge desde terminal (sin navegador).** Token en `~/.config/gitlab-callblocker-token`
+(permisos 600, NUNCA escribirlo en docs ni en el chat). Es un token "fine-grained" limitado a
+este proyecto, permisos Merge Request: Merge + Read. Creado 2026-10-10, caduca 2026-11-09.
+```bash
+T=$(cat ~/.config/gitlab-callblocker-token); P=abelardodiaz%2Fweb26-050-call-blocker
+curl -s -X PUT -H "PRIVATE-TOKEN: $T" \
+  "https://gitlab.com/api/v4/projects/$P/merge_requests/<IID>/merge?should_remove_source_branch=true" \
+  | python3 -c "import sys,json;d=json.load(sys.stdin);print(d.get('state'),d.get('message',''))"
+```
+Si da 401/403 el token caduco o fue revocado: volver a la web (Merge) y renovarlo (ver
+`docs/BACKLOG.md`). Si `should_remove_source_branch` falla por permisos, quitarlo y borrar la rama a mano.
+Crear el token: User Settings > Access tokens > Generate token > Fine-grained; el usuario pulsa
+"Generate" y lo guarda con `read -rs` en el prompt (`!`), asi no pasa por el chat.
 
 ## 3. Probar CallScreeningService en emulador AOSP
 
