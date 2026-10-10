@@ -152,7 +152,7 @@ In May 2026, during testing on Samsung devices, **a call from a number saved in 
 
 **Workaround if it happens:** remove the number from Contacts. Calls from numbers not in Contacts are blocked normally.
 
-It was **not reproduced later**: blocked contacts are rejected normally on the Galaxy S23 (One UI 8.5) and the Galaxy S26 (One UI 9). It may be specific to One UI 7.x. This is platform behavior, not a defect in Call Blocker; AOSP and Pixel devices do not show it. Other OEMs with custom call managers (Xiaomi MIUI, Oppo ColorOS, Vivo FunTouch) may behave differently — not yet verified.
+It was **not reproduced later**: blocked contacts are rejected normally on the Galaxy S23 (One UI 8.5) and the Galaxy S26 (One UI 9). It may be specific to One UI 7.x. This is platform behavior, not a defect in Call Blocker; It was also not seen on stock AOSP (Android 16 emulator). Other OEMs with custom call managers (Xiaomi MIUI, Oppo ColorOS, Vivo FunTouch) may behave differently — not yet verified.
 
 If a number is not being blocked, first check that Call Blocker is set as the default Call screening app (Settings > Apps > Default apps) and that no overly broad prefix rule is involved.
 
