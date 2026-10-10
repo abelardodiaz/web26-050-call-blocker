@@ -148,13 +148,13 @@ All numbers starting with that prefix will be blocked.
 
 ### Samsung devices (One UI)
 
-On Samsung devices running One UI, **calls from numbers saved in the system Contacts may not be delivered to third-party call screening services**. Samsung's internal telecom pipeline (`SamsungAutoRejectIncomingCallFiltering`) detects `contact exists` and allows the call through without delegating to the app that holds `ROLE_CALL_SCREENING`, even though the role is correctly assigned.
+Early testing (May 2026, Galaxy S23) suggested that calls from numbers saved in Contacts were not delivered to the screening service (Samsung's `SamsungAutoRejectIncomingCallFiltering` reported `contact exists` and allowed the call). **This could not be reproduced later**: with the call screening role correctly held, contacts were blocked on the S23 (July 2026), and on the Galaxy S26 (One UI 9) a blocked contact was rejected by Call Blocker. The May result was probably caused by the role not being bound at the time, or by a system update.
 
-**Workaround:** to block a number you have stored as a contact, remove it from Contacts first. Calls from numbers not in Contacts are blocked normally.
+If a number is not being blocked, check first that **Call Blocker is set as the default Call screening app** (Settings > Apps > Default apps) and that no overly broad prefix rule is catching the wrong number. If it still fails and the number is in Contacts, removing it from Contacts is a workaround; please open an issue with `dumpsys telecom` output.
 
-This is platform behavior, not a defect in Call Blocker. AOSP and Pixel devices do not exhibit this restriction. Other OEMs with custom call managers (Xiaomi MIUI, Oppo ColorOS, Vivo FunTouch) may behave similarly — not yet verified.
+Other OEMs with custom call managers (Xiaomi MIUI, Oppo ColorOS, Vivo FunTouch) may behave differently — not yet verified.
 
-Confirmed on: Samsung Galaxy S23 (SM-S911B), Android 16, One UI 7.
+Confirmed on: Samsung Galaxy S23 (SM-S911B), Android 16, One UI 8.5. Also reported working on Samsung Galaxy S26, Android 17, One UI 9 (`dumpsys telecom` confirms calls from Contacts are delegated to Call Blocker's screening service on this device; see `.claude/doc/SAMSUNG_CONTACT_BYPASS.md`).
 
 ## Commands
 

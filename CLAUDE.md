@@ -62,9 +62,15 @@ Destino: `/mnt/c/Users/abela/Downloads/CallBlocker-vX.X.X-debug.apk`
 
 - **Modelo**: Samsung Galaxy S23 (SM-S911B)
 - **Android**: 16 (API 36)
-- **One UI**: 7
+- **One UI**: 8.5
 - **Configuracion**: Dual SIM (Bait + AT&T Mexico)
 - **Nota**: Bait envia numeros con +52, AT&T sin codigo de pais
+
+## Dispositivo Secundario
+
+- **Modelo**: Samsung Galaxy S26
+- **Android**: 17 / **One UI**: 9 (dicho por el usuario, 2026-10-10: la app funciona perfecto)
+- **Acceso**: SSH a Termux (`ssh s26` desde WSL laptop-g3, puerto 8022). Para `dumpsys telecom`/`logcat` hace falta adb (ver skill conectar-adb-wifi)
 
 ## Permisos Requeridos
 

@@ -410,7 +410,7 @@ VERSION=$(grep 'versionName' app/build.gradle.kts | sed 's/.*"\(.*\)".*/\1/')
 scp app/build/outputs/apk/debug/app-debug.apk wrr@10.254.0.133:/mnt/c/Users/abela/Downloads/CallBlocker-v${VERSION}-debug.apk
 ```
 
-- [ ] **Step 3: Manual verification checklist on the Samsung S23 (Android 16 / One UI 7)**
+- [ ] **Step 3: Manual verification checklist on the Samsung S23 (Android 16 / One UI 8.5)**
 
 Install the APK and confirm, in order:
 

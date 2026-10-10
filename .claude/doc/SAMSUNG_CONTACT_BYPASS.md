@@ -1,14 +1,14 @@
 # Samsung One UI - Contact Bypass de CallScreeningService
 
-> **TL;DR:** En dispositivos Samsung con One UI, las llamadas que provienen de números guardados en Contactos del sistema NO son delegadas al `CallScreeningService` de terceros, aunque el rol `ROLE_CALL_SCREENING` esté correctamente asignado. Es comportamiento de la plataforma, no un bug de Call Blocker. **No hay fix viable dentro del scope actual.**
+> **TL;DR (actualizado 2026-10-10):** El "bypass de Contactos" observado el 2026-05-02 en el S23 **NO está confirmado como comportamiento de la plataforma**. El 2026-07-10 (S23) un contacto SÍ fue bloqueado con el rol activo, y el 2026-10-10 en el S26 (One UI 9) una llamada de contacto SÍ fue delegada a `CallBlockerScreeningService`. Hipótesis: en mayo el rol no estaba realmente vinculado a esa llamada, o una actualización de One UI cambió la ruta. Este documento se conserva como evidencia histórica; ver las secciones de verificación al final. **Primero revisar reglas de prefijo y el rol, no asumir bypass de Samsung.**
 
 ---
 
 ## Contexto
 
-Reportado por el usuario el 2026-05-02 después de instalar v0.3.4 desde F-Droid en un Samsung Galaxy S23 (One UI 7 / Android 16). Síntoma: la app no bloqueaba llamadas de un contacto guardado, aunque todo lo demás (permisos, rol, optimización de batería, prefijos en BD) estaba correcto.
+Reportado por el usuario el 2026-05-02 después de instalar v0.3.4 desde F-Droid en un Samsung Galaxy S23 (One UI 8.5 / Android 16). Síntoma: la app no bloqueaba llamadas de un contacto guardado, aunque todo lo demás (permisos, rol, optimización de batería, prefijos en BD) estaba correcto.
 
-## Diagnóstico — evidencia capturada
+## Diagnóstico — evidencia capturada (2026-05-02, histórica)
 
 ### 1. Verificación del rol — CORRECTO
 
@@ -97,7 +97,8 @@ Hacer Call Blocker el dialer por defecto del sistema. Le daría control total so
 Antes de tocar código, hacer este checklist con el usuario:
 
 1. **¿Qué dispositivo es?** Si es Samsung (o Xiaomi, Oppo, Vivo posiblemente), seguir abajo. Si es Pixel/AOSP, investigar como bug real.
-2. **¿El número que no se bloquea está guardado en Contactos del sistema?** Si sí → es esto. Workaround: borrar de Contactos.
+2. **¿El rol `CALL_SCREENING` está activo para Call Blocker?** (causa más probable en reinstalaciones) y **¿hay una regla de prefijo muy amplia** que atrape al contacto, o al revés, falta la regla? Revisar Ajustes > Lista de bloqueados.
+   Solo si 1-2 están bien y el número está en Contactos: capturar `dumpsys telecom` y verificar si `mCallScreeningAppName = Call Blocker` aparece en `SCREENING_COMPLETED`. Si sale `null`, sí es el atajo de Samsung; workaround: borrar de Contactos.
 3. **Si no está en Contactos** y aún así no bloquea → ahí sí investigar. Capturar logcat:
    ```bash
    adb logcat -c
@@ -138,3 +139,30 @@ adb shell dumpsys package com.callblocker | grep -E "versionName|versionCode|sig
 
 - Android docs sobre `RoleManager.ROLE_CALL_SCREENING`: https://developer.android.com/reference/android/app/role/RoleManager#ROLE_CALL_SCREENING
 - Samsung One UI no expone públicamente cómo opera su pipeline de filtros de llamadas. La evidencia se obtiene vía `dumpsys telecom`.
+
+---
+
+## Verificación en Galaxy S26 (2026-10-10)
+
+Equipo: Galaxy S26 (SM-S948B), Android 17, One UI 9, parche de seguridad 2026-10-05. App instalada: **v0.3.4** (versionCode 17). Rol `CALL_SCREENING` en manos de `com.callblocker`.
+
+`dumpsys telecom` (vía adb de depuración inalámbrica del propio teléfono) muestra, para una llamada entrante de un número **en Contactos**:
+
+- `SamsungAutoRejectIncomingCallFiltering` → `[Allow, ..., contact exists]` (igual que en mayo).
+- Pero luego `SCREENING_COMPLETED ... mCallScreeningAppName = Call Blocker, mCallScreeningComponentName = com.callblocker/.../CallBlockerScreeningService` → **el servicio de Call Blocker SÍ fue invocado** pese a `contact exists`.
+
+Conclusión: en One UI 9 el contacto NO impide que se delegue la llamada a `CallScreeningService`. La respuesta fue `shouldRejectCall=false` porque ese número no estaba en la lista de bloqueados (no se probó un contacto bloqueado). Coincide con la corrección del 2026-07-10 en S23.
+
+### Prueba con contacto bloqueado (2026-10-10 20:56)
+
+Llamada de un número en Contactos Y en la lista de bloqueados (`4441234567`, API 37). Logcat de la app:
+
+```
+=== LLAMADA ENTRANTE === Numero: 4441234567
+isNumberBlocked('4441234567') = true -> BlockReason: BLOCK_LIST
+RESULTADO: Numero bloqueado por BLOCK_LIST -> BLOQUEAR
+```
+
+`dumpsys telecom`: `SCREENING_COMPLETED ([Reject, logged, notified, ..., contact exists, mCallBlockReason = 1, mCallScreeningAppName = Call Blocker, ...])` y `FILTERING_COMPLETED ([Reject ...])`.
+
+**Resultado: en Galaxy S26 / Android 17 / One UI 9 (app v0.3.4) un contacto bloqueado SÍ se rechaza.** No hay bypass de Contactos. Un número en Contactos aparece como `contact exists` solo como metadata.
