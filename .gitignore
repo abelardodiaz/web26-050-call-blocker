@@ -88,3 +88,6 @@ app/outputs/
 # Environment variables
 .env
 resume.txt
+
+# Documentos privados (correspondencia con usuarios, borradores): NO van al repo publico
+docs/privado/
