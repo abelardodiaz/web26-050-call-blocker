@@ -112,6 +112,10 @@ curl -X POST http://10.254.0.3/api/v1/ping-pong-papas \
 
 - `docs/BACKLOG.md` es la lista UNICA de pendientes (revisiones, esperas, limpiezas). Leerlo al iniciar sesion y actualizarlo al cerrar/abrir items. NO guardar pendientes en la memoria de Claude.
 
+## Documentos privados
+
+- `docs/privado/` esta en `.gitignore`: ahi van borradores de respuestas a usuarios, correspondencia y todo lo que no deba ser publico (el repo es publico en GitLab/GitHub). Nunca poner nombres, correos ni numeros de usuarios en archivos versionados; en `docs/BACKLOG.md` solo referencias genericas.
+
 ## Runbooks (leer antes de repetir un trabajo)
 
 - `docs/RUNBOOK_purgar_datos_y_pruebas.md` — purgar datos personales del historial git (GitLab/GitHub/F-Droid), cambios por MR en `master` protegida, y probar CallScreeningService en emulador AOSP (server602b). Regla: nunca escribir numeros/correos reales en docs; usar 4441234567.
