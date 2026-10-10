@@ -170,3 +170,12 @@ RESULTADO: Numero bloqueado por BLOCK_LIST -> BLOQUEAR
 ### Qué falta para cerrar el tema
 
 Si hay otro Samsung con One UI 7.x a mano, probar un contacto bloqueado: si lo deja pasar, el bypass es propio de One UI 7.x; si lo rechaza, la causa de mayo fue el rol no vinculado.
+
+### Línea base AOSP (2026-10-10)
+
+Emulador AOSP puro (imagen `system-images;android-36;default;x86_64`, Android 16, sin Google ni capa de Samsung), app F-Droid v0.3.4, rol `CALL_SCREENING` asignado. Contacto con número `4441234567` guardado en Contactos y presente en la lista de bloqueados; llamada simulada con `adb emu gsm call`.
+
+- App: `BlockReason: BLOCK_LIST -> BLOQUEAR`.
+- `dumpsys telecom`: `SCREENING_COMPLETED ([Reject, ..., contact exists, mCallBlockReason = 1, mCallScreeningAppName = Call Blocker])`.
+
+**Resultado: en AOSP un contacto bloqueado se rechaza.** Confirma la línea base sin capa de fabricante. Con S23 (One UI 8.5) y S26 (One UI 9) ya son tres entornos sin bypass. El bypass de mayo sigue sin reproducirse; queda como posible comportamiento de One UI 7.x.
